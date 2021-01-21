@@ -1,0 +1,36 @@
+{% if items %}
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js"></script>
+
+  <script type='text/javascript'>
+    var items = {{ items|safe }};
+  </script>
+
+  <div id="app">
+    [[message]]
+
+    <ul>
+      <li v-for="device in item">
+        <a v-bind:href="www.google.e">[[ device.name ]]</a> <button v-on:click="greet(person.name)">hey</button>
+      </li>
+    </ul>
+  </div>
+
+  <script>
+    var app = new Vue({
+      delimiters: ['[[', ']]'],
+      el: '#app',
+      data: {
+          message: 'Hello Vue!',
+          item: items,
+      },
+      methods: {
+          greet: function(name) {
+              console.log('Hello from ' + name + '!')
+          }
+      }
+    });
+  </script>
+{% else %}
+  <p>No items available.</p>
+{% endif %}
