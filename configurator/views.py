@@ -10,13 +10,18 @@ from .serializers import FirmwareSerializer,DeviceSerializer
 
 
 
-
+import json
 def index(request):
-    latest_question_list = Device.objects.order_by('releasedate')[:5]
-    template = loader.get_template('configurator/index.html')
+    devices = Device.objects.all()
+    
+    categories = Device.Device_Category.choices
+    print(type(categories[0]))
     context = {
-        'latest_question_list': latest_question_list,
+        'devices': devices,
+        "categories":categories,
     }
+    
+    template = loader.get_template('configurator/index.html')
     return HttpResponse(template.render(context, request))
 
 
@@ -28,11 +33,14 @@ def device_detail(request,device_id):
 
 def devices_overview(request):
 
-    
+
     devices = Device.objects.all()
+    cate = Device.Device_Category.choices
+    
     template = loader.get_template('configurator/devices.html')
     context = {
         'devices': devices,
+        "cat":cate,
     }
     return HttpResponse(template.render(context, request))
 

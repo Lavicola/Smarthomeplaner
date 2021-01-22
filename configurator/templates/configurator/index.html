@@ -8,129 +8,106 @@
 
     <meta name="keywords" content="vuejs, django, crudapp, restapi">
     <!-- bootstap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- boostrap css -->
     <style>
-    /* Absolute Center Spinner */
-.loading {
-  position: fixed;
-  z-index: 999;
-  height: 2em;
-  width: 2em;
-  overflow: show;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+      body {
+  font-family: sans-serif;
+  margin: 42px;
 }
 
-/* Transparent Overlay */
-.loading:before {
-  content: '';
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.3);
+.tooltip {
+  display: block !important;
+  z-index: 10000;
 }
 
-/* :not(:required) hides these rules from IE9 and below */
-.loading:not(:required) {
-  /* hide "loading..." text */
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
+.tooltip .tooltip-inner {
+  background: black;
+  color: white;
+  border-radius: 16px;
+  padding: 5px 10px 4px;
 }
 
-.loading:not(:required):after {
-  content: '';
-  display: block;
-  font-size: 10px;
-  width: 1em;
-  height: 1em;
-  margin-top: -0.5em;
-  -webkit-animation: spinner 1500ms infinite linear;
-  -moz-animation: spinner 1500ms infinite linear;
-  -ms-animation: spinner 1500ms infinite linear;
-  -o-animation: spinner 1500ms infinite linear;
-  animation: spinner 1500ms infinite linear;
-  border-radius: 0.5em;
-  -webkit-box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.5) -1.5em 0 0 0, rgba(0, 0, 0, 0.5) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
-  box-shadow: rgba(0, 0, 0, 0.75) 1.5em 0 0 0, rgba(0, 0, 0, 0.75) 1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) 0 1.5em 0 0, rgba(0, 0, 0, 0.75) -1.1em 1.1em 0 0, rgba(0, 0, 0, 0.75) -1.5em 0 0 0, rgba(0, 0, 0, 0.75) -1.1em -1.1em 0 0, rgba(0, 0, 0, 0.75) 0 -1.5em 0 0, rgba(0, 0, 0, 0.75) 1.1em -1.1em 0 0;
+.tooltip .tooltip-arrow {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  position: absolute;
+  margin: 5px;
+  border-color: black;
 }
 
-/* Animation */
+.tooltip[x-placement^="top"] {
+  margin-bottom: 5px;
+}
 
-@-webkit-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+.tooltip[x-placement^="top"] .tooltip-arrow {
+  border-width: 5px 5px 0 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  bottom: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
 }
-@-moz-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+
+.tooltip[x-placement^="bottom"] {
+  margin-top: 5px;
 }
-@-o-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+
+.tooltip[x-placement^="bottom"] .tooltip-arrow {
+  border-width: 0 5px 5px 5px;
+  border-left-color: transparent !important;
+  border-right-color: transparent !important;
+  border-top-color: transparent !important;
+  top: -5px;
+  left: calc(50% - 5px);
+  margin-top: 0;
+  margin-bottom: 0;
 }
-@keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
+
+.tooltip[x-placement^="right"] {
+  margin-left: 5px;
 }
-    </style>
+
+.tooltip[x-placement^="right"] .tooltip-arrow {
+  border-width: 5px 5px 5px 0;
+  border-left-color: transparent !important;
+  border-top-color: transparent !important;
+  border-bottom-color: transparent !important;
+  left: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[x-placement^="left"] {
+  margin-right: 5px;
+}
+
+.tooltip[x-placement^="left"] .tooltip-arrow {
+  border-width: 5px 0 5px 5px;
+  border-top-color: transparent !important;
+  border-right-color: transparent !important;
+  border-bottom-color: transparent !important;
+  right: -5px;
+  top: calc(50% - 5px);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.tooltip[aria-hidden='true'] {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity .15s, visibility .15s;
+}
+
+.tooltip[aria-hidden='false'] {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity .15s;
+}
+      </style>
 
   </head>
 
@@ -139,26 +116,46 @@
           <h1>Smarthomeplaner</h1>
           <!-- search start-->
           <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
+            <select v-model="selected_category">
+              <option disabled value="">Please select one</option>
+              <option value="None">None</option>
+              {% for category in categories %} 
+              <option value="{{category.0}}">{{category.1}}</option>
+              {% endfor %}
+            </select>      
             <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getdevices()">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">Search</button>
          </div>
+
           <!-- search end -->
           <!-- device list start [device.firmware_set] -->
           <div id="images">
             <div v-for="device in devices">
               [device.name]   
-          <img :id="device.name" ondrop="drop_handler(event)" ondragstart="dragstart_handler(event)" onmouseout="mouse_left_icon(event)" onmouseover="mouse_entered_icon(event)" draggable="true" :src="device.image" width="100" height="100"></img>
+          <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :title=device.name :id="device.name" ondrop="drop_handler(event)" ondragstart="dragstart_handler(event)" onmouseout="mouse_left_icon(event)" onmouseover="mouse_entered_icon(event)" draggable="true" :src="device.image" width="100" height="100"></img>
 
             </div>
-      
-          </div>
-          <!-- device list end -->
-          <div class="container-fluid text-center">
-                  <button onclick="saveCanvas()" class="btn btn-primary">Save</button>
-                  <button onclick="loadCanvas()" class="btn btn-primary">Load</button>
+      <!-- device list end -->
+
+        </div>
+        
+        <p>Move the mouse over the text below:</p>
+
+        <p><input v-model="message" placeholder="Message" /></p>
+
+        
+
+    </div>
     
-                </div>
+              <!-- VUE END -->
+          </div>
+              <div class="container-fluid text-center">
+                <button onclick="saveCanvas()" class="btn btn-primary">Save</button>
+                <button onclick="loadCanvas()" class="btn btn-primary">Load</button>
+  
               </div>
+
+    <!--live search div end-->
               <div class="btn-group">
                 <select name="room_name" id="room_name">
                     <option value="Wohnzimmer">Wohnzimmer</option>
@@ -174,14 +171,6 @@
         </main>
 
 
-        
-
-<div id="dynamic_information"> 
-
-  <h1>TREE</h1>
-  
-  
-  </div>
     
     </div>
 
@@ -193,15 +182,21 @@
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>  
+  <script src="https://unpkg.com/v-tooltip@2.0.2"></script>
+
   <script type="text/javascript">
+
+
     new Vue({
+      
       el: '#live_search',
       delimiters: ['[',']'],
       data: {
+        search_term: "Search for device",
+        message: "dsdsas",
         devices: [],
-        loading: true,
+        selected_category: 'None',
         currentdevice: {},
-        message: null,
         search_term: '',
       },
       mounted: function() {
@@ -209,39 +204,50 @@
       },
       methods: {
         getdevices: function() {
-          let api_url = '/configurator/api/device/';
+          let api_base_url = '/configurator/api/device/';
+          axios.get(api_base_url)
+              .then((response) => {
+                this.devices = response.data;
+              })
+        },
+        greet: function(device) {
+          this.message = device + "<br>" + device;
+        },
+        getSearchResults: function() {
+          
+          let api_base_url = '/configurator/api/device/';
+          let api_url = "";
+          alert(this.selected_category);
+          if(this.selected_category != "None"){
+            api_url = api_base_url+"?name="+this.search_term+"&category="+this.selected_category;
+          }else{
+            api_url = api_base_url+"?name="+this.search_term;
+          }
+          
           axios.get(api_url)
               .then((response) => {
                 this.devices = response.data;
-                this.loading = false;
+              })
+        },
+        getPrivacyIssues: function() {
+          let api_base_url = '/configurator/api/device/';
+          let api_url = api_base_url+"?name="+this.search_term
+          axios.get(api_url)
+              .then((response) => {
+                this.devices = response.data;
+              })
+        },
+        getvulnerabilities: function() {
+          axios.get(api_url)
+              .then((response) => {
+                this.devices = response.data;
               })
         },
       }
     });
   </script>
 
-  <script type="text/javascript">
-    new Vue({
-      el: '#dynamic_information',
-      delimiters: ['[',']'],
-      data: {
-        nachricht: "hello world",
-      },
-      mounted: function() {
-        this.getdevices();
-      },
-      methods: {
-        getdevices: function() {
-          let api_url = '/configurator/api/device/';
-          axios.get(api_url)
-              .then((response) => {
-                this.devices = response.data;
-                this.loading = false;
-              })
-        },
-      }
-    });
-  </script>
+
 
 
 
@@ -376,17 +382,18 @@ function add_Room(){
 
 
 
-      //drawGrid(canvas);
+      drawGrid(canvas);
       canvas_event_handlers(canvas);
 
 
       function mouse_left_icon(a_object){
-    document.getElementById("dynamic_information").innerHTML =  "Hier stehen Information zum Gerät!";
+        message = "HACKED";
+    document.getElementById("unique").innerHTML =  "HACKED";
 }
 
 function mouse_entered_icon(a_object){
-    
-    document.getElementById("dynamic_information").innerHTML = "Ich bin Leer "+a_object.id;
+  message = "NOPE";
+    document.getElementById("unique").innerHTML = "HACKED ";
 }
 
 // drag stuff svg etc.

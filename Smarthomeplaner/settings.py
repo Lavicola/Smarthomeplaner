@@ -47,6 +47,7 @@ AUTH_USER_MODEL = 'users.CustomUser'
 INSTALLED_APPS = [
     ###
     'rest_framework',
+    'django_filters',
     'modeltranslation',
     'django_countries',
     ### 
