@@ -57,6 +57,22 @@ def firmware_list(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+from .forms import SmarthomeMapForm
+
+def getCanvas(request):
+    print("PATH")
+    form = SmarthomeMapForm(request.POST)
+    #if request.method == 'Post':
+    if form.is_valid():
+        print("ITS VALID!!!!!!!!!!!")
+    else:
+        print("NOT VALID")
+
+    return HttpResponse('/thanks/') # Redirect after POST
+
+
+
+
 #REST
 
 import random

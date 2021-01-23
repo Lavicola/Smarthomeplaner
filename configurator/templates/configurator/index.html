@@ -140,16 +140,25 @@
         </div>
         
         <p>Move the mouse over the text below:</p>
-
-        <p><input v-model="message" placeholder="Message" /></p>
+        <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCanvas2">SAVE</button>
 
         
 
     </div>
     
               <!-- VUE END -->
+
+              <form action="getCanvas" method="POST">
+                {% csrf_token %}
+                <label for="your_name">Your name: </label>
+                <input id="your_name" type="text" name="your_name" required>                <input type="submit" value="OK">
+            </form>
+
           </div>
               <div class="container-fluid text-center">
+                
+                <input id="csrf" value={{ csrf_token }} />
+                
                 <button onclick="saveCanvas()" class="btn btn-primary">Save</button>
                 <button onclick="loadCanvas()" class="btn btn-primary">Load</button>
   
@@ -197,12 +206,16 @@
         devices: [],
         selected_category: 'None',
         currentdevice: {},
-        search_term: '',
+        csrf_token: "",
       },
       mounted: function() {
         this.getdevices();
       },
       methods: {
+        getToken:function(){
+          this.csrf_token = document.getElementById("csrf").value;
+        },
+
         getdevices: function() {
           let api_base_url = '/configurator/api/device/';
           axios.get(api_base_url)
@@ -237,12 +250,23 @@
                 this.devices = response.data;
               })
         },
-        getvulnerabilities: function() {
-          axios.get(api_url)
-              .then((response) => {
-                this.devices = response.data;
-              })
-        },
+        getCanvas2: function() {
+          this.getToken();
+          const custom_data = 'your_name = { "name":"John", "age":30, "city":"New York"}';
+          axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/configurator/getCanvas',
+          headers:{
+            "Content-Type": "application/x-www-form-urlencoded",
+              'Accept': 'application/json',
+              'X-CSRFToken': this.csrf_token
+            },
+          data: "your_name=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice"]) )
+        }).then ( function (response){ //success function
+          console.log(response);
+        }
+        
+        )},
       }
     });
   </script>
@@ -382,18 +406,18 @@ function add_Room(){
 
 
 
-      drawGrid(canvas);
+      //drawGrid(canvas);
       canvas_event_handlers(canvas);
 
 
       function mouse_left_icon(a_object){
         message = "HACKED";
-    document.getElementById("unique").innerHTML =  "HACKED";
+   // document.getElementById("unique").innerHTML =  "HACKED";
 }
 
 function mouse_entered_icon(a_object){
   message = "NOPE";
-    document.getElementById("unique").innerHTML = "HACKED ";
+    //document.getElementById("unique").innerHTML = "HACKED ";
 }
 
 // drag stuff svg etc.
@@ -402,6 +426,7 @@ function mouse_entered_icon(a_object){
 function saveCanvas() {
       // convert canvas to a json string
       json = JSON.stringify( canvas.toJSON(['id','name',"isDevice"]) );
+      document.getElementById("your_name").innerHTML = json;
   
     }
 
