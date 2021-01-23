@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from configurator.models import Device, Firmware
+from configurator.models import Device, Firmware,CanvasMap
 
 
 
@@ -35,3 +35,9 @@ class DeviceSerializer(serializers.ModelSerializer ):
         fields=('name','image','category','manufacturer_name','generation','firmware_set')
 
 
+class CanvasMapSerializer(serializers.ModelSerializer ):
+
+    class Meta:
+        model = CanvasMap
+        #fields = '__all__' 
+        fields=('canvas_map')

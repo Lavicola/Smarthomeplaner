@@ -1,5 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _ #translation
+from users.models import AbstractBaseUser
+from django.contrib.auth import settings
 
 
 
@@ -71,6 +73,15 @@ class Vulnerability(models.Model):
     class Meta:
         verbose_name = _("Schwachstelle")
         verbose_name_plural = _("Schwachstellen")
+
+
+class CanvasMap(models.Model):
+    email = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,primary_key=True)
+    canvas_map = models.JSONField()
+    
+
+    
+
 
 
 

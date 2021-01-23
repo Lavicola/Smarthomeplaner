@@ -32,7 +32,6 @@ class DeviceViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 
-
 class FirmwareViewSet(viewsets.ModelViewSet):
     queryset = Firmware.objects.all()
     serializer_class = FirmwareSerializer

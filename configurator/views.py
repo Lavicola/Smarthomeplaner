@@ -3,10 +3,10 @@ from django.template import loader
 
 from configurator.models import Device
 from configurator.models import Firmware
-from configurator.models import Vulnerability
+from configurator.models import Vulnerability,CanvasMap
 #REST
 from rest_framework import viewsets
-from .serializers import FirmwareSerializer,DeviceSerializer
+from .serializers import FirmwareSerializer,DeviceSerializer,CanvasMapSerializer
 
 
 
@@ -59,17 +59,29 @@ def firmware_list(request):
 
 from .forms import SmarthomeMapForm
 
-def getCanvas(request):
+def setCanvas(request):
     print("PATH")
     form = SmarthomeMapForm(request.POST)
     #if request.method == 'Post':
     if form.is_valid():
-        print("ITS VALID!!!!!!!!!!!")
+        map = CanvasMap(request.user.email,form.cleaned_data["canvas_map"])
+        CanvasMap.save(map)
+
+        print("ITS VALID!!!!!!!!!!!")        
     else:
-        print("NOT VALID")
+        print("form.cleaned_data["'your_name'"]")
 
     return HttpResponse('/thanks/') # Redirect after POST
 
+
+###GetCanvas
+def getCanvas(request):
+    canvas_map = CanvasMap.objects.get(email=request.user.email)
+    print(canvas_map.canvas_map)
+    canas_json = json.dumps(canvas_map.canvas_map)
+
+    
+    return JsonResponse(canas_json, safe=False)
 
 
 
@@ -78,18 +90,6 @@ def getCanvas(request):
 import random
 import json
 from .viewsets import DeviceViewSet
-
-def acdc(request):
-
-    view = DeviceViewSet()
-
-
-    out = view.list()
-    #template = loader.get_template('configurator/vue_list.html')
-    return HttpResponse(out)
-
-    return HttpResponse(template.render(context, request))
-
 
 
 

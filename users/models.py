@@ -42,6 +42,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         verbose_name=_('email address'),
         max_length=255,
         unique=True,
+        primary_key=True
     )
     country = CountryField()
     is_contributor = models.BooleanField(default=False)
