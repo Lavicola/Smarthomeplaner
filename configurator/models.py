@@ -11,7 +11,7 @@ class Device(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     image = models.FileField(upload_to='Device')
-    releasedate = models.DateField()
+    release_date = models.DateField()
     manufacturer_name = models.CharField(max_length=200)
     connector = models.CharField(max_length=20)
     generation = models.CharField(max_length=10)
@@ -36,7 +36,6 @@ class Device(models.Model):
         verbose_name = _("Gerät")
         verbose_name_plural = _("Geräte")
 
-
     def __str__(self):
         return self.name +" " + self.manufacturer_name + "  V" + self.generation
 
@@ -49,10 +48,10 @@ class Interface(models.Model):
 
 class Firmware(models.Model):
     firmware_id = models.AutoField(primary_key=True)
-    Compatibility_list = models.ManyToManyField(Device,verbose_name= _("Firmware Kompatibel mit"))
+    compatibility_list = models.ManyToManyField(Device,verbose_name= _("Firmware Kompatibel mit"))
     version_number = models.CharField(max_length=50,verbose_name= _("Versionsnummer"))
     changelog = models.CharField(verbose_name=_("Änderungen"), max_length=500)
-    releasedate = models.DateField(verbose_name=_("Erscheinungsdatum"))
+    release_date = models.DateField(verbose_name=_("Erscheinungsdatum"))
 
     class Meta:
         verbose_name = _("Firmware")

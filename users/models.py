@@ -13,7 +13,7 @@ class CustomUserManager(BaseUserManager):
         birth and password.
         """
         if not email:
-            raise ValueError(_('Users must have an email address'))
+            raise ValueError(_('User must have an email address'))
 
         user = self.model(
             email=self.normalize_email(email)
@@ -25,8 +25,7 @@ class CustomUserManager(BaseUserManager):
 
     def create_superuser(self, email, password):
         """
-        Creates and saves a superuser with the given email, date of
-        birth and password.
+        Creates and saves a superuser with the given email and password.
         """
         user = self.create_user(
             email,
@@ -66,7 +65,6 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
-
 
     @property
     def is_staff(self):

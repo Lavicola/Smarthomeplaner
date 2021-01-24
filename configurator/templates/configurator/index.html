@@ -10,104 +10,13 @@
     <!-- bootstap -->
     <!-- boostrap css -->
     <style>
-      body {
-  font-family: sans-serif;
-  margin: 42px;
-}
-
-.tooltip {
-  display: block !important;
-  z-index: 10000;
-}
-
-.tooltip .tooltip-inner {
-  background: black;
-  color: white;
-  border-radius: 16px;
-  padding: 5px 10px 4px;
-}
-
-.tooltip .tooltip-arrow {
-  width: 0;
-  height: 0;
-  border-style: solid;
-  position: absolute;
-  margin: 5px;
-  border-color: black;
-}
-
-.tooltip[x-placement^="top"] {
-  margin-bottom: 5px;
-}
-
-.tooltip[x-placement^="top"] .tooltip-arrow {
-  border-width: 5px 5px 0 5px;
-  border-left-color: transparent !important;
-  border-right-color: transparent !important;
-  border-bottom-color: transparent !important;
-  bottom: -5px;
-  left: calc(50% - 5px);
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.tooltip[x-placement^="bottom"] {
-  margin-top: 5px;
-}
-
-.tooltip[x-placement^="bottom"] .tooltip-arrow {
-  border-width: 0 5px 5px 5px;
-  border-left-color: transparent !important;
-  border-right-color: transparent !important;
-  border-top-color: transparent !important;
-  top: -5px;
-  left: calc(50% - 5px);
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-.tooltip[x-placement^="right"] {
-  margin-left: 5px;
-}
-
-.tooltip[x-placement^="right"] .tooltip-arrow {
-  border-width: 5px 5px 5px 0;
-  border-left-color: transparent !important;
-  border-top-color: transparent !important;
-  border-bottom-color: transparent !important;
-  left: -5px;
-  top: calc(50% - 5px);
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.tooltip[x-placement^="left"] {
-  margin-right: 5px;
-}
-
-.tooltip[x-placement^="left"] .tooltip-arrow {
-  border-width: 5px 0 5px 5px;
-  border-top-color: transparent !important;
-  border-right-color: transparent !important;
-  border-bottom-color: transparent !important;
-  right: -5px;
-  top: calc(50% - 5px);
-  margin-left: 0;
-  margin-right: 0;
-}
-
-.tooltip[aria-hidden='true'] {
-  visibility: hidden;
-  opacity: 0;
-  transition: opacity .15s, visibility .15s;
-}
-
-.tooltip[aria-hidden='false'] {
-  visibility: visible;
-  opacity: 1;
-  transition: opacity .15s;
-}
+    
       </style>
+
+      {% load static %}
+  
+  <link rel="stylesheet" type="text/css" href="{% static 'configurator/style.css' %}">
+  <script src="{% static 'configurator/configurator_1.js'%}"></script>
 
   </head>
 
@@ -132,16 +41,18 @@
           <div id="images">
             <div v-for="device in devices">
               [device.name]   
-          <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :title=device.name :id="device.name" ondrop="drop_handler(event)" ondragstart="dragstart_handler(event)" onmouseout="mouse_left_icon(event)" onmouseover="mouse_entered_icon(event)" draggable="true" :src="device.image" width="100" height="100"></img>
+          <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :title=device.name :id="device.name" ondrop="drop_handler(event)" draggable="true" :src="device.image" width="100" height="100"></img>
 
             </div>
       <!-- device list end -->
 
         </div>
-        
-        <p>Move the mouse over the text below:</p>
-        <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="setCanvas2">SAVE</button>
-        <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCanvas2">LOAD</button>
+        <div class="container-fluid text-center">                
+          <input type="hidden" id="csrf" value={{ csrf_token }} />
+          
+          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="setCanvas">SAVE</button>
+          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCanvas">LOAD</button>          
+        </div>
 
         
 
@@ -149,22 +60,9 @@
     
               <!-- VUE END -->
 
-              <form action="" method="POST">
-                {% csrf_token %}
-                <label for="canvas_map">Your name: </label>
-                <input id="canvas_map" type="text" name="canvas_map" required>                <input type="submit" value="OK">
-            </form>
 
           </div>
-              <div class="container-fluid text-center">
-                
-                <input id="csrf" value={{ csrf_token }} />
-                
-                <button onclick="saveCanvas()" class="btn btn-primary">Save</button>
-                <button onclick="loadCanvas()" class="btn btn-primary">Load</button>
-  
-              </div>
-
+             
     <!--live search div end-->
               <div class="btn-group">
                 <select name="room_name" id="room_name">
@@ -179,24 +77,18 @@
         <main id="canvas-wrapper">
             <canvas id="canvas_object" width="1200" height="700"></canvas>
         </main>
-
-
-    
     </div>
 
 
 
 
   <!-- vue.js files -->
-  <script src ="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js" integrity="sha512-otOZr2EcknK9a5aa3BbMR9XOjYKtxxscwyRHN6zmdXuRfJ5uApkHB7cz1laWk2g8RKLzV9qv/fl3RPwfCuoxHQ==" crossorigin="anonymous"></script>  
   <script src="https://unpkg.com/v-tooltip@2.0.2"></script>
-
+  
   <script type="text/javascript">
-
-
     new Vue({
       
       el: '#live_search',
@@ -216,7 +108,6 @@
         getToken:function(){
           this.csrf_token = document.getElementById("csrf").value;
         },
-
         getdevices: function() {
           let api_base_url = '/configurator/api/device/';
           axios.get(api_base_url)
@@ -227,8 +118,7 @@
         greet: function(device) {
           this.message = device + "<br>" + device;
         },
-        getSearchResults: function() {
-          
+        getSearchResults: function() {          
           let api_base_url = '/configurator/api/device/';
           let api_url = "";
           alert(this.selected_category);
@@ -251,7 +141,7 @@
                 this.devices = response.data;
               })
         },
-        setCanvas2: function() {
+        setCanvas: function() {
           this.getToken();
           axios({
           method: 'post',
@@ -267,7 +157,7 @@
         }
         
         )},
-        getCanvas2: function() {
+        getCanvas: function() {
           this.getToken();
           axios({
           method: 'post',
@@ -287,287 +177,5 @@
       }
     });
   </script>
-
-
-
-
-
-
-
-
-<script>
-
-const default_Roomconfig = 
-{
-  left: 0,
-  top: 0,
-  width: 60,
-  height: 180,
-  fill: 'rgba(255, 255, 255, 0.2)',
-  stroke: '#686868',
-  strokeWidth: 2,
-  originX: 'left',
-  originY: 'top',
-  centeredRotation: true,
-  snapAngle: 45,
-  selectable: true,
-  //type: 'wall',
-};
-
-
-// array of rects! https://stackoverflow.com/questions/17255867/adding-grid-over-fabric-js-canvas  
-//taken from matiss.andersons
-function drawGrid(canvas) {
-
-    const gridSize = 40;
-    const width = canvas.getWidth()+1000;
-    const height = canvas.getHeight()+500;
-    const left = (width % gridSize) / 2;
-    const top = (height % gridSize) / 2;
-    const lines = [];
-    const lineOption = {stroke: 'rgba(0,0,0,1)', strokeWidth: 1, selectable: false};
-    for (let i = Math.ceil(width / gridSize); i--;) {
-      lines.push(new fabric.Line([gridSize * i, -top, gridSize * i, height], lineOption));
-    }
-    for (let i = Math.ceil(height / gridSize); i--;) {
-      lines.push(new fabric.Line([-left, gridSize * i, width, gridSize * i], lineOption));
-    }
-    const oGridGroup = new fabric.Group(lines, {left: 0, top: 0});
-    oGridGroup.selectable = false;
-    canvas.add(oGridGroup);
-}
-
-function canvas_event_handlers(canvas){
-
-
-    //enables zoom and panning
-    canvas.on('mouse:wheel', function(opt) {
-        var delta = opt.e.deltaY;
-        var zoom = canvas.getZoom();
-        zoom *= 0.999 ** delta;
-        if (zoom > 20) zoom = 20;
-        if (zoom < 0.01) zoom = 0.01;
-        canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
-        opt.e.preventDefault();
-        opt.e.stopPropagation();
-      });
-          
-      canvas.on('mouse:down', function(opt) {
-        var evt = opt.e;
-        if (evt.altKey === true) {
-          this.isDragging = true;
-          this.selection = false;
-          this.lastPosX = evt.clientX;
-          this.lastPosY = evt.clientY;
-        }
-      });
-
-      // enables dragging the canvas: alt + mouse down and move
-      canvas.on('mouse:move', function(opt) {
-        if (this.isDragging) {
-          var e = opt.e;
-          var vpt = this.viewportTransform;
-          vpt[4] += e.clientX - this.lastPosX;
-          vpt[5] += e.clientY - this.lastPosY;
-          this.requestRenderAll();
-          this.lastPosX = e.clientX;
-          this.lastPosY = e.clientY;
-        }
-      });
-      canvas.on('mouse:up', function(opt) {
-        // on mouse up we want to recalculate new interaction
-        // for all objects, so we call setViewportTransform
-        this.setViewportTransform(this.viewportTransform);
-        this.isDragging = false;
-        this.selection = true;
-      });
-      
-    
-
-
-}
-
-function generateId() {
-    return Math.random().toString(36).substr(2, 8)
-  }
-
-
-function add_Room(){
-    var name ;
-    var paras;
-    name = "default_room"+generateId() ;
-    paras = default_Roomconfig;
-    paras.name = name;
-    paras.id = generateId();
-    paras.isDevice = false;
-    const room = new fabric.Rect(paras);
-    room.on('mouseover', function() {
-      //console.log(room.id);
-    });
-        
-    canvas.add(room);
-    
-    return true ;
-  
-  
-  }
-
-
-
-    var canvas = new fabric.Canvas('canvas_object', {
-       // backgroundColor: 'rgb(100,100,200)',
-        selectionColor: 'blue',
-        // ...
-      });
-
-
-
-
-      //drawGrid(canvas);
-      canvas_event_handlers(canvas);
-
-
-      function mouse_left_icon(a_object){
-        message = "HACKED";
-   // document.getElementById("unique").innerHTML =  "HACKED";
-}
-
-function mouse_entered_icon(a_object){
-  message = "NOPE";
-    //document.getElementById("unique").innerHTML = "HACKED ";
-}
-
-// drag stuff svg etc.
-
-
-function saveCanvas() {
-      // convert canvas to a json string
-      json = JSON.stringify( canvas.toJSON(['id','name',"isDevice"]) );
-      document.getElementById("your_name").innerHTML = json;
-  
-    }
-
-    function loadCanvas(){
-      canvas.clear();
-      canvas.loadFromJSON(json, function() {
-        canvas.renderAll(); 
-     },function(o,object){
-        if(object.isDevice){
-          add_event_to_device(object);
-        }
-     })
-      
-
-    }
-
-
-var currentlyDragging;
-
-
-function dragstart_handler(ev) {
-  currentlyDragging = ev.target.id;
-  console.log("dragStart");
-  ev.dataTransfer.setData("text", ev.target.id);
-}
-
-function handleDragOver(e) {
-    if (e.preventDefault) {
-        e.preventDefault(); // Necessary.  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations   
-    }
-    e.dataTransfer.dropEffect = 'copy';
-    return false;
-}
-
-function handleDragEnter(e) {
-    if (e.preventDefault) {
-      e.preventDefault(); // Necessary.  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations   
-    }
-    // this / e.target is the current hover target.
-    this.classList.add('over');
-}
-
-function handleDragLeave(e) {
-    this.classList.remove('over'); // this / e.target is previous target element.
-}
-
-function drop_handler(ev) {
- console.log("Drop");
- ev.preventDefault();
- let data = ev.dataTransfer.getData("URL");
- let svg_name = ev.dataTransfer.getData("text/plain");
- fabric.loadSVGFromURL(data, function(objects, options) {
-        var svg = fabric.util.groupSVGElements(objects, options);
-        svg.left = ev.layerX;
-        svg.top = ev.layerY;
-        svg.id = svg_name + generateId(); // todo:make it unique!
-        svg.isDevice = true;
-         // this function will be for the devices later :)
-        add_event_to_device(svg);
-        
-        canvas.add(svg); 
-      });
-
-  console.log(data)
-
-}
-
-function remove_object(){
-   canvas.remove(canvas.getActiveObject());
-}
-
-function add_event_to_device(a_element){
-  
-    a_element.on('mouseup', function() {
-    let l_rooms = canvas.getObjects('rect');
-    
-    for (var i = 0; i < l_rooms.length; i++) {
-        if(a_element.isContainedWithinObject(l_rooms[i])){
-
-            console.log("Raum"+l_rooms[i].id+ "enthält:"+ a_element.id);
-            console.log(a_element.isDevice);
-            console.log("---------");
-          }
-        }      
-   });
-
-}
-
-
-function handleDragEnd(e) {
-    // this/e.target is the source node.
-    [].forEach.call(images, function (img) {
-        img.classList.remove('img_dragging');
-    });
-}
-
-window.addEventListener("load", function(event) {
-    // Bind the event listeners for the image elements
-    var images = document.querySelectorAll('#images img');
-    var objects = document.querySelectorAll('#images object');
-    [].forEach.call(images, function (img) {
-      //  img.addEventListener('dragstart', handleDragStart, false);
-        img.addEventListener('dragend', handleDragEnd, false);
-    });
-    [].forEach.call(objects, function (obj) {
-       // obj.addEventListener('dragstart', handleDragStart, false);
-        obj.addEventListener('dragend', handleDragEnd, false);
-    });
-    // Bind the event listeners for the canvas
-    var canvasContainer = document.getElementById('canvas-wrapper');
-    canvasContainer.addEventListener('dragenter', handleDragEnter, false);
-    canvasContainer.addEventListener('dragover', handleDragOver, false);
-    canvasContainer.addEventListener('dragleave', handleDragLeave, false);
-   canvasContainer.addEventListener('drop', drop_handler, false);
-    
-    var json
-    
-  });
-
-
-
-</script>
-
-
-
   </body>
 </html>
