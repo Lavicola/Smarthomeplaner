@@ -55,7 +55,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     ####self start
     'users',
-    'configurator.apps.ConfiguratorConfig',
+    'api.apps.APIConfig',
+    'smarthome.apps.SmarthomeConfig',
+    'configurator.apps.ConfiguratorConfig'
     ###self end
 
 

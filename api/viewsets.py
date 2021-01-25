@@ -1,5 +1,5 @@
 from rest_framework import viewsets, filters
-from .models import Device,Firmware
+from smarthome.models import Device,Firmware
 from .serializers import DeviceSerializer,FirmwareSerializer
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend

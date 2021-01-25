@@ -109,7 +109,7 @@
           this.csrf_token = document.getElementById("csrf").value;
         },
         getdevices: function() {
-          let api_base_url = '/configurator/api/device/';
+          let api_base_url = '/api/devices/';
           axios.get(api_base_url)
               .then((response) => {
                 this.devices = response.data;
@@ -119,7 +119,7 @@
           this.message = device + "<br>" + device;
         },
         getSearchResults: function() {          
-          let api_base_url = '/configurator/api/device/';
+          let api_base_url = '/api/devices/';
           let api_url = "";
           alert(this.selected_category);
           if(this.selected_category != "None"){

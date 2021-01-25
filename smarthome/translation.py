@@ -1,5 +1,5 @@
 from modeltranslation.translator import translator, TranslationOptions
-from configurator.models import Firmware
+from .models import Firmware
 
 
 

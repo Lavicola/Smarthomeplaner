@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from configurator.models import Device, Firmware,CanvasMap
+from smarthome.models import Device, Firmware
+from configurator.models import CanvasMap
 
 
 

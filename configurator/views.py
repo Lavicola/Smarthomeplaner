@@ -1,21 +1,20 @@
+from django.http import JsonResponse
 from django.http import HttpResponse
+
+from django.shortcuts import render
+from smarthome.models import Device,Firmware
 from django.template import loader
-
-from configurator.models import Device
-from configurator.models import Firmware
-from configurator.models import Vulnerability,CanvasMap
-#REST
-from rest_framework import viewsets
-from .serializers import FirmwareSerializer,DeviceSerializer,CanvasMapSerializer
-
-
-
+from .forms import SmarthomeMapForm
+from configurator.models import CanvasMap
 import json
+
+# Create your views here.
+
+
+
 def index(request):
     devices = Device.objects.all()
-    
     categories = Device.Device_Category.choices
-    print(type(categories[0]))
     context = {
         'devices': devices,
         "categories":categories,
@@ -25,84 +24,21 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
-def device_detail(request,device_id):
-
-
-    return HttpResponse("You're looking at device %s." % device_id)
-
-
-def devices_overview(request):
-
-
-    devices = Device.objects.all()
-    cate = Device.Device_Category.choices
-    
-    template = loader.get_template('configurator/devices.html')
-    context = {
-        'devices': devices,
-        "cat":cate,
-    }
-    return HttpResponse(template.render(context, request))
-
-#REST
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-import json
-from django.http import JsonResponse
-
-
-def firmware_list(request):
-    devices = Device.objects.all()
-    serializer = DeviceSerializer(devices,many=True)
-    return JsonResponse(serializer.data, safe=False)
-
-
-from .forms import SmarthomeMapForm
-
-def setCanvas(request):
-    print("PATH")
-    form = SmarthomeMapForm(request.POST)
-    #if request.method == 'Post':
-    if form.is_valid():
-        map = CanvasMap(request.user.email,form.cleaned_data["canvas_map"])
-        CanvasMap.save(map)
-
-        print("ITS VALID!!!!!!!!!!!")        
-    else:
-        print("form.cleaned_data["'your_name'"]")
-
-    return HttpResponse('/thanks/') # Redirect after POST
-
-
-###GetCanvas
 def getCanvas(request):
     canvas_map = CanvasMap.objects.get(email=request.user.email)
-    print(canvas_map.canvas_map)
-    canas_json = json.dumps(canvas_map.canvas_map)
-
-    
-    return JsonResponse(canas_json, safe=False)
+    canvas_json = json.dumps(canvas_map.canvas_map)
+    return JsonResponse(canvas_json, safe=False)
 
 
-
-#REST
-
-import random
-import json
-from .viewsets import DeviceViewSet
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+def setCanvas(request):
+    if request.method == 'POST':
+        print("HIER")
+        form = SmarthomeMapForm(request.POST)
+        if form.is_valid():
+            print("HIER")
+            map = CanvasMap(request.user.email,form.cleaned_data["canvas_map"])
+            CanvasMap.save(map)
+        else:
+            return HttpResponse('/error/') #
+        return HttpResponse('/thanks/') # Redirect after POST
+    return HttpResponse('/error/') #
