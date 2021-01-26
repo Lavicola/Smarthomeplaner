@@ -103,11 +103,10 @@ function generateId() {
 }
 
 
+
 function add_Room() {
-    var name;
-    var paras;
-    name = "default_room" + generateId();
-    paras = default_Roomconfig;
+    let name = GenerateRoomname();
+    let paras = default_Roomconfig;
     paras.name = name;
     paras.id = generateId();
     paras.isDevice = false;
@@ -116,12 +115,48 @@ function add_Room() {
         //console.log(room.id);
     });
 
+    buildJSON();
     canvas.add(room);
 
     return true;
 
 
 }
+
+function GenerateRoomname(){
+    let number = 2;
+    let temp_name = getRoomCategory();
+    let name = temp_name;
+    while(RoomExists(name)){
+        name = temp_name + number;
+        number++;
+    }
+
+    return name;
+}
+
+function RoomExists(a_room_name){
+
+    let l_rooms = canvas.getObjects('rect');
+    let j = l_rooms.length;
+    for (var i = 0; i < j; i++) {
+
+        if(l_rooms[i].name == a_room_name){
+            return true;
+        }
+
+    }
+    return false;
+
+}
+
+
+function getRoomCategory(){
+    category = document.getElementById("room_name").value;
+    return category;
+ 
+ }
+ 
 
 
 function saveCanvas() {
@@ -140,6 +175,65 @@ function loadCanvas() {
             add_event_to_device(object);
         }
     })
+}
+
+
+function buildJSON(){
+    let l_hash_map = CreateHashMap();
+    let l_room_names = canvas.getObjects("rect"); 
+    let l_devices = GetDevices();
+
+    for(var i=0;i<l_devices.length;i++){
+        for (var j =0;j<l_room_names.length;j++){
+            if ( l_devices[i].isContainedWithinObject(l_room_names[j]) ) {
+                l_hash_map[l_room_names[j].name].push(l_devices[i].name);
+            }
+        }
+    }
+
+
+    console.log(l_hash_map);
+
+    return;
+
+}
+
+
+function CreateHashMap(){
+
+    let l_hash_map = new Object();
+    let l_rooms = canvas.getObjects("rect");
+
+
+    for(var i=0;i<l_rooms.length;i++){
+        l_hash_map[l_rooms[i].name] = [];
+    }
+
+    return l_hash_map;
+
+}
+
+
+function GetDevices(){
+    let canvas_obects = canvas.getObjects();
+    let l_devices = [];
+
+    for(var i=0;i<canvas_obects.length;i++){
+        if(canvas_obects[i].isDevice){
+            l_devices.push(canvas_obects[i]);
+        }
+    }
+
+    return l_devices
+
+    
+}
+
+
+function GetRoomDevices(a_roomname){
+
+    let l_canvas_objects = canvas.getObjects();
+
 
 
 }
@@ -147,8 +241,8 @@ function loadCanvas() {
 
 
 
+
 function dragstart_handler(ev) {
-    currentlyDragging = ev.target.id;
     console.log("dragStart");
     ev.dataTransfer.setData("text", ev.target.id);
 }
@@ -177,12 +271,13 @@ function drop_handler(ev) {
     console.log("Drop");
     ev.preventDefault();
     let data = ev.dataTransfer.getData("URL");
-    let svg_name = ev.dataTransfer.getData("text/plain");
+    let svg_name = ev.dataTransfer.getData("text");
     fabric.loadSVGFromURL(data, function(objects, options) {
         var svg = fabric.util.groupSVGElements(objects, options);
         svg.left = ev.layerX;
         svg.top = ev.layerY;
-        svg.id = svg_name + generateId(); // todo:make it unique!
+        svg.name = svg_name;
+        svg.id = svg_name+ "_" + generateId(); // todo:make it unique!
         svg.isDevice = true;
         // this function will be for the devices later :)
         add_event_to_device(svg);
@@ -190,7 +285,6 @@ function drop_handler(ev) {
         canvas.add(svg);
     });
 
-    console.log(data)
 
 }
 
@@ -205,14 +299,15 @@ function add_event_to_device(a_element) {
         for (var i = 0; i < l_rooms.length; i++) {
             if (a_element.isContainedWithinObject(l_rooms[i])) {
 
-                console.log("Raum" + l_rooms[i].id + "enthält:" + a_element.id);
-                console.log(a_element.isDevice);
-                console.log("---------");
+                //console.log(l_rooms[i].name + " enthält: " + a_element.id);
+                //console.log(a_element.isDevice);
+                //console.log("---------");
             }
         }
     });
 
 }
+
 
 function initCanvas(){
 
