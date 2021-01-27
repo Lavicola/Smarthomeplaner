@@ -5,3 +5,4 @@ from.models import *
 admin.site.register(Device)
 admin.site.register(Firmware)
 admin.site.register(Vulnerability)
+admin.site.register(Room)

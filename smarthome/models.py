@@ -2,8 +2,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _ #translation
 from users.models import AbstractBaseUser
 from django.contrib.auth import settings
-
-
+from users.models import CustomUser
 
 # Create your models here.
 
@@ -35,6 +34,7 @@ class Device(models.Model):
     class Meta:
         verbose_name = _("Gerät")
         verbose_name_plural = _("Geräte")
+        constraints = [models.UniqueConstraint(fields=["name","manufacturer_name","generation"],name="unique_device")]
 
     def __str__(self):
         return self.name +" " + self.manufacturer_name + "  V" + self.generation
@@ -74,8 +74,15 @@ class Vulnerability(models.Model):
         verbose_name_plural = _("Schwachstellen")
 
 
+class Room(models.Model):
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
+    device = models.ForeignKey(Device,on_delete=models.CASCADE)
+    room_name = models.CharField(max_length=50)
+
+
 
     
+from smarthome.signals import *
 
     
 

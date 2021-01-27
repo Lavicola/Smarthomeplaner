@@ -158,26 +158,6 @@ function getRoomCategory(){
  }
  
 
-
-function saveCanvas() {
-    // convert canvas to a json string
-    json = JSON.stringify(canvas.toJSON(['id', 'name', "isDevice"]));
-    document.getElementById("your_name").innerHTML = json;
-
-}
-
-function loadCanvas() {
-    canvas.clear();
-    canvas.loadFromJSON(json, function() {
-        canvas.renderAll();
-    }, function(o, object) {
-        if (object.isDevice) {
-            add_event_to_device(object);
-        }
-    })
-}
-
-
 function buildJSON(){
     let l_hash_map = CreateHashMap();
     let l_room_names = canvas.getObjects("rect"); 
