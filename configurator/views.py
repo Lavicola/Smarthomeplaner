@@ -32,13 +32,22 @@ def getCanvas(request):
 
 def setCanvas(request):
     if request.method == 'POST':
-        print("HIER")
         form = SmarthomeMapForm(request.POST)
         if form.is_valid():
-            print("HIER")
             map = CanvasMap(request.user.email,form.cleaned_data["canvas_map"])
             CanvasMap.save(map)
         else:
             return HttpResponse('/error/') #
         return HttpResponse('/thanks/') # Redirect after POST
     return HttpResponse('/error/') #
+
+
+def saveRooms(request):
+    json_data = json.loads(request.body) 
+    print(json_data)
+
+
+    return HttpResponse('/thanksssss/')
+
+
+

@@ -3,8 +3,8 @@ var canvas;
 const default_Roomconfig = {
     left: 0,
     top: 0,
-    width: 60,
-    height: 180,
+    width: 200,
+    height: 100,
     fill: 'rgba(255, 255, 255, 0.2)',
     stroke: '#686868',
     strokeWidth: 2,
@@ -111,17 +111,38 @@ function add_Room() {
     paras.id = generateId();
     paras.isDevice = false;
     const room = new fabric.Rect(paras);
-    room.on('mouseover', function() {
-        //console.log(room.id);
-    });
+                    
+    var textObject = new fabric.IText(name, {
+        left: 40,
+        top: 40,    
+        fontSize: 18,
+        fill: '#000000'                        
+     }); 
+                    
+    var group = new fabric.Group([ room, textObject ], {
+        left: 150,
+        top: 150                          
+     });
 
-    buildJSON();
-    canvas.add(room);
+
+    
+
+    canvas.add(group);
+
+    
+    CreateHashMap();
+    
+
 
     return true;
 
 
 }
+
+
+
+
+
 
 function GenerateRoomname(){
     let number = 2;
@@ -137,11 +158,12 @@ function GenerateRoomname(){
 
 function RoomExists(a_room_name){
 
-    let l_rooms = canvas.getObjects('rect');
+    let l_rooms = GetRoomNames();
+
     let j = l_rooms.length;
     for (var i = 0; i < j; i++) {
 
-        if(l_rooms[i].name == a_room_name){
+        if(l_rooms[i] == a_room_name){
             return true;
         }
 
@@ -160,21 +182,29 @@ function getRoomCategory(){
 
 function buildJSON(){
     let l_hash_map = CreateHashMap();
-    let l_room_names = canvas.getObjects("rect"); 
-    let l_devices = GetDevices();
+    let l_rooms = GetRectTextGroups(canvas.getObjects());
+    let l_room_names = GetRoomNames();
 
+    
+    let l_devices = GetDevices();
+    
+    test = canvas.getObjects();
+     
+
+
+    
+    
+    //check for every device in which room it is
     for(var i=0;i<l_devices.length;i++){
-        for (var j =0;j<l_room_names.length;j++){
-            if ( l_devices[i].isContainedWithinObject(l_room_names[j]) ) {
-                l_hash_map[l_room_names[j].name].push(l_devices[i].name);
+        //iterate through all rooms
+        for(var j=0;j<l_rooms.length;j++){
+            if(l_devices[i].isContainedWithinObject(l_rooms[j])){
+                l_hash_map[l_room_names[j]].push(l_devices[i].name);
             }
         }
     }
-
-
-    console.log(l_hash_map);
-
-    return;
+    
+    return JSON.stringify(l_hash_map);
 
 }
 
@@ -182,17 +212,65 @@ function buildJSON(){
 function CreateHashMap(){
 
     let l_hash_map = new Object();
-    let l_rooms = canvas.getObjects("rect");
-
+    let l_rooms = GetRoomNames();
 
     for(var i=0;i<l_rooms.length;i++){
-        l_hash_map[l_rooms[i].name] = [];
+        l_hash_map[l_rooms[i]] = [];
     }
-
     return l_hash_map;
 
 }
 
+// This function returns a room object or None if the inserted group is not a (rect,text). The Group also must have an isDevice type
+function GetRectOfRectTextGroup(group){
+
+    single_object = group._objects[0];
+    // check if isDevice type exists if not return a placeholder string
+    if( single_object.isDevice === undefined){
+        //console.log("object has no isDevice type");
+        return "None";
+        //if it is not a device it must be a room
+    }else if (!single_object.isDevice){
+        return single_object;
+    }
+    
+    return "None";       
+}
+
+
+// This function returns every rectText group which are rooms
+function GetRectTextGroups(groups){
+    rectTextGroups = [];
+    for(var i=0;i<groups.length;i++){
+        single_objects = groups[i]._objects;
+        
+        if( single_objects[0].isDevice === undefined){            
+            //if it is not a device it must be a room
+        }else if (!single_objects[0].isDevice){
+            rectTextGroups.push(groups[i]);
+        }
+
+    }
+    return rectTextGroups;
+}
+
+
+//This function returns an array of Room names
+function GetRoomNames(groups){
+    let canvas_objects = canvas.getObjects();
+    let room_names = [];
+    let room ;
+
+    for(var i=0;i<canvas_objects.length;i++){
+        room = GetRectOfRectTextGroup(canvas_objects[i]);
+
+        if(room != "None"){
+            room_names.push(room.name);
+        }
+    }
+    return room_names;
+
+}
 
 function GetDevices(){
     let canvas_obects = canvas.getObjects();
@@ -210,20 +288,8 @@ function GetDevices(){
 }
 
 
-function GetRoomDevices(a_roomname){
-
-    let l_canvas_objects = canvas.getObjects();
-
-
-
-}
-
-
-
-
 
 function dragstart_handler(ev) {
-    console.log("dragStart");
     ev.dataTransfer.setData("text", ev.target.id);
 }
 
@@ -248,7 +314,6 @@ function handleDragLeave(e) {
 }
 
 function drop_handler(ev) {
-    console.log("Drop");
     ev.preventDefault();
     let data = ev.dataTransfer.getData("URL");
     let svg_name = ev.dataTransfer.getData("text");
@@ -279,9 +344,7 @@ function add_event_to_device(a_element) {
         for (var i = 0; i < l_rooms.length; i++) {
             if (a_element.isContainedWithinObject(l_rooms[i])) {
 
-                //console.log(l_rooms[i].name + " enthält: " + a_element.id);
-                //console.log(a_element.isDevice);
-                //console.log("---------");
+
             }
         }
     });

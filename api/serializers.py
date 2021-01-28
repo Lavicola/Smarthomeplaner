@@ -33,7 +33,7 @@ class DeviceSerializer(serializers.ModelSerializer ):
     class Meta:
         model = Device
         #fields = '__all__' 
-        fields=('name','image','category','manufacturer_name','generation','firmware_set')
+        fields=('id','name','image','category','manufacturer_name','generation','firmware_set')
 
 
 class CanvasMapSerializer(serializers.ModelSerializer ):

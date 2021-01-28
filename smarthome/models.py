@@ -73,6 +73,11 @@ class Vulnerability(models.Model):
         verbose_name = _("Schwachstelle")
         verbose_name_plural = _("Schwachstellen")
 
+    def __str__(self):
+        return str(self.description) 
+
+
+
 
 class Room(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)

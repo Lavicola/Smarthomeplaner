@@ -24,7 +24,7 @@
           <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
             <select v-model="selected_category">
               <option disabled value="">Please select one</option>
-              <option value="None">Keine Einschränkung</option>
+              <option value="None">Alle Kategorien</option>
               {% for category in categories %} 
               <option value="{{category.0}}">{{category.1}}</option>
               {% endfor %}
@@ -38,7 +38,7 @@
           <div id="images">
             <div v-for="device in devices">
               [device.name]   
-          <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :title=device.name :id="device.name+device.manufacturer_name" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image" width="100" height="100"></img>
+          <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image" width="100" height="100"></img>
 
             </div>
       <!-- device list end -->
@@ -47,7 +47,7 @@
 
         <div class="buttons">                
           <input type="hidden" id="csrf" value={{ csrf_token }} />
-          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="setCanvas">Save</button>
+          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="save">Save</button>
           <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCanvas">Load</button>          
         </div>
     </div>
@@ -87,8 +87,8 @@
         message: "dsdsas",
         devices: [],
         selected_category: 'None',
-        currentdevice: {},
         csrf_token: "",
+        devices_json:{},
       },
       mounted: function() {
         this.getdevices();
@@ -107,6 +107,7 @@
         greet: function(device) {
           
           this.message = device + "<br>" + device;
+          
         },
         getSearchResults: function() {          
           let api_base_url = '/api/devices/';
@@ -121,6 +122,7 @@
           axios.get(api_url)
               .then((response) => {
                 this.devices = response.data;
+                
               })
         },
         getPrivacyIssues: function() {
@@ -131,6 +133,10 @@
                 this.devices = response.data;
               })
         },
+        save: function() {
+          this.setCanvas();
+          this.SaveRooms();
+      },
         setCanvas: function() {
           this.getToken();
           axios({
@@ -144,9 +150,9 @@
           data: "canvas_map=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice"]) )
         }).then ( function (response){ //success function
           console.log(response);
-        }
-        
-        )},
+                  }
+                )
+      },
         getCanvas: function() {
           this.getToken();
           axios({
@@ -164,8 +170,27 @@
           }
         
         )},
+        SaveRooms: function() {
+          this.getToken();
+          axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/configurator/saveRooms',
+          headers:{
+            "Content-Type": "application/x-www-form-urlencoded",
+              'Accept': 'application/json',
+              'X-CSRFToken': this.csrf_token
+            },
+          data: buildJSON()
+        }).then ( function (response){ //success function
+          console.log(response);
+        }
+        
+        )},
       }
     });
   </script>
+
+
+
   </body>
 </html>
