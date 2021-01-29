@@ -55,12 +55,14 @@
           </div>
              
     <!--live search div end-->
+
               <div class="btn-group">
-                <select name="room_name" id="room_name">
-                    <option value="Wohnzimmer">Wohnzimmer</option>
-                    <option value="WC">WC</option>
-                    <option value="Kinderzimmer">Kinderzimmer</option>
-                </select>
+                <input list="room_names" id="room_name" /></label>
+                <datalist >
+                  <option value="Wohnzimmer"></option>
+                  <option value="WC">
+                  <option value="Kinderzimmer">
+                </datalist>
                 <button onclick="add_Room()">Add Room</button>
                 <button class="btn btn-danger remove" onclick="remove_object()">Remove</button>
         </div>

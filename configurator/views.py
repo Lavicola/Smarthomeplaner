@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from smarthome.models import Device,Firmware
+from smarthome.models import Device,Firmware,Room,DeviceEntry
 from django.template import loader
 from .forms import SmarthomeMapForm
 from configurator.models import CanvasMap
@@ -43,9 +43,21 @@ def setCanvas(request):
 
 
 def saveRooms(request):
-    json_data = json.loads(request.body) 
-    print(json_data)
+    if request.method == 'POST':
+        email = request.user.email
+        json_data = json.loads(request.body)
+        room_names = list(json_data.keys())
 
+
+        Room.DeleteUnusedRooms(email,list(json_data.keys()))   
+        Room.CreateRooms(email,list(json_data.keys()))
+        for room_name in room_names:            
+            DeviceEntry.setEntries(email,room_name,json_data[room_name])
+
+
+        
+        
+        
 
     return HttpResponse('/thanksssss/')
 

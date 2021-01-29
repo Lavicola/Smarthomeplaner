@@ -40,6 +40,13 @@ class Device(models.Model):
         return self.name +" " + self.manufacturer_name + "  V" + self.generation
 
 
+    @staticmethod
+    def GetDevice(device_id):
+
+
+        return Device.objects.filter(id=device_id).first()
+
+
 
 class Interface(models.Model):
     device_id = models.ForeignKey(Device, on_delete=models.CASCADE)
@@ -78,11 +85,157 @@ class Vulnerability(models.Model):
 
 
 
+class DeviceEntry(models.Model):
+    id = models.AutoField(primary_key=True)
+    unique_room = models.ForeignKey("Room",on_delete=models.CASCADE)
+    device = models.ForeignKey(Device,on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["unique_room","device","quantity"],name="unique_entry")]
+
+
+    def __str__(self):
+        return self.device.manufacturer_name +" "+ self.device.name +" "+ str(self.quantity) 
+
+
+    @staticmethod
+    def setEntries(email,room_name,device_list):
+
+        for id in set(device_list):
+            room_object = Room.GetRoom(email,room_name)
+            device_object = Device.GetDevice(id)
+            quantity = DeviceEntry.GetDeviceQuantity(device_list,id)
+            if(DeviceEntry.exists(room_object,device_object)):
+                DeviceEntry.UpdateQuantity(room_object,device_object,quantity)
+            else:
+                DeviceEntry.setEntry(room_object,device_object,quantity)
+            
+        return 
+
+    @staticmethod
+    def setEntry(room,device,a_quantity):
+        DeviceEntry.save(DeviceEntry(unique_room=room,device=device,quantity=a_quantity))
+        return True
+
+    @staticmethod
+    def UpdateQuantity(a_room,a_device,a_quantity):
+        DeviceEntry.objects.filter(unique_room=a_room,device=a_device).update(quantity=a_quantity)
+        return True
+
+
+    @staticmethod
+    def GetDeviceQuantity(a_device_list, a_device_id):
+
+        return a_device_list.count(a_device_id)
+
+    # gives the current Device Entry quantity which is saved in the database back. 
+    @staticmethod
+    def GetCurrentDeviceQuantity(a_room,a_device):
+        return DeviceEntry.objects.only("quantity").get(unique_room=a_room,device=a_device).quantity
+
+
+    @staticmethod
+    def exists(a_room,a_device):
+        if( DeviceEntry.objects.filter(unique_room=a_room,device=a_device).count() == 0 ):
+            return False
+
+        return True
+
+
+
 
 class Room(models.Model):
+    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    device = models.ForeignKey(Device,on_delete=models.CASCADE)
     room_name = models.CharField(max_length=50)
+
+
+    class Meta:
+        constraints = [models.UniqueConstraint(fields=["user","room_name"],name="unique_room")]
+
+
+    def __str__(self):
+        return self.room_name  
+
+
+    @staticmethod
+    def GetExistingRoomNames(a_email):
+        room_names = []
+        for room in Room.objects.raw('SELECT DISTINCT room_name,id FROM `smarthome_room` WHERE `user_id` = %s;',[a_email]):
+            room_names.append(room.room_name)
+        return room_names
+
+
+    @staticmethod
+    def DeleteUnusedRooms(a_email,a_room_names):
+        current_room_names = Room.GetExistingRoomNames(a_email)
+
+        for name in current_room_names:
+            if name not in a_room_names:
+                Room.delete(a_email,name)
+
+        return 
+
+
+    @staticmethod
+    def GetRoom(a_email,a_room_name):
+                
+        return Room.objects.filter(user=a_email,room_name=a_room_name).first()
+
+
+    @staticmethod
+    def exists(a_email,a_room_name):
+
+        return Room.objects.filter(user=a_email,room_name=a_room_name).exists()
+
+
+    @staticmethod
+    def create(a_email,a_name):
+
+        Room.save(Room(user_id=a_email,room_name=a_name))
+
+        return True
+    
+    @staticmethod
+    def CreateRooms(a_email,a_names):
+        
+        for name in a_names:
+            if(Room.exists(a_email,name) == False):
+                Room.create(a_email,name)
+        return True
+
+    @staticmethod
+    def DeleteRooms(a_email,a_names):
+        
+        for name in names:
+            Room.delete(a_email,a_names)
+
+        return True
+
+
+    @staticmethod
+    def delete(a_email,a_names):
+        
+        Room.objects.filter(user_id=a_email,room_name=a_names).delete()
+        return True
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
 
 
 

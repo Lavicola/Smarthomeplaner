@@ -36,3 +36,15 @@ def firmware_list(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+
+def save_rooms(request):
+    for room in json_data:
+        for devices in json_data[room]:
+            print(devices)
+    
+
+
+
+
+
+
