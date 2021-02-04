@@ -1,39 +1,41 @@
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser, PermissionsMixin
 from django_countries.fields import CountryField
+from django.utils import timezone
+
 from django.utils.translation import gettext_lazy as _
 
 #https://testdriven.io/blog/django-custom-user-model/
 #https://docs.djangoproject.com/en/3.1/topics/auth/customizing/#custom-users-admin-full-example
+#https://testdriven.io/blog/django-custom-user-model/
 
 class CustomUserManager(BaseUserManager):
-    def create_user(self, email, password=None):
+    def create_user(self, email, password, **extra_fields):
         """
-        Creates and saves a User with the given email, date of
-        birth and password.
+        Create and save a User with the given email and password.
         """
         if not email:
-            raise ValueError(_('User must have an email address'))
-
-        user = self.model(
-            email=self.normalize_email(email)
-        )
-
+            raise ValueError(_('The Email must be set'))
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
         user.set_password(password)
-        user.save(using=self._db)
+        
+        user.save()
         return user
 
-    def create_superuser(self, email, password):
+    def create_superuser(self, email, password, **extra_fields):
         """
-        Creates and saves a superuser with the given email and password.
+        Create and save a SuperUser with the given email and password.
         """
-        user = self.create_user(
-            email,
-            password=password,
-        )
-        user.is_admin = True
-        user.save(using=self._db)
-        return user
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_active', True)
+
+        if extra_fields.get('is_staff') is not True:
+            raise ValueError(_('Superuser must have is_staff=True.'))
+        if extra_fields.get('is_superuser') is not True:
+            raise ValueError(_('Superuser must have is_superuser=True.'))
+        return self.create_user(email, password, **extra_fields)
 
 
 class CustomUser(AbstractBaseUser,PermissionsMixin):
@@ -44,34 +46,19 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         primary_key=True
     )
     country = CountryField()
-    is_contributor = models.BooleanField(default=False)
-    is_translator = models.BooleanField(default=False)
-    is_admin = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    date_joined = models.DateTimeField(default=timezone.now)
 
-    objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
 
+    objects = CustomUserManager()
+
+
     def __str__(self):
         return self.email
 
-    def has_perm(self, perm, obj=None):
-        "Does the user have a specific permission?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    def has_module_perms(self, app_label):
-        "Does the user have permissions to view the app `app_label`?"
-        # Simplest possible answer: Yes, always
-        return True
-
-    @property
-    def is_staff(self):
-        "Is the user a member of staff?"
-        # Simplest possible answer: All admins are staff
-        if(self.is_contributor or self.is_translator or self.is_admin ):
-            return True
-        else:
-            return False
-
+  

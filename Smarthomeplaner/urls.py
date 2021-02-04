@@ -23,5 +23,6 @@ urlpatterns = [
     path("api/",include("api.urls")),
     path('smarthome/',include('smarthome.urls')),
     path('configurator/',include('configurator.urls')),
+    path('userauth/',include("userauth.urls")),
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
