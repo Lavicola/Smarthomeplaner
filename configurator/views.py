@@ -12,6 +12,35 @@ import json
 
 
 
+
+
+def congifuration(request):
+    l_email = request.user.email
+    l_rooms = Room.objects.filter(user=l_email).values()
+    l_fullrooms = {}
+    for room in l_rooms:
+        l_fullrooms[room["room_name"]] = []
+        devices = DeviceEntry.objects.filter(unique_room=room["id"])
+        for device in devices:
+            l_fullrooms[room["room_name"]].append(device)
+
+    print(l_fullrooms["WC"])
+
+    context =  {'rooms': l_fullrooms}
+    
+
+
+    template = loader.get_template('configurator/room_configurations.html')
+
+    return HttpResponse(template.render(context, request))
+
+
+
+
+
+
+
+
 def index(request):
     devices = Device.objects.all()
     categories = Device.Device_Category.choices
@@ -52,12 +81,7 @@ def saveRooms(request):
         Room.DeleteUnusedRooms(email,list(json_data.keys()))   
         Room.CreateRooms(email,list(json_data.keys()))
         for room_name in room_names:            
-            DeviceEntry.setEntries(email,room_name,json_data[room_name])
-
-
-        
-        
-        
+            DeviceEntry.setEntries(email,room_name,json_data[room_name])        
 
     return HttpResponse('/thanksssss/')
 

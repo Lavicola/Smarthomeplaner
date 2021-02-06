@@ -1,0 +1,26 @@
+
+<!-- http://www.w3bai.com/de/css/tryit.php?filename=trycss_navbar_vertical -->
+{% load i18n %}
+
+
+{% if user.is_authenticated %}
+{% translate "Welcome" %} {{ user.email }}
+<form method="post" action="{% url 'account_logout' %}" id="logout_form">
+    {% csrf_token %}
+      <input type="hidden" name="{{ redirect_field_name }}" value="{{ request.path }}      "/>
+    <button class="STYLE_ME" type="submit">Logout</button>
+  </form>
+{% endif %}
+
+<ul>
+    <li><a href="{% url 'configurator:index' %}">{% translate "Configurator" %}</a></li>
+    <li><a href="{% url 'configurator:index' %}">{% translate "Device Overview" %}</a></li>
+    <li><a href="{% url 'configurator:index' %}">{% translate "My Devices" %}</a></li>
+
+    {% if not user.is_authenticated  %}
+<li><a href="{% url 'account_login' %}">{% translate "Login" %}</a></li>
+<li><a href="{% url 'account_signup' %}">{% translate "Logout" %}</a></li>
+{% endif %}
+
+</ul>
+  

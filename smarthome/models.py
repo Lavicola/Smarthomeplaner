@@ -32,8 +32,8 @@ class Device(models.Model):
     )
 
     class Meta:
-        verbose_name = _("Gerät")
-        verbose_name_plural = _("Geräte")
+        verbose_name = _("Device")
+        verbose_name_plural = _("Device")
         constraints = [models.UniqueConstraint(fields=["name","manufacturer_name","generation"],name="unique_device")]
 
     def __str__(self):
@@ -55,10 +55,10 @@ class Interface(models.Model):
 
 class Firmware(models.Model):
     firmware_id = models.AutoField(primary_key=True)
-    compatibility_list = models.ManyToManyField(Device,verbose_name= _("Firmware Kompatibel mit"))
-    version_number = models.CharField(max_length=50,verbose_name= _("Versionsnummer"))
-    changelog = models.CharField(verbose_name=_("Änderungen"), max_length=500)
-    release_date = models.DateField(verbose_name=_("Erscheinungsdatum"))
+    compatibility_list = models.ManyToManyField(Device,verbose_name= _("Firmware Compatible with"))
+    version_number = models.CharField(max_length=50,verbose_name= _("Versionnumber"))
+    changelog = models.CharField(verbose_name=_("Changelog"), max_length=500)
+    release_date = models.DateField(verbose_name=_("Release Date"))
 
     class Meta:
         verbose_name = _("Firmware")
@@ -67,18 +67,18 @@ class Firmware(models.Model):
 
 
 class Vulnerability(models.Model):
-    device_id = models.ManyToManyField(Device,verbose_name= _("Schwachstelle bei folgenden Geräten ausnutzbar:"))
-    discovered_date = models.DateField(verbose_name= _("Schwachstelle wurde gefunden am:"))
-    description = models.CharField(max_length=300,verbose_name= _("Beschreibung der Schwachstelle"))
-    url = models.URLField(max_length=200,verbose_name= _("URL zum Artikel der Schwachstelle"))
-    category = models.CharField(max_length=20,verbose_name= _("Kategorie"))
-    patch_date = models.DateField(verbose_name= _("Schwachstelle wurde gepatched am:"))
-    url_patch = models.URLField(max_length=200,verbose_name= _("Link zum Artikel des Patches"))
-    patched = models.BooleanField(default= False,verbose_name= _("Schwachstelle wurde behoben:"))
+    device_id = models.ManyToManyField(Device,verbose_name= _("Vulnerability useable by Device:"))
+    discovered_date = models.DateField(verbose_name= _("Vulnerability was found on:"))
+    description = models.CharField(max_length=300,verbose_name= _("Description of the Vulnerability "))
+    url = models.URLField(max_length=200,verbose_name= _("URL to the Article to the Vulnerability"))
+    category = models.CharField(max_length=20,verbose_name= _("Categorie"))
+    patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"))
+    url_patch = models.URLField(max_length=200,verbose_name= _("Link to the Patch Article"))
+    patched = models.BooleanField(default= False,verbose_name= _("Vulnerability patched:"))
 
     class Meta:
-        verbose_name = _("Schwachstelle")
-        verbose_name_plural = _("Schwachstellen")
+        verbose_name = _("Vulnerability")
+        verbose_name_plural = _("Vulnerabilities")
 
     def __str__(self):
         return str(self.description) 
@@ -112,6 +112,7 @@ class DeviceEntry(models.Model):
                 DeviceEntry.setEntry(room_object,device_object,quantity)
             
         return 
+
 
     @staticmethod
     def setEntry(room,device,a_quantity):

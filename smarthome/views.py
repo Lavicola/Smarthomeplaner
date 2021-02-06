@@ -12,6 +12,7 @@ def index(request):
 
 
 def device_detail(request,device_id):
+    
 
     return HttpResponse("You're looking at device %s." % device_id)
 

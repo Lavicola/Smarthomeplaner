@@ -1,3 +1,5 @@
+{% load i18n %}
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -18,19 +20,24 @@
   </head>
 
   <body>
+
+    {% include "nav.html" %}
+    
+
+
     <div id="live_search">
           <h1>Smarthomeplaner</h1>
           <!-- search start-->
           <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
             <select v-model="selected_category">
-              <option disabled value="">Please select one</option>
-              <option value="None">Alle Kategorien</option>
+              <option disabled value=""> {% translate "Please select one" %}</option>
+              <option value="None">{% translate "All Categories" %}</option>
               {% for category in categories %} 
               <option value="{{category.0}}">{{category.1}}</option>
               {% endfor %}
             </select>      
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">
-            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">Search</button>
+            <input class="form-control mr-sm-2" type="text" placeholder="{% translate "Search" %}" v-model="search_term" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
          </div>
 
           <!-- search end -->
@@ -47,8 +54,8 @@
 
         <div class="buttons">                
           <input type="hidden" id="csrf" value={{ csrf_token }} />
-          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="save">Save</button>
-          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCanvas">Load</button>          
+          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="save">{% translate "Save" %}</button>
+          <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getCanvas">{% translate "Load" %}</button>          
         </div>
     </div>
     <!-- VUE END -->
@@ -63,8 +70,8 @@
                   <option value="WC">
                   <option value="Kinderzimmer">
                 </datalist>
-                <button onclick="add_Room()">Add Room</button>
-                <button class="btn btn-danger remove" onclick="remove_object()">Remove</button>
+                <button onclick="add_Room()">{% translate "Add Room" %}</button>
+                <button class="btn btn-danger remove" onclick="remove_object()">{% translate "Remove" %}</button>
         </div>
         
         <main id="canvas-wrapper">
@@ -85,8 +92,8 @@
       el: '#live_search',
       delimiters: ['[',']'],
       data: {
-        search_term: "Search for device",
-        message: "dsdsas",
+        search_term: "",
+        message: "",
         devices: [],
         selected_category: 'None',
         csrf_token: "",

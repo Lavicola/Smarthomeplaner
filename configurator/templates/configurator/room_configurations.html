@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block additional_css %}
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'configurator/configuration_style.css' %}">
+
+{% endblock %}
+
+
+{% block navbar %}
+{% include "nav.html" %}
+{% endblock %}
+
+
+
+
+
+{% block content %}
+
+
+<br>
+{% for room_name, devices in rooms.items %} 
+
+<div class="room"> 
+
+
+<table>
+<caption>{{ room_name }}</caption>
+
+    <tr>
+        <th>Produkt</th>
+        <th>Menge</th>
+      </tr>
+    <tr>    
+{% for device in devices %} 
+<td>{{ device.device }} </td>
+<td>{{ device.quantity }} </td>
+</tr>
+{% endfor %}
+</tr>
+</table>
+<p></p>
+</div>
+
+{% endfor %}
+
+
+
+
+{% endblock %}

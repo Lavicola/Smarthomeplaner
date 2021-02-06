@@ -100,6 +100,8 @@ TEMPLATES = [
     },
 ]
 
+LOCALE_PATHS = ( os.path.join(BASE_DIR, 'locale'), )
+
 
 AUTHENTICATION_BACKENDS = [
     
@@ -119,6 +121,8 @@ ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
 LOGIN_REDIRECT_URL = "/configurator"
+ACCOUNT_LOGOUT_REDIRECT_URL ="/userauth/accounts/login"
+
 
 ACCOUNT_FORMS = {
 'signup': 'userauth.forms.RegisterUser',
