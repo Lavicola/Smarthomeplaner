@@ -8,3 +8,23 @@ table, th, td {
     text-align: left;
   }
 
+  .flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+
+}
+
+.room {
+    padding-top: 2%;
+    padding-right: 4%;
+}  
+
+
+caption { 
+    display: table-caption;
+    color: black;
+    font-size: xx-large;
+    font-weight: bold;
+    text-align: center;
+  }

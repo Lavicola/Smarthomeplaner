@@ -49,7 +49,7 @@ def index(request):
         "categories":categories,
     }
     
-    template = loader.get_template('configurator/index.html')
+    template = loader.get_template('configurator/smarthome_configurator.html')
     return HttpResponse(template.render(context, request))
 
 

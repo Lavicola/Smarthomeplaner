@@ -1,0 +1,57 @@
+
+{% extends "base.html" %}
+{% load i18n %}
+
+
+{% block stylesheets %}
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'configurator/style.css' %}">
+{% endblock %}
+
+{% block javascripts %}
+{% load static %}
+<script src="{% static 'configurator/configurator_1.js'%}"></script>
+<script src="{% static 'configurator/configurator_2.js'%}"></script>
+<script src="{% static 'configurator/configurator_3.js'%}"></script>
+
+{% endblock %}
+
+{% block content %}
+<div id="live_search">
+    <h1>Smarthomeplaner</h1>
+    <!-- search start-->
+    <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
+      <select v-model="selected_category">
+        <option disabled value=""> {% translate "Please select one" %}</option>
+        <option value="None">{% translate "All Categories" %}</option>
+        {% for category in categories %} 
+        <option value="{{category.0}}">{{category.1}}</option>
+        {% endfor %}
+      </select>      
+      <input class="form-control mr-sm-2" type="text" placeholder="{% translate "Search" %}" v-model="search_term" aria-label="Search">
+      <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
+   </div>
+    <!-- search end -->
+
+    <!-- device list start [device.firmware_set] -->
+    <div id="images">
+      <div v-for="device in devices">
+        [device.name]   
+    <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image" width="100" height="100"></img>
+
+      </div>
+    <!-- device list end -->
+  </div>
+
+  <div class="buttons">                
+    <input type="hidden" id="csrf" value={{ csrf_token }} />
+    <button class="btn btn-outline-success my-2 my-sm-0" onclick="SaveData()">{% translate "Save" %}</button>
+    <button class="btn btn-outline-success my-2 my-sm-0" onclick="getCanvas()">{% translate "Load" %}</button>          
+  </div>
+</div>
+
+<main id="canvas-wrapper">
+    <canvas id="canvas_object" width="1200" height="700"></canvas>
+</main>
+</div>
+{% endblock %}

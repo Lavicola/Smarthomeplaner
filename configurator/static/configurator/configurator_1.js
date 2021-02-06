@@ -288,7 +288,6 @@ function GetDevices(){
 }
 
 
-
 function dragstart_handler(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
 }
@@ -381,8 +380,11 @@ function include(file) {
 
 
 include("https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js");
+
 window.addEventListener("load", function(){
     initCanvas();
+
+
 });
 
 

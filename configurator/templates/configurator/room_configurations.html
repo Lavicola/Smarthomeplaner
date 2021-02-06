@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block additional_css %}
+{% block stylesheets %}
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'configurator/configuration_style.css' %}">
@@ -8,9 +8,6 @@
 {% endblock %}
 
 
-{% block navbar %}
-{% include "nav.html" %}
-{% endblock %}
 
 
 
@@ -20,6 +17,8 @@
 
 
 <br>
+<div class="flex-container"> 
+
 {% for room_name, devices in rooms.items %} 
 
 <div class="room"> 
@@ -31,11 +30,14 @@
     <tr>
         <th>Produkt</th>
         <th>Menge</th>
+        <th>Bild</th>
       </tr>
     <tr>    
 {% for device in devices %} 
 <td>{{ device.device }} </td>
 <td>{{ device.quantity }} </td>
+<td><img draggable="false" src="/media/{{ device.device.image }}" width="100" height="100"></img></td>
+
 </tr>
 {% endfor %}
 </tr>
@@ -43,8 +45,9 @@
 <p></p>
 </div>
 
-{% endfor %}
 
+{% endfor %}
+</div>
 
 
 
