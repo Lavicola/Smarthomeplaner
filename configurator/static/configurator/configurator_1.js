@@ -362,7 +362,7 @@ function initCanvas(){
     canvasContainer.addEventListener('drop', drop_handler, false);
     canvas_event_handlers(canvas);
 
-    //drawGrid();
+    drawGrid();
 }
 
 function include(file) {   
