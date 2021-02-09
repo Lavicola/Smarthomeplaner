@@ -44,7 +44,7 @@
            <div class="desc">    
               [device.name] <br>   
               <label for="connector">{% translate "Connector" %}:</label>
-              <select :class="dropdown" :id="'dropdown-' + device.id">
+              <select class="dropdown" :id="'dropdown-' + device.id">
                 <option v-for="connector in device.connector">
                 [connector] 
                 </option>

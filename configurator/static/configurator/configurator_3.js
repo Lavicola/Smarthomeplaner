@@ -16,11 +16,15 @@
             'Accept': 'application/json',
             'X-CSRFToken': csrf_token
           },
-        data: "canvas_map=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice"]) )
-      }).then ( function (response){ //success function
-        console.log(response);
+        data: "canvas_map=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice","connector"]) )
+      }).then ( function (response){ 
+                  console.log(response);
+                  return true;                  
                 }
-              )
+              )  .catch(error => {                
+                console.log(error.response.status);
+                return false;
+             })
     }
     
     
@@ -39,9 +43,12 @@
         canvas.clear();
         canvas.loadFromJSON(response.data);
         canvas.renderAll(); 
+        return true;
         }
-      
-      )}
+      )  .catch(error => {                
+        console.log(error.response.status);
+        return false;
+     }) }
     
 
     function saveRooms() {
@@ -64,6 +71,7 @@
 
 
     function SaveData() {
-        setCanvas();
-        saveRooms();
+        if(setCanvas()){
+          saveRooms();
+        }       
     }

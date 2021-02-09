@@ -14,7 +14,6 @@ include("https://unpkg.com/v-tooltip@2.0.2");
 
 window.addEventListener("load", function(){
 new Vue({
-      
     el: '#live_search',
     delimiters: ['[',']'],
     data: {

@@ -48,6 +48,7 @@ function drawGrid(canvas) {
 function canvas_event_handlers(canvas) {
 
 
+
     //enables zoom and panning
     canvas.on('mouse:wheel', function(opt) {
         var delta = opt.e.deltaY;
@@ -183,14 +184,8 @@ function getRoomCategory(){
 function buildJSON(){
     let l_hash_map = CreateHashMap(); // [room_name]
     let l_rooms = GetRectTextGroups(canvas.getObjects());
-    let l_room_names = GetRoomNames();
-
-    
+    let l_room_names = GetRoomNames();    
     let l_devices = GetDevices();
-    
-     
-
-    
     
     //check for every device in which room it is
     for(var i=0;i<l_devices.length;i++){
@@ -203,9 +198,14 @@ function buildJSON(){
         }
     }
     
-    console.log(l_hash_map);
-    return JSON.stringify(l_hash_map);
-
+    try
+    {
+        return JSON.stringify(l_hash_map);
+    } catch(error){
+        console.error();
+        return {}
+    }
+    
 }
 
 
