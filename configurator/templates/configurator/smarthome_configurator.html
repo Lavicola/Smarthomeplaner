@@ -16,6 +16,9 @@
 
 {% endblock %}
 
+
+
+
 {% block content %}
 <div id="live_search">
     <h1>Smarthomeplaner</h1>
@@ -36,7 +39,14 @@
     <!-- device list start [device.firmware_set] -->
     <div id="images">
       <div v-for="device in devices">
-        [device.name]   
+        [device.name]   <br>
+        <label for="connector">{% translate "Connector" %}:</label>
+        <select :class="dropdown" :id="'dropdown-' + device.id">
+        <option v-for="connector in device.connector">
+          [connector] 
+        </option>
+      </select>
+        
     <img  v-on:dblclick="greet(device.name)" v-tooltip="message" :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image" width="100" height="100"></img>
 
       </div>
@@ -49,6 +59,18 @@
     <button class="btn btn-outline-success my-2 my-sm-0" onclick="getCanvas()">{% translate "Load" %}</button>          
   </div>
 </div>
+
+<div class="btn-group">
+  <input list="room_names" id="room_name" /></label>
+  <datalist >
+    <option value="Wohnzimmer"></option>
+    <option value="WC">
+    <option value="Kinderzimmer">
+  </datalist>
+  <button onclick="add_Room()">{% translate "Add Room" %}</button>
+  <button class="btn btn-danger remove" onclick="remove_object()">{% translate "Remove" %}</button>
+</div>
+
 
 <main id="canvas-wrapper">
     <canvas id="canvas_object" width="1200" height="700"></canvas>

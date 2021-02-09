@@ -40,7 +40,6 @@ new Vue({
       getSearchResults: function() {          
         let api_base_url = '/api/devices/';
         let api_url = "";
-        alert(this.selected_category);
         if(this.selected_category != "None"){
           api_url = api_base_url+"?name="+this.search_term+"&category="+this.selected_category;
         }else{

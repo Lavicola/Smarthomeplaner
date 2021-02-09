@@ -181,16 +181,14 @@ function getRoomCategory(){
  
 
 function buildJSON(){
-    let l_hash_map = CreateHashMap();
+    let l_hash_map = CreateHashMap(); // [room_name]
     let l_rooms = GetRectTextGroups(canvas.getObjects());
     let l_room_names = GetRoomNames();
 
     
     let l_devices = GetDevices();
     
-    test = canvas.getObjects();
      
-
 
     
     
@@ -199,11 +197,13 @@ function buildJSON(){
         //iterate through all rooms
         for(var j=0;j<l_rooms.length;j++){
             if(l_devices[i].isContainedWithinObject(l_rooms[j])){
-                l_hash_map[l_room_names[j]].push(l_devices[i].name);
+                device_tuple = {device_id: l_devices[i].name, connector: l_devices[i].connector }
+                l_hash_map[l_room_names[j]].push(device_tuple);
             }
         }
     }
     
+    console.log(l_hash_map);
     return JSON.stringify(l_hash_map);
 
 }
@@ -323,8 +323,8 @@ function drop_handler(ev) {
         svg.name = svg_name;
         svg.id = svg_name+ "_" + generateId(); // todo:make it unique!
         svg.isDevice = true;
-        // this function will be for the devices later :)
-        add_event_to_device(svg);
+        svg.connector = getConnector(svg_name);
+        
 
         canvas.add(svg);
     });
@@ -336,17 +336,13 @@ function remove_object() {
     canvas.remove(canvas.getActiveObject());
 }
 
-function add_event_to_device(a_element) {
-    a_element.on('mouseup', function() {
-        let l_rooms = canvas.getObjects('rect');
+function getConnector(device_id){
+    var dropdown_string = "dropdown-"
 
-        for (var i = 0; i < l_rooms.length; i++) {
-            if (a_element.isContainedWithinObject(l_rooms[i])) {
-
-
-            }
-        }
-    });
+    let con = document.getElementById(dropdown_string+device_id);
+    var connector = con.value;
+    
+    return connector
 
 }
 

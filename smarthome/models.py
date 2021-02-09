@@ -6,13 +6,27 @@ from users.models import CustomUser
 
 # Create your models here.
 
+
+class Connector(models.Model):
+    connector = models.CharField(max_length=30,primary_key=True )
+
+    def __str__(self):
+        return self.connector
+
+    @staticmethod
+    def GetConnector(a_connector_name):
+        return Connector.objects.get(pk=a_connector_name)
+
+
+
+
 class Device(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     image = models.FileField(upload_to='Device')
+    connector = models.ManyToManyField(Connector)
     release_date = models.DateField()
-    manufacturer_name = models.CharField(max_length=200)
-    connector = models.CharField(max_length=20)
+    manufacturer = models.CharField(max_length=200) 
     generation = models.CharField(max_length=10)
 
     class Device_Category(models.TextChoices):
@@ -34,27 +48,19 @@ class Device(models.Model):
     class Meta:
         verbose_name = _("Device")
         verbose_name_plural = _("Device")
-        constraints = [models.UniqueConstraint(fields=["name","manufacturer_name","generation"],name="unique_device")]
+        constraints = [models.UniqueConstraint(fields=["name","manufacturer","generation"],name="unique_device")]
 
     def __str__(self):
-        return self.name +" " + self.manufacturer_name + "  V" + self.generation
+        return self.name +" " + self.manufacturer + "  V" + self.generation
 
 
     @staticmethod
     def GetDevice(device_id):
-
-
         return Device.objects.filter(id=device_id).first()
 
 
-
-class Interface(models.Model):
-    device_id = models.ForeignKey(Device, on_delete=models.CASCADE)
-    connector = models.CharField(max_length=30)
-
-
 class Firmware(models.Model):
-    firmware_id = models.AutoField(primary_key=True)
+    firmware_id = models.AutoField(primary_key=True) #todo rename to id
     compatibility_list = models.ManyToManyField(Device,verbose_name= _("Firmware Compatible with"))
     version_number = models.CharField(max_length=50,verbose_name= _("Versionnumber"))
     changelog = models.CharField(verbose_name=_("Changelog"), max_length=500)
@@ -64,17 +70,27 @@ class Firmware(models.Model):
         verbose_name = _("Firmware")
         verbose_name_plural = _("Firmwares")
 
+    def __str__(self):
+        firmwares = self.compatibility_list.all()
+        manufacture = list(firmwares)[0].manufacturer
+        return manufacture + " Version: "+ str(self.firmware_id)
+
 
 
 class Vulnerability(models.Model):
-    device_id = models.ManyToManyField(Device,verbose_name= _("Vulnerability useable by Device:"))
-    discovered_date = models.DateField(verbose_name= _("Vulnerability was found on:"))
-    description = models.CharField(max_length=300,verbose_name= _("Description of the Vulnerability "))
-    url = models.URLField(max_length=200,verbose_name= _("URL to the Article to the Vulnerability"))
-    category = models.CharField(max_length=20,verbose_name= _("Categorie"))
-    patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"))
-    url_patch = models.URLField(max_length=200,verbose_name= _("Link to the Patch Article"))
-    patched = models.BooleanField(default= False,verbose_name= _("Vulnerability patched:"))
+    device_id = models.ManyToManyField(Device,verbose_name= _("Vulnerability exploitable by:"))
+    description = models.CharField(max_length=500,verbose_name= _("Description of the Vulnerability "))
+    paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Vulnerability"))
+    patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"),blank=True)
+    url_patch = models.URLField(max_length=500,verbose_name= _("URL to the Patch Article"),blank=True)
+
+
+    class Vulnerability_Category(models.TextChoices):
+        Firmware = "Firmware", _("Firmware")
+        Physical = "Physical" , _("Physical")
+        Others = "Others", _("Others")
+
+    category = models.CharField(max_length=8,choices=Vulnerability_Category.choices)
 
     class Meta:
         verbose_name = _("Vulnerability")
@@ -89,46 +105,92 @@ class DeviceEntry(models.Model):
     id = models.AutoField(primary_key=True)
     unique_room = models.ForeignKey("Room",on_delete=models.CASCADE)
     device = models.ForeignKey(Device,on_delete=models.CASCADE)
+    connector = models.ForeignKey(Connector,on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["unique_room","device","quantity"],name="unique_entry")]
+        constraints = [models.UniqueConstraint(fields=["unique_room","device","connector","quantity"],name="unique_entry")]
 
 
     def __str__(self):
-        return self.device.manufacturer_name +" "+ self.device.name +" "+ str(self.quantity) 
+        return self.device.manufacturer +" "+ self.device.name +" "+ str(self.quantity) 
 
+
+#
+# device_list list of dict with {device_id,connector}
+#
 
     @staticmethod
-    def setEntries(email,room_name,device_list):
+    def setEntries(a_room,device_list_dict):
+        # get list of device_ids
+        print(device_list_dict)
+        device_list = [a_dict["device_id"] for a_dict in device_list_dict]
+
+        # get the unique connectors
+        unique_dict_list = list(map(dict, set(tuple(sorted(sub.items())) for sub in device_list_dict))) 
+        unique_connector_list = [a_dict["connector"] for a_dict in unique_dict_list]
 
         for id in set(device_list):
-            room_object = Room.GetRoom(email,room_name)
             device_object = Device.GetDevice(id)
-            quantity = DeviceEntry.GetDeviceQuantity(device_list,id)
-            if(DeviceEntry.exists(room_object,device_object)):
-                DeviceEntry.UpdateQuantity(room_object,device_object,quantity)
-            else:
-                DeviceEntry.setEntry(room_object,device_object,quantity)
-            
+            for connector in unique_connector_list:                
+                quantity = DeviceEntry.GetDeviceQuantity(device_list_dict,id,connector)
+                if(quantity == 0):
+                    continue
+                else:
+                    if(DeviceEntry.exists(a_room,device_object,connector)):
+                        DeviceEntry.UpdateQuantity(a_room,device_object,Connector.GetConnector(connector),quantity)
+                    else:
+                        DeviceEntry.setEntry(a_room,device_object,Connector.GetConnector(connector),quantity)
+
         return 
 
 
     @staticmethod
-    def setEntry(room,device,a_quantity):
-        DeviceEntry.save(DeviceEntry(unique_room=room,device=device,quantity=a_quantity))
+    def DeleteUnusedEntries(a_room,device_list_dict):
+        device_entries = DeviceEntry.objects.filter(unique_room=a_room)
+        unique_dict_list = list(map(dict, set(tuple(sorted(sub.items())) for sub in device_list_dict))) 
+        found = False
+        for entry in device_entries:
+            for dict_entry in unique_dict_list:
+                if(dict_entry["connector"] == entry.connector.connector and int(dict_entry["device_id"]) == entry.device.id):
+                    found=True
+                else:
+                    continue
+            if not (found):
+                DeviceEntry.delete(entry)
+            found = False
+
+
+
+
+            
+
+
+
+
+
+        return 
+
+    @staticmethod
+    def GetDeviceQuantity(device_list_dict, a_device_id,a_connector):
+        quantity = len([i for i in device_list_dict if i['connector'] == a_connector and i["device_id"] == a_device_id ])
+        return quantity
+
+
+    @staticmethod
+    def setEntry(room,device,a_connector,a_quantity):
+        DeviceEntry.save(DeviceEntry(unique_room=room,device=device,connector=a_connector,quantity=a_quantity))
         return True
 
     @staticmethod
-    def UpdateQuantity(a_room,a_device,a_quantity):
-        DeviceEntry.objects.filter(unique_room=a_room,device=a_device).update(quantity=a_quantity)
+    def UpdateQuantity(a_room,a_device,a_connector,a_quantity):
+        DeviceEntry.objects.filter(unique_room=a_room,device=a_device,connector=a_connector).update(quantity=a_quantity)
         return True
 
-
     @staticmethod
-    def GetDeviceQuantity(a_device_list, a_device_id):
-
-        return a_device_list.count(a_device_id)
+    def DeleteEntry(a_room,a_device,a_connector):
+        DeviceEntry.objects.get(unique_room=a_room,connector=a_connector,device=a_device).delete()
+        return 
 
     # gives the current Device Entry quantity which is saved in the database back. 
     @staticmethod
@@ -137,10 +199,9 @@ class DeviceEntry(models.Model):
 
 
     @staticmethod
-    def exists(a_room,a_device):
-        if( DeviceEntry.objects.filter(unique_room=a_room,device=a_device).count() == 0 ):
+    def exists(a_room,a_device,a_connector):
+        if( DeviceEntry.objects.filter(unique_room=a_room,device=a_device,connector=a_connector).count() == 0 ):
             return False
-
         return True
 
 
@@ -257,7 +318,7 @@ from smarthome.signals import *
 
 class App(models.Model):
     name = models.CharField(primary_key=True,max_length=60)
-    manufacturer_name = models.CharField(max_length=200)
+    manufacturer = models.CharField(max_length=200)
     functionality = models.CharField(max_length=1000)
     releasedate = models.CharField(max_length=20)
 

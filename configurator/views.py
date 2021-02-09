@@ -24,8 +24,6 @@ def congifuration(request):
         for device in devices:
             l_fullrooms[room["room_name"]].append(device)
 
-    print(l_fullrooms["WC"])
-
     context =  {'rooms': l_fullrooms}
     
 
@@ -53,6 +51,7 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
+
 def getCanvas(request):
     canvas_map = CanvasMap.objects.get(email=request.user.email)
     canvas_json = json.dumps(canvas_map.canvas_map)
@@ -77,11 +76,12 @@ def saveRooms(request):
         json_data = json.loads(request.body)
         room_names = list(json_data.keys())
 
-
         Room.DeleteUnusedRooms(email,list(json_data.keys()))   
         Room.CreateRooms(email,list(json_data.keys()))
-        for room_name in room_names:            
-            DeviceEntry.setEntries(email,room_name,json_data[room_name])        
+        for room_name in room_names:
+            room = Room.GetRoom(a_email=email,a_room_name=room_name)
+            DeviceEntry.setEntries(room,json_data[room_name])        
+            DeviceEntry.DeleteUnusedEntries(room,json_data[room_name])
 
     return HttpResponse('/thanksssss/')
 

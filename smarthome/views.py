@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from api.serializers import CanvasMap
 from django.http import HttpResponse
+from .models import Device
+from django.http import Http404
+
 
 
 # Create your views here.
@@ -11,10 +14,14 @@ def index(request):
     return HttpResponse("You reached me!")
 
 
-def device_detail(request,device_id):
-    
-
+def detail(request,device_id):
+    try:
+        device = Device.objects.get(pk=device_id)
+    except Device.DoesNotExist:
+        raise Http404("Device does not exist")
     return HttpResponse("You're looking at device %s." % device_id)
+    return render(request, 'device/detail.html', {'device': device})
+
 
 
 def devices_overview(request):

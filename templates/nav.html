@@ -15,7 +15,7 @@
 <ul>
     <li><a href="{% url 'configurator:index' %}">{% translate "Configurator" %}</a></li>
     <li><a href="{% url 'configurator:index' %}">{% translate "Device Overview" %}</a></li>
-    <li><a href="{% url 'configurator:index' %}">{% translate "My Devices" %}</a></li>
+    <li><a href="{% url 'configurator:smarthome_configurator' %}">{% translate "My Devices" %}</a></li>
 
     {% if not user.is_authenticated  %}
 <li><a href="{% url 'account_login' %}">{% translate "Login" %}</a></li>
