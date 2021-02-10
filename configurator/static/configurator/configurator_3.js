@@ -18,7 +18,6 @@
           },
         data: "canvas_map=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice","connector"]) )
       }).then ( function (response){ 
-                  console.log(response);
                   return true;                  
                 }
               )  .catch(error => {                
@@ -41,8 +40,14 @@
           },
       }).then ( function (response){ //success function
         canvas.clear();
-        canvas.loadFromJSON(response.data);
+        canvas.loadFromJSON(response.data, function() {
         canvas.renderAll(); 
+     },function(o,object){
+        if(object.isDevice){
+          add_event_to_device(object);
+        }
+     })
+        
         return true;
         }
       )  .catch(error => {                
@@ -64,8 +69,11 @@
         data: buildJSON()
       }).then ( function (response){ //success function
         console.log(response);
-      }
-      
+        return true;
+      }.catch(error => {                
+        console.log(error.response.status);
+        return false;
+     })
       )}
 
 
@@ -75,3 +83,5 @@
           saveRooms();
         }       
     }
+
+  

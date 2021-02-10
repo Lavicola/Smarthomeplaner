@@ -47,8 +47,6 @@ function drawGrid(canvas) {
 
 function canvas_event_handlers(canvas) {
 
-
-
     //enables zoom and panning
     canvas.on('mouse:wheel', function(opt) {
         var delta = opt.e.deltaY;
@@ -103,8 +101,6 @@ function generateId() {
     return Math.random().toString(36).substr(2, 8)
 }
 
-
-
 function add_Room() {
     let name = GenerateRoomname();
     let paras = default_Roomconfig;
@@ -125,25 +121,9 @@ function add_Room() {
         top: 150                          
      });
 
-
-    
-
-    canvas.add(group);
-
-    
-    CreateHashMap();
-    
-
-
+    canvas.add(group);    
     return true;
-
-
 }
-
-
-
-
-
 
 function GenerateRoomname(){
     let number = 2;
@@ -324,7 +304,7 @@ function drop_handler(ev) {
         svg.id = svg_name+ "_" + generateId(); // todo:make it unique!
         svg.isDevice = true;
         svg.connector = getConnector(svg_name);
-        
+        add_event_to_device(svg);
 
         canvas.add(svg);
     });
@@ -338,13 +318,26 @@ function remove_object() {
 
 function getConnector(device_id){
     var dropdown_string = "dropdown-"
-
     let con = document.getElementById(dropdown_string+device_id);
     var connector = con.value;
-    
     return connector
+}
+
+function add_event_to_device(a_element) {
+    a_element.on('mouseover', function() {
+    let device_name =document.getElementById(a_element.name);  
+    document.getElementById("CurrentCanvasObject").innerHTML = device_name.name+" (" + a_element.connector+")";
+    });
+
+    a_element.on('mouseout', function() {
+        let device_name =document.getElementById(a_element.name);  
+        document.getElementById("CurrentCanvasObject").innerHTML ="Move over a Object to show the Name";
+        });
+    
 
 }
+
+
 
 
 function initCanvas(){
