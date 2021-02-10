@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _ #translation
 from users.models import AbstractBaseUser
 from django.contrib.auth import settings
 from users.models import CustomUser
+from django.utils import timezone
 
 # Create your models here.
 
@@ -81,8 +82,10 @@ class Vulnerability(models.Model):
     device_id = models.ManyToManyField(Device,verbose_name= _("Vulnerability exploitable by:"))
     description = models.CharField(max_length=500,verbose_name= _("Description of the Vulnerability "))
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Vulnerability"))
-    patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"),blank=True)
+    patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"),null=True,blank=True)
     url_patch = models.URLField(max_length=500,verbose_name= _("URL to the Patch Article"),blank=True)
+    created     = models.DateTimeField(editable=False,blank=True,null=True)
+    modified    = models.DateTimeField(editable=False,blank=True,null=True)
 
 
     class Vulnerability_Category(models.TextChoices):
@@ -99,6 +102,13 @@ class Vulnerability(models.Model):
     def __str__(self):
         return str(self.description) 
 
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.created = timezone.now()
+        elif(self.patch_date != None):
+                self.modified = timezone.now()
+        return super(Vulnerability, self).save(*args, **kwargs)
 
 
 class DeviceEntry(models.Model):
@@ -159,15 +169,6 @@ class DeviceEntry(models.Model):
             if not (found):
                 DeviceEntry.delete(entry)
             found = False
-
-
-
-
-            
-
-
-
-
 
         return 
 

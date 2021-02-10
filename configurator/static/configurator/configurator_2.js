@@ -21,6 +21,8 @@ new Vue({
       message: "",
       devices: [],
       selected_category: 'None',
+      vulnerabilites: [],
+      privacy_informations:[],
     },
     mounted: function() {
       this.getdevices();
