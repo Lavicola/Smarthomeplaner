@@ -1,10 +1,13 @@
 from django.urls import include, path
 from rest_framework import routers
-from api.views import DeviceViewSet
+from api.viewsets import DeviceViewSet,VulnerabilityViewSet,PrivacyIssueViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'devices', DeviceViewSet,basename="api")
+router.register(r'vulnerability',VulnerabilityViewSet,basename="api")
+router.register(r'privacy',PrivacyIssueViewSet,basename="api")
+
 
 
 # Wire up our API using automatic URL routing.

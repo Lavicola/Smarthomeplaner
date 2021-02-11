@@ -26,7 +26,7 @@ class Device(models.Model):
     name = models.CharField(max_length=200)
     image = models.FileField(upload_to='Device')
     connector = models.ManyToManyField(Connector)
-    release_date = models.DateField()
+    release_date = models.DateField(null=True,blank=True)
     manufacturer = models.CharField(max_length=200) 
     generation = models.CharField(max_length=10)
 
@@ -80,6 +80,7 @@ class Firmware(models.Model):
 
 class Vulnerability(models.Model):
     device_id = models.ManyToManyField(Device,verbose_name= _("Vulnerability exploitable by:"))
+    discovery = models.DateField(verbose_name= _("Vulnerability was found on:"))
     description = models.CharField(max_length=500,verbose_name= _("Description of the Vulnerability "))
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Vulnerability"))
     patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"),null=True,blank=True)
@@ -109,6 +110,17 @@ class Vulnerability(models.Model):
         elif(self.patch_date != None):
                 self.modified = timezone.now()
         return super(Vulnerability, self).save(*args, **kwargs)
+
+
+class PrivacyIssue(models.Model):
+    device_id = models.ManyToManyField(Device,verbose_name= _("Privacy Issue affects the following devices:"))
+    discovery = models.DateField(max_length=20)
+    description = models.CharField(max_length=300)
+    paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Issue"))
+    patch_date = models.DateField(verbose_name= _("Privacy Issue got resolved/updated on:"),null=True,blank=True)
+    url_patch = models.URLField(max_length=500,verbose_name= _("URL to the Privacy Issue update"),blank=True)
+
+
 
 
 class DeviceEntry(models.Model):
@@ -329,10 +341,6 @@ class AppUpdate(models.Model):
     version_number = models.CharField(primary_key=True,max_length=50)
     releasedate = models.CharField(max_length=20) 
     changelog = models.CharField(max_length=200)
-
-class DataProtection(models.Model):
-    discovery = models.CharField(max_length=20)
-    description = models.CharField(max_length=300)
     
 """
 

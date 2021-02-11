@@ -312,8 +312,12 @@ function drop_handler(ev) {
 
 }
 
-function remove_object() {
-    canvas.remove(canvas.getActiveObject());
+function remove_objects() {
+
+    objects  = canvas.getActiveObjects();    
+    for(var i=0;i<objects.length;i++){
+        canvas.remove(objects[i]);
+    }
 }
 
 function getConnector(device_id){

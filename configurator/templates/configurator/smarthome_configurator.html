@@ -12,7 +12,7 @@
 {% block javascripts %}
 {% load static %}
 <script src="{% static 'configurator/configurator_1.js'%}"></script>
-<script src="{% static 'configurator/configurator_2.js'%}"></script>
+<script src="{% static 'configurator/configurator_2_vue.js'%}"></script>
 <script src="{% static 'configurator/configurator_3.js'%}"></script>
 
 {% endblock %}
@@ -35,32 +35,57 @@
       <input class="form-control mr-sm-2" type="text" placeholder="{% translate "Search" %}" v-model="search_term" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
    </div>
-    <!-- search end -->
-
-    <!-- device list start [device.firmware_set] -->
     <div class="responsive">
       <div class="device_container" v-for="device in devices">
-          <img :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image">
+          <img  v-on:dblclick="getAdditionalInformations" :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image">
            <div class="desc">    
-              [device.name] <br>   
+              {[device.name]} <br>   
               <label for="connector">{% translate "Connector" %}:</label>
               <select class="dropdown" :id="'dropdown-' + device.id">
                 <option v-for="connector in device.connector">
-                [connector] 
+                {[connector]} 
                 </option>
               </select>            
             </div>
         </div>
     </div>
 
-    <div class="device_container" v-for="vulnerability in vulnerabilites">
-      [vulnerability]
+    <div id="additional_informations" v-if="vulnerabilites.length">
+            <table>
+              <caption v-if="vulnerabilites.length">{[vulnerabilites[0].device_id[0]["name"]  ]}</caption>
+              <tr>
+                  <th>{% translate "Vulnerability found" %}</th>
+                  <th>{% translate "Vulnerability description" %}</th>
+                  <th>{% translate "Vulnerability Patched" %}</th>
+                </tr>
+              <tr>                             
+              <tr v-for="vulnerability in vulnerabilites">
+                  <td>{[vulnerability.discovery]} </td>
+                  <td><a v-bind:href="vulnerability.paper_url">{[vulnerability.description]} </a></td>
+                  <td v-if="vulnerability.patch_date">{% translate "Yes" %} </td> 
+                  <td v-else>{% translate "No" %} </td>
+              </tr>          
+          </table>
+    <div class="privacy_information" >
+      <table>
+        <tr>
+          <th>{% translate "Privacy Issue found" %}</th>
+          <th>{% translate "Privacy Issue description" %}</th>
+          <th>{% translate "Privacy Issue Patched" %}</th>
+        </tr>
+      <tr>                             
+      <tr v-for="privacy_issue in privacy_issues">
+          <td>{[privacy_issue.discovery]} </td>
+          <td><a v-bind:href="privacy_issue.paper_url">{[privacy_issue.description]} </a></td>
+          <td v-if="privacy_issue.patch_date">{% translate "Yes" %} </td> 
+          <td v-else>{% translate "No" %} </td>
+      </tr>
+      </table>
     </div>
-    
-    <div class="privacy_information" v-for="privacy_information in privacy_informations" >
-      [privacy_information]
-    </div>
+  </div>
 </div>
+
+
 
 
 <div class="buttons">                
@@ -77,7 +102,7 @@
     <option value="Kinderzimmer">
   </datalist>
   <button onclick="add_Room()">{% translate "Add Room" %}</button>
-  <button class="btn btn-danger remove" onclick="remove_object()">{% translate "Remove Element" %}</button>
+  <button class="btn btn-danger remove" onclick="remove_objects()">{% translate "Remove Element(s)" %}</button>
 </div>
 
 

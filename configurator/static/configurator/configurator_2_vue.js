@@ -15,14 +15,14 @@ include("https://unpkg.com/v-tooltip@2.0.2");
 window.addEventListener("load", function(){
 new Vue({
     el: '#live_search',
-    delimiters: ['[',']'],
+    delimiters: ['{[',']}'],
     data: {
       search_term: "",
       message: "",
       devices: [],
       selected_category: 'None',
       vulnerabilites: [],
-      privacy_informations:[],
+      privacy_issues:[],
     },
     mounted: function() {
       this.getdevices();
@@ -50,16 +50,29 @@ new Vue({
         axios.get(api_url)
             .then((response) => {
               this.devices = response.data;
-              
             })
       },
-      getPrivacyIssues: function() {
-        let api_base_url = '/configurator/api/device/';
-        let api_url = api_base_url+"?name="+this.search_term
+      getVulnerabilities: function(device_id) {
+        let api_base_url = '/api/vulnerability/';
+        let api_url = api_base_url+"?device_id="+device_id
         axios.get(api_url)
             .then((response) => {
-              this.devices = response.data;
+              this.vulnerabilites = response.data;
             })
+      },
+      getPrivacyIssues: function(device_id) {
+
+        let api_base_url = '/api/privacy/';
+        let api_url = api_base_url+"?device_id="+device_id
+        axios.get(api_url)
+            .then((response) => {
+              this.privacy_issues = response.data;
+            })
+      },
+      getAdditionalInformations: function(event) {
+        device_id=event.target.id;
+        this.getPrivacyIssues(device_id);      
+        this.getVulnerabilities(device_id);
       },
     }
   });
