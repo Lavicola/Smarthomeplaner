@@ -17,13 +17,14 @@
             'X-CSRFToken': csrf_token
           },
         data: "canvas_map=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice","connector"]) )
-      }).then ( function (response){ 
-                  return true;                  
-                }
+      }).then(function (response){ 
+                console.log("success");          
+      }
               )  .catch(error => {                
                 console.log(error.response.status);
                 return false;
              })
+          return true;                  
     }
     
     
@@ -47,13 +48,12 @@
           add_event_to_device(object);
         }
      })
-        
-        return true;
-        }
-      )  .catch(error => {                
+        }).catch(error => {                
         console.log(error.response.status);
         return false;
-     }) }
+     }) 
+    return true;
+    }
     
 
     function saveRooms() {
@@ -66,15 +66,16 @@
             'Accept': 'application/json',
             'X-CSRFToken': csrf_token
           },
-        data: buildJSON()
-      }).then ( function (response){ //success function
-        console.log(response);
-        return true;
-      }.catch(error => {                
+        data: buildJSON(),
+      }).then(function (response){ 
+        console.log("success");          
+}
+      )  .catch(error => {                
         console.log(error.response.status);
         return false;
      })
-      )}
+    return true;
+    }
 
 
 

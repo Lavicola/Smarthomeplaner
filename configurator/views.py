@@ -78,6 +78,7 @@ def saveRooms(request):
             Room.DeleteUnusedRooms(email,list(json_data.keys()))   
             Room.CreateRooms(email,list(json_data.keys()))
             for room_name in room_names:
+                print(room_name)
                 room = Room.GetRoom(a_email=email,a_room_name=room_name)
                 DeviceEntry.setEntries(room,json_data[room_name])        
                 DeviceEntry.DeleteUnusedEntries(room,json_data[room_name])
