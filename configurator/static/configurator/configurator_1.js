@@ -6,12 +6,12 @@ const default_Roomconfig = {
     width: 200,
     height: 100,
     fill: 'rgba(255, 255, 255, 0.2)',
-    stroke: '#686868',
-    strokeWidth: 2,
+    stroke: 'black',
+    strokeWidth: 4,
     originX: 'left',
     originY: 'top',
     centeredRotation: true,
-    snapAngle: 45,
+    snapAngle: 180,
     selectable: true,
 };
 
@@ -91,21 +91,14 @@ function canvas_event_handlers(canvas) {
         this.isDragging = false;
         this.selection = true;
     });
-
-
-
-
-}
-
-function generateId() {
-    return Math.random().toString(36).substr(2, 8)
 }
 
 function add_Room() {
     let name = GenerateRoomname();
     let paras = default_Roomconfig;
+    paras.fill = getRoomColor();
+    paras.opacity = 0.5;
     paras.name = name;
-    paras.id = generateId();
     paras.isDevice = false;
     const room = new fabric.Rect(paras);
                     
@@ -138,10 +131,9 @@ function GenerateRoomname(){
 }
 
 function RoomExists(a_room_name){
-
     let l_rooms = GetRoomNames();
-
     let j = l_rooms.length;
+
     for (var i = 0; i < j; i++) {
 
         if(l_rooms[i] == a_room_name){
@@ -150,16 +142,20 @@ function RoomExists(a_room_name){
 
     }
     return false;
-
 }
 
 
 function getRoomCategory(){
     category = document.getElementById("room_name").value;
+    console.log(category);
     return category;
- 
  }
  
+function getRoomColor(){
+    room_color = document.getElementById("room_color").value;
+    return room_color;
+}
+
 
 function buildJSON(){
     let l_hash_map = CreateHashMap(); // [room_name]
@@ -172,7 +168,7 @@ function buildJSON(){
         //iterate through all rooms
         for(var j=0;j<l_rooms.length;j++){
             if(l_devices[i].isContainedWithinObject(l_rooms[j])){
-                device_tuple = {device_id: l_devices[i].name, connector: l_devices[i].connector }
+                device_tuple = {device_id: l_devices[i].id, connector: l_devices[i].connector }
                 l_hash_map[l_room_names[j]].push(device_tuple);
             }
         }
@@ -261,10 +257,7 @@ function GetDevices(){
             l_devices.push(canvas_obects[i]);
         }
     }
-
     return l_devices
-
-    
 }
 
 
@@ -295,15 +288,19 @@ function handleDragLeave(e) {
 function drop_handler(ev) {
     ev.preventDefault();
     let data = ev.dataTransfer.getData("URL");
-    let svg_name = ev.dataTransfer.getData("text");
+    let svg_id = ev.dataTransfer.getData("text");
+    svg_connector = getConnector(svg_id);
+    svg_name = document.getElementById(svg_id).name;
     fabric.loadSVGFromURL(data, function(objects, options) {
         var svg = fabric.util.groupSVGElements(objects, options);
         svg.left = ev.layerX;
         svg.top = ev.layerY;
-        svg.name = svg_name;
-        svg.id = svg_name+ "_" + generateId(); // todo:make it unique!
+        svg.id = svg_id;
+        svg.scaleToWidth(100);
+        svg.scaleToHeight(100);
+        svg.name = svg_name +" "+ svg_connector;
         svg.isDevice = true;
-        svg.connector = getConnector(svg_name);
+        svg.connector = svg_connector;
         add_event_to_device(svg);
 
         canvas.add(svg);
@@ -328,9 +325,8 @@ function getConnector(device_id){
 }
 
 function add_event_to_device(a_element) {
-    a_element.on('mouseover', function() {
-    let device_name =document.getElementById(a_element.name);  
-    document.getElementById("CurrentCanvasObject").innerHTML = device_name.name+" (" + a_element.connector+")";
+    a_element.on('mouseover', function() {  
+    document.getElementById("CurrentCanvasObject").innerHTML = a_element.name;
     });
 
     a_element.on('mouseout', function() {
@@ -341,6 +337,16 @@ function add_event_to_device(a_element) {
 
 }
 
+function SetBackground(){
+    fabric.Image.fromURL("https://images.unsplash.com/photo-1600456899121-68eda5705257?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2025&q=80.jpg", function (img) {    
+        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+            stretch:true,
+            scaleX: canvas.width / img.width,
+            scaleY: canvas.height / img.height
+        });
+    });
+    
+}
 
 
 
@@ -348,10 +354,10 @@ function initCanvas(){
 
      canvas = new fabric.Canvas('canvas_object', {
         // backgroundColor: 'rgb(100,100,200)',
-        selectionColor: 'blue',
+       // selectionColor: 'white',
         // ...
     });
-
+    //SetBackground();
     var canvasContainer = document.getElementById('canvas-wrapper');
     canvasContainer.addEventListener('dragenter', handleDragEnter, false);
     canvasContainer.addEventListener('dragover', handleDragOver, false);
@@ -359,7 +365,7 @@ function initCanvas(){
     canvasContainer.addEventListener('drop', drop_handler, false);
     canvas_event_handlers(canvas);
 
-    drawGrid();
+    //drawGrid();
 }
 
 function include(file) {   

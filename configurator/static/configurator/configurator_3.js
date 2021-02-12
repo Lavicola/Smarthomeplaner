@@ -66,7 +66,8 @@
             'Accept': 'application/json',
             'X-CSRFToken': csrf_token
           },
-        data: buildJSON(),
+
+        data: "json_data=" + buildJSON(),
       }).then(function (response){ 
         console.log("success");          
 }

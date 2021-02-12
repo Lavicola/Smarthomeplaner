@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from smarthome.models import Device,Firmware,Room,DeviceEntry
 from django.template import loader
-from .forms import SmarthomeMapForm
+from .forms import SmarthomeMapForm,AJAXSaveRoomForm
 from configurator.models import CanvasMap
 import json
 
@@ -72,17 +72,17 @@ def saveRooms(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
             email = request.user.email
-            json_data = json.loads(request.body)
-            room_names = list(json_data.keys())
-
-            Room.DeleteUnusedRooms(email,list(json_data.keys()))   
-            Room.CreateRooms(email,list(json_data.keys()))
-            for room_name in room_names:
-                print(room_name)
-                room = Room.GetRoom(a_email=email,a_room_name=room_name)
-                DeviceEntry.setEntries(room,json_data[room_name])        
-                DeviceEntry.DeleteUnusedEntries(room,json_data[room_name])
-            return HttpResponse('/thanksssss/')
+            form = AJAXSaveRoomForm(request.POST)
+            if form.is_valid():
+                json_data = form.cleaned_data["json_data"]
+                room_names = list(json_data.keys())
+                Room.DeleteUnusedRooms(email,list(json_data.keys()))   
+                Room.CreateRooms(email,list(json_data.keys()))
+                for room_name in room_names:
+                    room = Room.GetRoom(a_email=email,a_room_name=room_name)
+                    DeviceEntry.setEntries(room,json_data[room_name])        
+                    DeviceEntry.DeleteUnusedEntries(room,json_data[room_name])
+                return HttpResponse('/thanksssss/')
         return HttpResponse('Unauthorized', status=401)
     return HttpResponse()
 

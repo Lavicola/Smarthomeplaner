@@ -19,8 +19,6 @@ class Connector(models.Model):
         return Connector.objects.get(pk=a_connector_name)
 
 
-
-
 class Device(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
@@ -145,7 +143,6 @@ class DeviceEntry(models.Model):
     @staticmethod
     def setEntries(a_room,device_list_dict):
         # get list of device_ids
-        print(device_list_dict)
         device_list = [a_dict["device_id"] for a_dict in device_list_dict]
 
         # get the unique connectors
