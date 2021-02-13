@@ -18,14 +18,15 @@ new Vue({
     delimiters: ['{[',']}'],
     data: {
       search_term: "",
-      message: "",
+      seen: Boolean,
       devices: [],
       selected_category: 'None',
-      vulnerabilites: [],
+      vulnerabilities: [],
       privacy_issues:[],
     },
     mounted: function() {
       this.getdevices();
+      this.seen=false;
     },
     methods: {
       getdevices:function() {
@@ -35,10 +36,7 @@ new Vue({
               this.devices = response.data;
             })
       },
-      greet: function(device) {
-        this.message = device + "<br>" + device;
-      },
-      getSearchResults: function() {          
+      getSearchResults: function() {      
         let api_base_url = '/api/devices/';
         let api_url = "";
         if(this.selected_category != "None"){
@@ -57,7 +55,7 @@ new Vue({
         let api_url = api_base_url+"?device_id="+device_id
         axios.get(api_url)
             .then((response) => {
-              this.vulnerabilites = response.data;
+              this.vulnerabilities = response.data;
             })
       },
       getPrivacyIssues: function(device_id) {
@@ -73,6 +71,12 @@ new Vue({
         device_id=event.target.id;
         this.getPrivacyIssues(device_id);      
         this.getVulnerabilities(device_id);
+        if(!this.seen){
+          this.seen=true;
+        }
+        
+
+
       },
     }
   });

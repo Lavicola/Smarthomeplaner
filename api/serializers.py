@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from smarthome.models import Device, Firmware,Vulnerability,PrivacyIssue
+from smarthome.models import Device, Firmware,Vulnerability,PrivacyIssue,Category
 from configurator.models import CanvasMap
 
 
@@ -15,11 +15,10 @@ class FirmwareSerializer(serializers.ModelSerializer ):
 
 class DeviceSerializer(serializers.ModelSerializer ):
     firmware_set = FirmwareSerializer(many=True)
-
     class Meta:
         model = Device
         #fields = '__all__' 
-        fields=('id','name','image','category','manufacturer','connector','generation','firmware_set')
+        fields=('id','name','image','manufacturer','connector','generation','firmware_set','category')
 
 
 class DeviceSerializerShort(serializers.ModelSerializer ):

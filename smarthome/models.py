@@ -19,31 +19,24 @@ class Connector(models.Model):
         return Connector.objects.get(pk=a_connector_name)
 
 
+class Category(models.Model):
+    category = models.CharField(max_length=30)
+
+    def __str__(self):
+        return self.category
+
+
+
 class Device(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=200)
     image = models.FileField(upload_to='Device')
     connector = models.ManyToManyField(Connector)
+    category = models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
     release_date = models.DateField(null=True,blank=True)
     manufacturer = models.CharField(max_length=200) 
     generation = models.CharField(max_length=10)
-
-    class Device_Category(models.TextChoices):
-        SMART_LIGHTING = "SL", _("SMART_LIGHTING")
-        SMART_LOCK = "SLO" , _("SMART_LOCK")
-        SMART_METERING_WATER = "SMW", _("SMART_METERING_WATER")
-        SMART_METERING_ELECTRICITY ="SME", _("SMART_METERING_ELECTRICITY")
-        SMAERT_METERING_WARMTH ="SMWA", _("SMAERT_METERING_WARMTH")
-        VIRTUAL_ASSISTANT = "VA", _("VIRTUAL_ASSISTANT")
-        SMART_THERMOSTAT = "ST", _("SMART_THERMOSTAT")
-        SMART_CAM = "SC", _("SMART_CAM")
-        SMART_SECURITY_SYSTEM = "SSS", _("SMART_SECURITY_SYSTEM")
     
-    category = models.CharField(
-        max_length=4,
-        choices=Device_Category.choices
-    )
-
     class Meta:
         verbose_name = _("Device")
         verbose_name_plural = _("Device")

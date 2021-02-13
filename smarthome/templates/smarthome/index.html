@@ -29,7 +29,8 @@
               <option disabled value="">Please select one</option>
               <option value="None">None</option>
               {% for category in categories %} 
-              <option value="{{category.0}}">{{category.1}}</option>
+              {{category}}
+              <option value="{{category}}">{{category}}</option>
               {% endfor %}
             </select>      
             <input class="form-control mr-sm-2" type="text" placeholder="Search" v-model="search_term" aria-label="Search">

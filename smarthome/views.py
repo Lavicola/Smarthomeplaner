@@ -25,15 +25,11 @@ def detail(request,device_id):
 
 
 def devices_overview(request):
-
-
     devices = Device.objects.all()
-    cate = Device.Device_Category.choices
     
     template = loader.get_template('configurator/devices.html')
     context = {
         'devices': devices,
-        "cat":cate,
     }
     return HttpResponse(template.render(context, request))
 

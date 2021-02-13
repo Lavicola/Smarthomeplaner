@@ -1,4 +1,3 @@
-
 var canvas;
 const default_Roomconfig = {
     left: 0,
@@ -15,37 +14,7 @@ const default_Roomconfig = {
     selectable: true,
 };
 
-
-// array of rects! https://stackoverflow.com/questions/17255867/adding-grid-over-fabric-js-canvas  
-//taken from matiss.andersons
-function drawGrid(canvas) {
-
-    const gridSize = 40;
-    const width = canvas.getWidth() + 1000;
-    const height = canvas.getHeight() + 500;
-    const left = (width % gridSize) / 2;
-    const top = (height % gridSize) / 2;
-    const lines = [];
-    const lineOption = {
-        stroke: 'rgba(0,0,0,1)',
-        strokeWidth: 1,
-        selectable: false
-    };
-    for (let i = Math.ceil(width / gridSize); i--;) {
-        lines.push(new fabric.Line([gridSize * i, -top, gridSize * i, height], lineOption));
-    }
-    for (let i = Math.ceil(height / gridSize); i--;) {
-        lines.push(new fabric.Line([-left, gridSize * i, width, gridSize * i], lineOption));
-    }
-    const oGridGroup = new fabric.Group(lines, {
-        left: 0,
-        top: 0
-    });
-    oGridGroup.selectable = false;
-    canvas.add(oGridGroup);
-}
-
-function canvas_event_handlers(canvas) {
+function set_canvas_event_handlers(canvas) {
 
     //enables zoom and panning
     canvas.on('mouse:wheel', function(opt) {
@@ -61,7 +30,8 @@ function canvas_event_handlers(canvas) {
         opt.e.preventDefault();
         opt.e.stopPropagation();
     });
-
+    
+    // enables dragging the canvas: alt + mouse down and move
     canvas.on('mouse:down', function(opt) {
         var evt = opt.e;
         if (evt.altKey === true) {
@@ -72,7 +42,6 @@ function canvas_event_handlers(canvas) {
         }
     });
 
-    // enables dragging the canvas: alt + mouse down and move
     canvas.on('mouse:move', function(opt) {
         if (this.isDragging) {
             var e = opt.e;
@@ -93,36 +62,41 @@ function canvas_event_handlers(canvas) {
     });
 }
 
-function add_Room() {
-    let name = GenerateRoomname();
-    let paras = default_Roomconfig;
-    paras.fill = getRoomColor();
-    paras.opacity = 0.5;
-    paras.name = name;
-    paras.isDevice = false;
-    const room = new fabric.Rect(paras);
-                    
-    var textObject = new fabric.IText(name, {
-        left: 40,
-        top: 40,    
-        fontSize: 18,
-        fill: '#000000'                        
-     }); 
-                    
-    var group = new fabric.Group([ room, textObject ], {
-        left: 150,
-        top: 150                          
-     });
+function getRoomProperties() {
+    let room_properties = default_Roomconfig;
+    room_properties.fill = getRoomColor();
+    room_properties.name = GenerateRoomname();
+    room_properties.isDevice = false;
+    room_properties.opacity = 0.5;
+    return room_properties;
 
-    canvas.add(group);    
+}
+
+function add_Room() {
+    let room_properties = getRoomProperties();
+
+    const room = new fabric.Rect(room_properties);
+    let textObject = new fabric.IText(room_properties.name, {
+        left: 40,
+        top: 40,
+        fontSize: 18,
+        fill: '#000000'
+    });
+
+    let group = new fabric.Group([room, textObject], {
+        left: 150,
+        top: 150
+    });
+
+    canvas.add(group);
     return true;
 }
 
-function GenerateRoomname(){
+function GenerateRoomname() {
     let number = 2;
     let temp_name = getRoomCategory();
     let name = temp_name;
-    while(RoomExists(name)){
+    while (RoomExists(name)) {
         name = temp_name + number;
         number++;
     }
@@ -130,13 +104,13 @@ function GenerateRoomname(){
     return name;
 }
 
-function RoomExists(a_room_name){
+function RoomExists(a_room_name) {
     let l_rooms = GetRoomNames();
     let j = l_rooms.length;
 
     for (var i = 0; i < j; i++) {
 
-        if(l_rooms[i] == a_room_name){
+        if (l_rooms[i] == a_room_name) {
             return true;
         }
 
@@ -145,52 +119,61 @@ function RoomExists(a_room_name){
 }
 
 
-function getRoomCategory(){
+function getRoomCategory() {
     category = document.getElementById("room_name").value;
-    console.log(category);
     return category;
- }
- 
-function getRoomColor(){
+}
+
+function getRoomColor() {
     room_color = document.getElementById("room_color").value;
     return room_color;
 }
 
 
-function buildJSON(){
-    let l_hash_map = CreateHashMap(); // [room_name]
-    let l_rooms = GetRectTextGroups(canvas.getObjects());
-    let l_room_names = GetRoomNames();    
-    let l_devices = GetDevices();
-    
+function buildJSON() {
+    let canvas_objects = canvas.getObjects();
+    let l_hash_map = CreateHashMap(canvas_objects); // [room_name]
+    let l_rooms = GetRectTextGroups(canvas_objects);
+    let l_room_names = GetRoomNames(canvas_objects);
+    let l_devices = GetDevices(canvas_objects);
+    let l_found;
+
     //check for every device in which room it is
-    for(var i=0;i<l_devices.length;i++){
+    for (var i = 0; i < l_devices.length; i++) {
         //iterate through all rooms
-        for(var j=0;j<l_rooms.length;j++){
-            if(l_devices[i].isContainedWithinObject(l_rooms[j])){
-                device_tuple = {device_id: l_devices[i].id, connector: l_devices[i].connector }
-                l_hash_map[l_room_names[j]].push(device_tuple);
+        for (var j = 0; j < l_rooms.length; j++) {
+            l_found = false;
+            if (l_devices[i].isContainedWithinObject(l_rooms[j])) {
+                device_tuple = {
+                    device_id: l_devices[i].id,
+                    connector: l_devices[i].connector
+                };
+                l_hash_map[l_room_names[j]].push(device_tuple);                
+                l_found=true;
+                break;
             }
         }
+        if(!l_found){
+            alert("Das Gerät "+l_devices[i].name +" konnte keinen Raum zugeordnet werden");
+        }
     }
-    
-    try
-    {
+
+    try {
         return JSON.stringify(l_hash_map);
-    } catch(error){
+    } catch (error) {
         console.error();
-        return {}
+        return {};
     }
-    
+
 }
 
 
-function CreateHashMap(){
+function CreateHashMap(a_canvas_objects) {
 
-    let l_hash_map = new Object();
-    let l_rooms = GetRoomNames();
+    let l_hash_map = {};
+    let l_rooms = GetRoomNames(a_canvas_objects);
 
-    for(var i=0;i<l_rooms.length;i++){
+    for (var i = 0; i < l_rooms.length; i++) {
         l_hash_map[l_rooms[i]] = [];
     }
     return l_hash_map;
@@ -198,31 +181,31 @@ function CreateHashMap(){
 }
 
 // This function returns a room object or None if the inserted group is not a (rect,text). The Group also must have an isDevice type
-function GetRectOfRectTextGroup(group){
+function GetRectOfRectTextGroup(group) {
 
     single_object = group._objects[0];
     // check if isDevice type exists if not return a placeholder string
-    if( single_object.isDevice === undefined){
+    if (single_object.isDevice === undefined) {
         //console.log("object has no isDevice type");
         return "None";
         //if it is not a device it must be a room
-    }else if (!single_object.isDevice){
+    } else if (!single_object.isDevice) {
         return single_object;
     }
-    
-    return "None";       
+
+    return "None";
 }
 
 
 // This function returns every rectText group which are rooms
-function GetRectTextGroups(groups){
+function GetRectTextGroups(groups) {
     rectTextGroups = [];
-    for(var i=0;i<groups.length;i++){
+    for (var i = 0; i < groups.length; i++) {
         single_objects = groups[i]._objects;
-        
-        if( single_objects[0].isDevice === undefined){            
+
+        if (single_objects[0].isDevice === undefined) {
             //if it is not a device it must be a room
-        }else if (!single_objects[0].isDevice){
+        } else if (!single_objects[0].isDevice) {
             rectTextGroups.push(groups[i]);
         }
 
@@ -232,15 +215,14 @@ function GetRectTextGroups(groups){
 
 
 //This function returns an array of Room names
-function GetRoomNames(groups){
-    let canvas_objects = canvas.getObjects();
+function GetRoomNames(a_canvas_objects) {
     let room_names = [];
-    let room ;
+    let room;
 
-    for(var i=0;i<canvas_objects.length;i++){
-        room = GetRectOfRectTextGroup(canvas_objects[i]);
+    for (var i = 0; i < a_canvas_objects.length; i++) {
+        room = GetRectOfRectTextGroup(a_canvas_objects[i]);
 
-        if(room != "None"){
+        if (room != "None") {
             room_names.push(room.name);
         }
     }
@@ -248,16 +230,15 @@ function GetRoomNames(groups){
 
 }
 
-function GetDevices(){
-    let canvas_obects = canvas.getObjects();
+function GetDevices(canvas_objects) {
     let l_devices = [];
 
-    for(var i=0;i<canvas_obects.length;i++){
-        if(canvas_obects[i].isDevice){
-            l_devices.push(canvas_obects[i]);
+    for (var i = 0; i < canvas_objects.length; i++) {
+        if (canvas_objects[i].isDevice) {
+            l_devices.push(canvas_objects[i]);
         }
     }
-    return l_devices
+    return l_devices;
 }
 
 
@@ -298,7 +279,7 @@ function drop_handler(ev) {
         svg.id = svg_id;
         svg.scaleToWidth(100);
         svg.scaleToHeight(100);
-        svg.name = svg_name +" "+ svg_connector;
+        svg.name = svg_name + " " + svg_connector;
         svg.isDevice = true;
         svg.connector = svg_connector;
         add_event_to_device(svg);
@@ -311,82 +292,72 @@ function drop_handler(ev) {
 
 function remove_objects() {
 
-    objects  = canvas.getActiveObjects();    
-    for(var i=0;i<objects.length;i++){
+    objects = canvas.getActiveObjects();
+    for (var i = 0; i < objects.length; i++) {
         canvas.remove(objects[i]);
     }
 }
 
-function getConnector(device_id){
-    var dropdown_string = "dropdown-"
-    let con = document.getElementById(dropdown_string+device_id);
+function getConnector(device_id) {
+    var dropdown_string = "dropdown-";
+    let con = document.getElementById(dropdown_string + device_id);
     var connector = con.value;
-    return connector
+    return connector;
 }
 
 function add_event_to_device(a_element) {
-    a_element.on('mouseover', function() {  
-    document.getElementById("CurrentCanvasObject").innerHTML = a_element.name;
+    a_element.on('mouseover', function() {
+        document.getElementById("CurrentCanvasObject").innerHTML = a_element.name;
     });
 
     a_element.on('mouseout', function() {
-        let device_name =document.getElementById(a_element.name);  
-        document.getElementById("CurrentCanvasObject").innerHTML ="Move over a Object to show the Name";
-        });
-    
+        document.getElementById("CurrentCanvasObject").innerHTML = "Move over a Object to show the Name";
+    });
+
 
 }
 
-function SetBackground(){
-    fabric.Image.fromURL("https://images.unsplash.com/photo-1600456899121-68eda5705257?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2025&q=80.jpg", function (img) {    
+function SetBackground() {
+    fabric.Image.fromURL("https://images.unsplash.com/photo-1600456899121-68eda5705257?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2025&q=80.jpg", function(img) {
         canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-            stretch:true,
+            stretch: true,
             scaleX: canvas.width / img.width,
             scaleY: canvas.height / img.height
         });
     });
-    
+
 }
 
 
 
-function initCanvas(){
+function initCanvas() {
+    canvas = new fabric.Canvas('canvas_object');
+    set_canvas_event_handlers(canvas);
+}
 
-     canvas = new fabric.Canvas('canvas_object', {
-        // backgroundColor: 'rgb(100,100,200)',
-       // selectionColor: 'white',
-        // ...
-    });
-    //SetBackground();
+function InitCanvasContainerEvents(){
     var canvasContainer = document.getElementById('canvas-wrapper');
     canvasContainer.addEventListener('dragenter', handleDragEnter, false);
     canvasContainer.addEventListener('dragover', handleDragOver, false);
     canvasContainer.addEventListener('dragleave', handleDragLeave, false);
     canvasContainer.addEventListener('drop', drop_handler, false);
-    canvas_event_handlers(canvas);
-
-    //drawGrid();
 }
 
-function include(file) {   
-    var script  = document.createElement('script'); 
-    script.src  = file; 
-    script.type = 'text/javascript'; 
-    script.defer = true;     
-    document.getElementsByTagName('head').item(0).appendChild(script); 
-  } 
-    
+
+function include(file) {
+    var script = document.createElement('script');
+    script.src = file;
+    script.type = 'text/javascript';
+    script.defer = true;
+    document.getElementsByTagName('head').item(0).appendChild(script);
+}
+
 
 
 include("https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js");
 
-window.addEventListener("load", function(){
+window.addEventListener("load", function() {
     initCanvas();
-
+    InitCanvasContainerEvents();
 
 });
-
-
-
-
-    

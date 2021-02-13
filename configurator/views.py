@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from smarthome.models import Device,Firmware,Room,DeviceEntry
+from smarthome.models import Device,Firmware,Room,DeviceEntry,Category
 from django.template import loader
 from .forms import SmarthomeMapForm,AJAXSaveRoomForm
 from configurator.models import CanvasMap
@@ -32,7 +32,8 @@ def congifuration(request):
 
 def index(request):
     devices = Device.objects.all()
-    categories = Device.Device_Category.choices
+    categories = Category.objects.all()
+    print(categories.values)
     context = {
         'devices': devices,
         "categories":categories,
