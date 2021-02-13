@@ -14,17 +14,15 @@ class DeviceViewSet(viewsets.ReadOnlyModelViewSet):
         device_name = self.request.query_params.get("name",None)
         device_category = self.request.query_params.get("category",None)
         if device_name is not None and device_category is not None:
+            print("device_name is not None and device_category is not None")
             category_id = Category.objects.filter(category=device_category).get()
             criteria1 = Q(name__icontains=device_name)
             criteria2 = Q(category=category_id)
             queryset = queryset.filter(criteria1 & criteria2)
-        if device_name is not None:
+        elif device_name is not None:
+            print("device_name is not None")
             criteria1 = Q(name__icontains=device_name)
             queryset = queryset.filter(criteria1)
-        if device_category is not None and device_name is None:
-            category_id = Category.objects.filter(category=device_category).get()
-            criteria2 = Q(category=device_category)
-            queryset = queryset.filter(criteria2)
         return queryset
 
 
