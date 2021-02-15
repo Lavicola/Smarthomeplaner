@@ -7,22 +7,14 @@
 
 {% endblock %}
 
-
-
-
-
-
-
 {% block content %}
 
 
 <br>
 <div class="flex-container"> 
 
-{% for room_name, devices in rooms.items %} 
-
+{% for room_name, table_data in table_informations.items %} 
 <div class="room"> 
-
 
 <table>
 <caption>{{ room_name }}</caption>
@@ -34,11 +26,12 @@
         <th>Bild</th>
       </tr>
     <tr>    
-{% for device in devices %} 
-<td>{{ device.device }} </td>
-<td>{{ device.quantity }} </td>
-<td>{{ device.connector }} </td>
-<td><img draggable="false" src="/media/{{ device.device.image }}" width="100" height="100"></img></td>
+{% for device_entry,color in table_data %} 
+{{color}}
+<td class= "{{color}}" >{{ device_entry.device }} </td>
+<td class= "{{color}}">{{ device_entry.quantity }} </td>
+<td class= "{{color}}">{{ device_entry.connector }} </td>
+<td><img draggable="false" src="/media/{{ device_entry.device.image }}" width="100" height="100"></img></td>
 
 </tr>
 {% endfor %}

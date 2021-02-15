@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from smarthome.models import Device,Firmware,Room,DeviceEntry,Category
+from smarthome.models import Device,Firmware,Room,DeviceEntry,Category,Vulnerability
 from django.template import loader
 from .forms import SmarthomeMapForm,AJAXSaveRoomForm
 from configurator.models import CanvasMap
@@ -15,16 +15,30 @@ import json
 
 
 def congifuration(request):
-    l_fullrooms = {}
+    l_tabledata = {}
+    table_color = ""
+
+
     if request.user.is_authenticated:
         l_email = request.user.email
         l_rooms = Room.objects.filter(user=l_email).values()
         for room in l_rooms:
-            l_fullrooms[room["room_name"]] = []
-            devices = DeviceEntry.objects.filter(unique_room=room["id"])
-            for device in devices:
-                l_fullrooms[room["room_name"]].append(device)
-    context =  {'rooms': l_fullrooms}
+            l_tabledata[room["room_name"]] = []
+            device_entries = DeviceEntry.objects.filter(unique_room=room["id"])
+            for device_entry in device_entries:
+                if(Vulnerability.objects.filter(device_id=device_entry.device_id,patch_date__isnull=True).count() != 0): 
+                    print("red")
+                    table_color = "red-column"
+                else:
+                    print("white")
+                    print(Vulnerability.objects.filter(device_id=device_entry.device_id,url_patch__isnull=True).count() != 0)
+                    print(Vulnerability.objects.filter(device_id=device_entry.device_id,url_patch__isnull=True).count())
+                    table_color = "white-column"                
+                l_tabledata[room["room_name"]].append((device_entry,table_color))
+                
+    context =  {
+        'table_informations': l_tabledata
+        }
     template = loader.get_template('configurator/room_configurations.html')
 
     return HttpResponse(template.render(context, request))

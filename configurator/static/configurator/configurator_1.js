@@ -105,7 +105,7 @@ function GenerateRoomname() {
 }
 
 function RoomExists(a_room_name) {
-    let l_rooms = GetRoomNames();
+    let l_rooms = GetRoomNames(canvas.getObjects());
     let j = l_rooms.length;
 
     for (var i = 0; i < j; i++) {

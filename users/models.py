@@ -35,6 +35,10 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_('Superuser must have is_staff=True.'))
         if extra_fields.get('is_superuser') is not True:
             raise ValueError(_('Superuser must have is_superuser=True.'))
+        if extra_fields.get('is_active') is not True:
+            raise ValueError(_('Superuser must have is_active=True.'))
+
+
         return self.create_user(email, password, **extra_fields)
 
 
@@ -46,7 +50,10 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         primary_key=True
     )
     country = CountryField()
+    last_visit = models.DateField(blank=True,null=True)
     is_staff = models.BooleanField(default=False)
+    is_translator = models.BooleanField(default=False)
+    is_contributor = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     date_joined = models.DateTimeField(default=timezone.now)

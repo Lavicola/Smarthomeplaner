@@ -4,6 +4,14 @@ from users.models import AbstractBaseUser
 from django.contrib.auth import settings
 from users.models import CustomUser
 from django.utils import timezone
+from django.db.models.signals import m2m_changed, post_delete, pre_save
+from django.dispatch import receiver
+from django_countries.fields import CountryField
+from django.template.loader import get_template,render_to_string
+from django.template import Context
+from django.core.mail import send_mass_mail
+
+
 
 # Create your models here.
 
@@ -43,7 +51,7 @@ class Device(models.Model):
         constraints = [models.UniqueConstraint(fields=["name","manufacturer","generation"],name="unique_device")]
 
     def __str__(self):
-        return self.name +" " + self.manufacturer + "  V" + self.generation
+        return self.name +" " + self.manufacturer + "  V" + self.generation 
 
 
     @staticmethod
@@ -56,7 +64,7 @@ class Firmware(models.Model):
     compatibility_list = models.ManyToManyField(Device,verbose_name= _("Firmware Compatible with"))
     version_number = models.CharField(max_length=50,verbose_name= _("Versionnumber"))
     changelog = models.CharField(verbose_name=_("Changelog"), max_length=500)
-    release_date = models.DateField(verbose_name=_("Release Date"))
+    release_date = models.DateField(verbose_name=_("Release Date"),blank=True,null=True)
 
     class Meta:
         verbose_name = _("Firmware")
@@ -87,20 +95,55 @@ class Vulnerability(models.Model):
 
     category = models.CharField(max_length=8,choices=Vulnerability_Category.choices)
 
+
+
     class Meta:
         verbose_name = _("Vulnerability")
         verbose_name_plural = _("Vulnerabilities")
-
+    
     def __str__(self):
-        return str(self.description) 
+        return self.description 
 
-    def save(self, *args, **kwargs):
-        ''' On save, update timestamps '''
-        if not self.id:
-            self.created = timezone.now()
-        elif(self.patch_date != None):
-                self.modified = timezone.now()
-        return super(Vulnerability, self).save(*args, **kwargs)
+
+
+
+@receiver(m2m_changed, sender=Vulnerability.device_id.through)
+def video_category_changed(sender,action,pk_set,instance, **kwargs):
+    device_entries = []
+    user_mailingdict = {}
+    messages = ()
+
+    if(action == "post_add"):
+        for device_id in pk_set:
+            for entry in DeviceEntry.objects.filter(device=device_id):
+                user_email = str(entry.unique_room.user)
+                room_name = entry.unique_room.room_name
+                if ( user_email not in user_mailingdict):
+                    # e.g a[user@aol.de]
+                    user_mailingdict[user_email] = {}
+                
+                if not (user_mailingdict[user_email].__contains__(room_name)):
+                    user_mailingdict[user_email][room_name] = [] 
+                user_mailingdict[user_email][room_name].append(entry)
+        for user in user_mailingdict.keys():
+            context = {
+                    'username': user,
+                    "rooms" : user_mailingdict[user], 
+                    "vulnerability": instance.description, 
+                    }
+            if (list(CustomUser.objects.filter(email=user).values_list("country"))[0][0] == 'DE'):
+                subject = "Neue Sicherheitslücke die dich betrifft"
+                email_text = render_to_string("smarthome/email_body_german.html",context)
+            else:
+                subject = "A new Vulnerability added which concerns you "
+                email_text = render_to_string("smarthome/email_body_english.html",context)
+            messages = messages + ((subject, email_text, "davidschmidt777@t-online.de", [user_email]),)
+
+        print(len(messages))
+        send_mass_mail((messages))
+            
+        pass
+            
 
 
 class PrivacyIssue(models.Model):
@@ -110,8 +153,6 @@ class PrivacyIssue(models.Model):
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Issue"))
     patch_date = models.DateField(verbose_name= _("Privacy Issue got resolved/updated on:"),null=True,blank=True)
     url_patch = models.URLField(max_length=500,verbose_name= _("URL to the Privacy Issue update"),blank=True)
-
-
 
 
 class DeviceEntry(models.Model):
@@ -221,7 +262,7 @@ class Room(models.Model):
 
 
     def __str__(self):
-        return self.room_name  
+        return self.room_name +"   " +str(self.user) 
 
 
     @staticmethod
@@ -287,53 +328,24 @@ class Room(models.Model):
 
 
 
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
-from smarthome.signals import *
-
-    
-
-
-
-
-
+class FundamentalsEntry(models.Model):
+    title = models.CharField(max_length=70)
+    text = models.CharField(max_length=65000)
 
 """
-
-
-
-
 class App(models.Model):
     name = models.CharField(primary_key=True,max_length=60)
-    manufacturer = models.CharField(max_length=200)
-    functionality = models.CharField(max_length=1000)
-    releasedate = models.CharField(max_length=20)
-
+    supported_device = models.ManyToManyField(Device,verbose_name=("The App works with the following Devices:"))
+    developer = models.CharField(max_length=200)
 
 
 class AppUpdate(models.Model):
+    app_name = models.ManyToManyField(App,verbose_name= _("Update belongs to"))
     version_number = models.CharField(primary_key=True,max_length=50)
-    releasedate = models.CharField(max_length=20) 
+    releasedate = models.DateField(blank=True) 
     changelog = models.CharField(max_length=200)
     
 """
-
 
 
 

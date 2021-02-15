@@ -8,6 +8,10 @@ table, th, td {
     text-align: left;
   }
 
+.red-column{
+  background-color: red;
+}
+
   .flex-container {
     display: flex;
     flex-direction: row;

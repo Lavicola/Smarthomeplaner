@@ -1,0 +1,20 @@
+{% extends "smarthome/base_email.html" %}
+
+{% block salutation %}
+Hallo {{username}},
+{% endblock %}
+
+{% block generic_information_text %}
+Du erhältst diese Email, weil eine neue Sicherheitslücke in einen oder mehreren Geräten hinzugefügt wurde,
+folgende Geräte in deinen Räumen sind betroffen:
+{% endblock %}
+
+
+{% block generic_additional_information %}
+Für mehr Informationen <a href="{% url 'configurator:smarthome_configurator' %}">Klicke hier</a>
+{% endblock %}
+
+
+{% block generic_Vulnerability_text %}
+Beschreibung der Schwachstelle
+{% endblock %}

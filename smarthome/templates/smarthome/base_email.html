@@ -1,0 +1,39 @@
+
+<html>
+<body>
+    
+{% block salutation %}
+Greetings {{username}}
+{% endblock %}
+{% block generic_information_text %}
+You receive this Email, because a new Vulnerability is affecting one or more devices you are owning:
+{% endblock %}
+
+
+
+
+
+{% for room_name, table_data in rooms.items %} 
+<strong>{{ room_name }}</strong>
+
+{% for device_entry in table_data %} 
+
+<p>{{ device_entry.device }} {{device_entry.connector}} </p>
+{% endfor %}
+{% endfor %}
+
+
+{% block generic_additional_information %}
+for more information please visit<a href="{% url 'configurator:smarthome_configurator' %}">us</a>
+{% endblock %}
+
+
+
+{% block generic_Vulnerability_text %}
+Vulnerability description:
+{% endblock %}
+{{vulnerability}}
+
+
+</body>
+</html>
