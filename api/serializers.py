@@ -9,16 +9,16 @@ class FirmwareSerializer(serializers.ModelSerializer ):
 
     class Meta:
         model = Firmware
-        fields = ('version_number','changelog','releasedate')
+        fields = ('version_number','changelog')
 
 
 
 class DeviceSerializer(serializers.ModelSerializer ):
-    firmware_set = FirmwareSerializer(many=True)
+    #firmware_set = FirmwareSerializer(many=True)
     class Meta:
         model = Device
         #fields = '__all__' 
-        fields=('id','name','image','manufacturer','connector','generation','firmware_set','category')
+        fields=('id','name','image','manufacturer','connector','generation','category')
 
 
 class DeviceSerializerShort(serializers.ModelSerializer ):
@@ -31,7 +31,7 @@ class DeviceSerializerShort(serializers.ModelSerializer ):
 
 
 class VulnerabilitySerializer(serializers.ModelSerializer ):
-    device_id = DeviceSerializerShort(many=True)
+    device_id = DeviceSerializerShort(many = True)
 
     class Meta:
         model = Vulnerability
@@ -42,7 +42,7 @@ class PrivacyIssueSerializer(serializers.ModelSerializer ):
     device_id = DeviceSerializerShort(many=True)
 
     class Meta:
-        model = Vulnerability
+        model = PrivacyIssue
         fields=("device_id",'discovery',"description","paper_url","patch_date","url_patch")
 
 

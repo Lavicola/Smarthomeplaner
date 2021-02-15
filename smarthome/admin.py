@@ -13,4 +13,3 @@ admin.site.register(Category)
 admin.site.register(Room)
 admin.site.register(DeviceEntry)
 
-

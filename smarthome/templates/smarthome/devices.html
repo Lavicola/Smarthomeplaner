@@ -1,22 +1,10 @@
-{% if devices %}
 
-    {% for ca in cat %} 
-
-    test
-    {% endfor %}
-
+{% extends "base.html" %}
+{% block content %}
     {% for device in devices %}
     <div id="container">
-
-    {% for firmware in device.firmware_set.all %}
-        {{firmware.id}}
-        {{firmware.changelog}}
-    {% endfor %}
-    <div>
-        <a href="configurator/{{ device.id }}/">{{ device.name }}</a>
+        <a href="{{ device.name }}/">{{ device.name }}</a>
     </div>
-    </div>
+    
     {% endfor %}
-{% else %}
-    <p>No devices are available.</p>
-{% endif %}
+    {% endblock %}

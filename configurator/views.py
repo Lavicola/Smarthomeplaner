@@ -2,23 +2,16 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from smarthome.models import Device,Firmware,Room,DeviceEntry,Category,Vulnerability
+from smarthome.models import Device,Room,DeviceEntry,Category,Vulnerability
 from django.template import loader
 from .forms import SmarthomeMapForm,AJAXSaveRoomForm
 from configurator.models import CanvasMap
 import json
 
-# Create your views here.
-
-
-
-
 
 def congifuration(request):
     l_tabledata = {}
     table_color = ""
-
-
     if request.user.is_authenticated:
         l_email = request.user.email
         l_rooms = Room.objects.filter(user=l_email).values()

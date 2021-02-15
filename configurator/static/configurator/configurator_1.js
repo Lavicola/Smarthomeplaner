@@ -10,7 +10,6 @@ const default_Roomconfig = {
     originX: 'left',
     originY: 'top',
     centeredRotation: true,
-    snapAngle: 180,
     selectable: true,
 };
 
@@ -85,7 +84,9 @@ function add_Room() {
 
     let group = new fabric.Group([room, textObject], {
         left: 150,
-        top: 150
+        top: 150,
+        snapAngle: 90,
+
     });
 
     canvas.add(group);
@@ -331,7 +332,11 @@ function SetBackground() {
 
 
 function initCanvas() {
-    canvas = new fabric.Canvas('canvas_object');
+    canvas = new fabric.Canvas('canvas_object')
+    fabric.Object.prototype.set({
+        snapThreshold: 45,
+        snapAngle: 90
+    });;
     set_canvas_event_handlers(canvas);
 }
 

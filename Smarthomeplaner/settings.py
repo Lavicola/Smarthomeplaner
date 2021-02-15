@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     ####self start
+    'basics',
     'users',
     'api.apps.APIConfig',
     'smarthome.apps.SmarthomeConfig',

@@ -47,7 +47,7 @@ class Device(models.Model):
     
     class Meta:
         verbose_name = _("Device")
-        verbose_name_plural = _("Device")
+        verbose_name_plural = _("Devices")
         constraints = [models.UniqueConstraint(fields=["name","manufacturer","generation"],name="unique_device")]
 
     def __str__(self):
@@ -73,7 +73,12 @@ class Firmware(models.Model):
     def __str__(self):
         firmwares = self.compatibility_list.all()
         manufacture = list(firmwares)[0].manufacturer
-        return manufacture + " Version: "+ str(self.firmware_id)
+        devices = Device.objects.filter(firmware=self.firmware_id)
+        device_names = ""
+
+        for device in devices:
+            device_names+=  str(device) + "," 
+        return "Firmware Hersteller:"+manufacture +" Version: "+str(self.firmware_id)+ " supported devices:" + device_names
 
 
 
@@ -108,7 +113,7 @@ class Vulnerability(models.Model):
 
 
 @receiver(m2m_changed, sender=Vulnerability.device_id.through)
-def video_category_changed(sender,action,pk_set,instance, **kwargs):
+def notify_users(sender,action,pk_set,instance, **kwargs):
     device_entries = []
     user_mailingdict = {}
     messages = ()
@@ -164,6 +169,8 @@ class DeviceEntry(models.Model):
 
     class Meta:
         constraints = [models.UniqueConstraint(fields=["unique_room","device","connector","quantity"],name="unique_entry")]
+        verbose_name = _("Device Entry")
+        verbose_name_plural = _("Device Entries")
 
 
     def __str__(self):
@@ -268,7 +275,7 @@ class Room(models.Model):
     @staticmethod
     def GetExistingRoomNames(a_email):
         room_names = []
-        for room in Room.objects.raw('SELECT DISTINCT room_name,id FROM `smarthome_room` WHERE `user_id` = %s;',[a_email]):
+        for room in Room.objects.filter(user=a_email):
             room_names.append(room.room_name)
         return room_names
 
@@ -326,11 +333,6 @@ class Room(models.Model):
         Room.objects.filter(user_id=a_email,room_name=a_names).delete()
         return True
 
-
-
-class FundamentalsEntry(models.Model):
-    title = models.CharField(max_length=70)
-    text = models.CharField(max_length=65000)
 
 """
 class App(models.Model):

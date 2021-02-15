@@ -40,21 +40,7 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
         device_id = self.request.query_params.get("device_id",None)
         #todo check if int?
         if device_id is not None:
-            criteria1 = Q(device_id=device_id)
-            queryset = queryset.filter(criteria1)
-        return queryset
-
-
-
-class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = VulnerabilitySerializer
-    def get_queryset(self):
-        queryset = Vulnerability.objects.all()
-        device_id = self.request.query_params.get("device_id",None)
-        #todo check if int?
-        if device_id is not None:
-            criteria1 = Q(device_id=device_id)
-            queryset = queryset.filter(criteria1)
+            queryset = queryset.filter(device_id=device_id)            
         return queryset
 
 class PrivacyIssueViewSet(viewsets.ReadOnlyModelViewSet):

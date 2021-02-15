@@ -25,4 +25,6 @@ urlpatterns = [
     path('configurator/',include('configurator.urls')),
     path('userauth/',include("userauth.urls")),
     path('admin/', admin.site.urls),
+    path("basics/",include("basics.urls")),
+
 ] + static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)

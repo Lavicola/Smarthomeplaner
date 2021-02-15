@@ -23,6 +23,7 @@ new Vue({
       selected_category: 'None',
       vulnerabilities: [],
       privacy_issues:[],
+      base_url : "/smarthome/devices/",
     },
     mounted: function() {
       this.getdevices();

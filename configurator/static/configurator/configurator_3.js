@@ -10,7 +10,7 @@
         let csrf_token = getToken();
         axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/configurator/setCanvas',
+        url: '/configurator/setCanvas',
         headers:{
           "Content-Type": "application/x-www-form-urlencoded",
             'Accept': 'application/json',
@@ -33,7 +33,7 @@
         let csrf_token = getToken();
         axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/configurator/getCanvas',
+        url: '/configurator/getCanvas',
         headers:{
           "Content-Type": "application/x-www-form-urlencoded",
             'Accept': 'application/json',
@@ -60,7 +60,7 @@
         let csrf_token = getToken();
         axios({
         method: 'post',
-        url: 'http://127.0.0.1:8000/configurator/saveRooms',
+        url: '/configurator/saveRooms',
         headers:{
           "Content-Type": "application/x-www-form-urlencoded",
             'Accept': 'application/json',

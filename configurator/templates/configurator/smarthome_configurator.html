@@ -39,7 +39,8 @@
       <div class="device_container" v-for="device in devices">
           <img  v-on:dblclick="getAdditionalInformations" :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image">
            <div class="desc">    
-              {[device.name]} <br>   
+              <a v-bind:href="base_url+device.name" target="_blank"> {[device.name]} </a>
+              <br>   
               <label for="connector">{% translate "Connector" %}:</label>
               <select class="dropdown" :id="'dropdown-' + device.id">
                 <option v-for="connector in device.connector">
@@ -53,7 +54,7 @@
     <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Issues " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
-              <caption>{[vulnerabilities[0].device_id[0]["name"]  ]}</caption>
+              <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </a></caption>
               <tr>
                   <th>{% translate "Vulnerability found" %}</th>
                   <th>{% translate "Vulnerability description" %}</th>
@@ -94,13 +95,11 @@
 
 <div class="buttons">                
   <input type="hidden" id="csrf" value={{ csrf_token }} />
-  <button class="btn btn-outline-success my-2 my-sm-0" onclick="SaveData()">{% translate "Save" %}</button>
-  <button class="btn btn-outline-success my-2 my-sm-0" onclick="getCanvas()">{% translate "Load" %}</button>          
+  <button  onclick="SaveData()">{% translate "Save" %}</button>
+  <button  onclick="getCanvas()">{% translate "Load" %}</button>          
 </div>
 
 <div id= "customValues">
-
-
   <input id="room_name" list="room_names" type= "text"/>
   <datalist id="room_names">
     <option>{% translate "Wohnzimmer" %}</option>
@@ -112,8 +111,6 @@
 
   <input type="color" id="room_color"value="#ffffff">
   <label for="room_color"></label>{% translate "Room Color" %}</label>
-
-
 </div>
 
 
@@ -125,8 +122,8 @@
 
 
 <span id="CurrentCanvasObject">{% translate "Add Room" %} </span>
-<main id="canvas-wrapper">
-    <canvas id="canvas_object" width="1200" height="700"></canvas>
+<main id="canvas-wrapper" >
+    <canvas id="canvas_object" width="1800" height="800"></canvas>
 </main>
 
 </div>
