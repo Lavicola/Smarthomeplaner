@@ -1,33 +1,10 @@
 
+
     function getToken(){
         let = csrf_token = document.getElementById("csrf").value;
         return csrf_token;
     
     }
-    
-    
-    function setCanvas() {
-        let csrf_token = getToken();
-        axios({
-        method: 'post',
-        url: '/configurator/setCanvas',
-        headers:{
-          "Content-Type": "application/x-www-form-urlencoded",
-            'Accept': 'application/json',
-            'X-CSRFToken': csrf_token
-          },
-        data: "canvas_map=" + JSON.stringify( canvas.toJSON(['id','name',"isDevice","connector"]) )
-      }).then(function (response){ 
-                console.log("success");          
-      }
-              )  .catch(error => {                
-                console.log(error.response.status);
-                return false;
-             })
-          return true;                  
-    }
-    
-    
     
     function getCanvas() {
         let csrf_token = getToken();
@@ -39,7 +16,7 @@
             'Accept': 'application/json',
             'X-CSRFToken': csrf_token
           },
-      }).then ( function (response){ //success function
+      }).then ( function (response){ 
         canvas.clear();
         canvas.loadFromJSON(response.data, function() {
         canvas.renderAll(); 
@@ -50,40 +27,59 @@
      })
         }).catch(error => {                
         console.log(error.response.status);
+        setLoadText(false);
         return false;
      }) 
+    setLoadText(true);
     return true;
     }
     
 
-    function saveRooms() {
+    function saveConfiguration() {
         let csrf_token = getToken();
         axios({
         method: 'post',
-        url: '/configurator/saveRooms',
+        url: '/configurator/saveConfiguration',
         headers:{
           "Content-Type": "application/x-www-form-urlencoded",
             'Accept': 'application/json',
             'X-CSRFToken': csrf_token
           },
-
-        data: "json_data=" + buildJSON(),
+        data: { json_data: buildJSON(), canvas_map: JSON.stringify( canvas.toJSON(['id','name',"isDevice","connector"]) ) },
       }).then(function (response){ 
         console.log("success");          
 }
       )  .catch(error => {                
         console.log(error.response.status);
+        setSaveText(false)
         return false;
      })
+     setSaveText(true)
     return true;
     }
 
 
+function setSaveText(isTrue){
+  if(isTrue){
+      document.getElementById("save_text").innerHTML = "Konfiguration wurde erfolgreich gespeichert";
+  }else{
+      document.getElementById("save_text").innerHTML = "Fehler, bitte versuche es erneut bzw. melde dich an";
+  }
 
-    function SaveData() {
-        if(setCanvas()){
-          saveRooms();
-        }       
-    }
+  setTimeout(function(){
+    document.getElementById("save_text").innerHTML=""; }, 3000);
 
-  
+}
+
+
+function setLoadText(isTrue){
+  if(isTrue){
+      document.getElementById("load_text").innerHTML = "Konfiguration wurde erfolgreich geladen ";
+  }else{
+      document.getElementById("load_text").innerHTML = "Es ist ein Fehler aufgetreten, sind sie angemeldet?";
+  }
+
+  setTimeout(function(){
+    document.getElementById("load_text").innerHTML=""; }, 3000);
+
+}

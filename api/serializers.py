@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from smarthome.models import Device, Firmware,Vulnerability,PrivacyIssue,Category
+from smarthome.models import Device, Firmware,Vulnerability,PrivacyConcern,Category,Connector
 from configurator.models import CanvasMap
 
 
@@ -13,16 +13,25 @@ class FirmwareSerializer(serializers.ModelSerializer ):
 
 
 
+class ConnectorSerializer(serializers.ModelSerializer ):
+    class Meta:
+        model = Connector
+        #fields = '__all__' 
+        fields=('connector',)
+
+
+
 class DeviceSerializer(serializers.ModelSerializer ):
     #firmware_set = FirmwareSerializer(many=True)
+    connector = ConnectorSerializer(many=True)
     class Meta:
         model = Device
         #fields = '__all__' 
         fields=('id','name','image','manufacturer','connector','generation','category')
 
 
+
 class DeviceSerializerShort(serializers.ModelSerializer ):
-    
     class Meta:
         model = Device
         #fields = '__all__' 
@@ -38,12 +47,12 @@ class VulnerabilitySerializer(serializers.ModelSerializer ):
         fields=("device_id",'discovery',"description","paper_url","patch_date","url_patch")
 
 
-class PrivacyIssueSerializer(serializers.ModelSerializer ):
+class PrivacyConcernserializer(serializers.ModelSerializer ):
     device_id = DeviceSerializerShort(many=True)
 
     class Meta:
-        model = PrivacyIssue
-        fields=("device_id",'discovery',"description","paper_url","patch_date","url_patch")
+        model = PrivacyConcern
+        fields=("device_id",'discovery',"description","paper_url")
 
 
 

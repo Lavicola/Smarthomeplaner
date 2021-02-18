@@ -8,6 +8,5 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         if ('password1' and 'password2' in form_field):
             if( form_field["password1"] == form_field["password2"]):           
                 user.set_password(form_field["password1"])
-                print("you did it!")
                 user.save()
         return user

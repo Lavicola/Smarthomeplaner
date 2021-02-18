@@ -318,18 +318,6 @@ function add_event_to_device(a_element) {
 
 }
 
-function SetBackground() {
-    fabric.Image.fromURL("https://images.unsplash.com/photo-1600456899121-68eda5705257?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=2025&q=80.jpg", function(img) {
-        canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
-            stretch: true,
-            scaleX: canvas.width / img.width,
-            scaleY: canvas.height / img.height
-        });
-    });
-
-}
-
-
 
 function initCanvas() {
     canvas = new fabric.Canvas('canvas_object')

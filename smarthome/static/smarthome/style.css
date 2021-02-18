@@ -1,4 +1,9 @@
 
+
+.red_row{
+  background-color: #af0000;
+}
+
 table, th, td {
     border: 1px solid black;
     border-collapse: collapse;

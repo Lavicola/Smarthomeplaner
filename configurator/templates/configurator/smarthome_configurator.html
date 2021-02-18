@@ -26,8 +26,7 @@
     <!-- search start-->
     <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
       <select v-model="selected_category">
-        <option disabled value=""> {% translate "Please select one" %}</option>
-        <option value="all">{% translate "All Categories" %}</option>
+        <option value="all" >{% translate "All Categories" %}</option>
         {% for category in categories %} 
         <option value="{{category}}">{{category}}</option>
         {% endfor %}
@@ -44,14 +43,14 @@
               <label for="connector">{% translate "Connector" %}:</label>
               <select class="dropdown" :id="'dropdown-' + device.id">
                 <option v-for="connector in device.connector">
-                {[connector]} 
+                {[connector["connector"]]} 
                 </option>
               </select>            
             </div>
         </div>
     </div>
 
-    <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Issues " %}</div>
+    <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Concerns " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
               <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </a></caption>
@@ -63,29 +62,26 @@
               <tr>                             
               <tr v-for="vulnerability in vulnerabilities">
                   <td>{[vulnerability.discovery]} </td>
-                  <td><a v-bind:href="vulnerability.paper_url">{[vulnerability.description]} </a></td>
+                  <td><a v-bind:href="vulnerability.paper_url" target="_blank">{[vulnerability.description]} </a></td>
                   <td v-if="vulnerability.patch_date">{% translate "Yes" %} </td> 
                   <td v-else>{% translate "No " %} </td>
               </tr>          
           </table>
           <span v-else> {% translate "No Vulnerabilities found!" %} </span>
 
-    <div class="privacy_information">
-      <table v-if="privacy_issues.length">
+    <div class="privacy_concerns">
+      <table v-if="privacy_concerns.length">
         <tr>
-          <th>{% translate "Privacy Issue found" %}</th>
-          <th>{% translate "Privacy Issue description" %}</th>
-          <th>{% translate "Privacy Issue Patched" %}</th>
+          <th>{% translate "Privacy Concern found" %}</th>
+          <th>{% translate "Privacy Concern description" %}</th>
         </tr>
       <tr>                             
-      <tr v-for="privacy_issue in privacy_issues">
-          <td>{[privacy_issue.discovery]} </td>
-          <td><a v-bind:href="privacy_issue.paper_url">{[privacy_issue.description]} </a></td>
-          <td v-if="privacy_issue.patch_date">{% translate "Yes" %} </td> 
-          <td v-else>{% translate "No" %} </td>
+      <tr v-for="privacy_concern in privacy_concerns">
+          <td>{[privacy_concern.discovery]} </td>
+          <td><a v-bind:href="privacy_concern.paper_url" target="_blank">{[privacy_concern.description]} </a></td>
       </tr>
       </table>
-      <span v-else> {% translate "No Privacy Issues found!" %} </span>
+      <span v-else> {% translate "No Privacy Concerns found!" %} </span>
     </div>
   </div>
 </div>
@@ -95,8 +91,8 @@
 
 <div class="buttons">                
   <input type="hidden" id="csrf" value={{ csrf_token }} />
-  <button  onclick="SaveData()">{% translate "Save" %}</button>
-  <button  onclick="getCanvas()">{% translate "Load" %}</button>          
+  <button  onclick="saveConfiguration()">{% translate "Save" %}</button> <span style="font-weight:bold" id="save_text"></span>   <br>
+  <button  onclick="getCanvas()">{% translate "Load" %}</button> <span style="font-weight:bold" id="load_text"></span>         
 </div>
 
 <div id= "customValues">

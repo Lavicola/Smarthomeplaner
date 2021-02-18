@@ -50,7 +50,6 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         primary_key=True
     )
     country = CountryField()
-    last_visit = models.DateField(blank=True,null=True)
     is_staff = models.BooleanField(default=False)
     is_translator = models.BooleanField(default=False)
     is_contributor = models.BooleanField(default=False)

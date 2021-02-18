@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
-from smarthome.models import Device,Firmware,Vulnerability,PrivacyIssue,Category
-from .serializers import DeviceSerializer,FirmwareSerializer,VulnerabilitySerializer,PrivacyIssueSerializer
+from smarthome.models import Device,Firmware,Vulnerability,PrivacyConcern,Category
+from .serializers import DeviceSerializer,FirmwareSerializer,VulnerabilitySerializer,PrivacyConcernserializer
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters  
@@ -14,13 +14,13 @@ class DeviceViewSet(viewsets.ReadOnlyModelViewSet):
         device_name = self.request.query_params.get("name",None)
         device_category = self.request.query_params.get("category",None)
         if device_name is not None and device_category is not None:
-            print("device_name is not None and device_category is not None")
+            #print("device_name is not None and device_category is not None")
             category_id = Category.objects.filter(category=device_category).get()
             criteria1 = Q(name__icontains=device_name)
             criteria2 = Q(category=category_id)
             queryset = queryset.filter(criteria1 & criteria2)
         elif device_name is not None:
-            print("device_name is not None")
+            #print("device_name is not None")
             criteria1 = Q(name__icontains=device_name)
             queryset = queryset.filter(criteria1)
         return queryset
@@ -43,10 +43,10 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(device_id=device_id)            
         return queryset
 
-class PrivacyIssueViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = PrivacyIssueSerializer
+class PrivacyConcernViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PrivacyConcernserializer
     def get_queryset(self):
-        queryset = PrivacyIssue.objects.all()
+        queryset = PrivacyConcern.objects.all()
         device_id = self.request.query_params.get("device_id",None)
         #todo check if int?
         if device_id is not None:

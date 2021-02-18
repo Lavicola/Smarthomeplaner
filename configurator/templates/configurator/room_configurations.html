@@ -27,7 +27,7 @@
       </tr>
     <tr>    
 {% for device_entry,color in table_data %} 
-<td class= "{{color}}" >{{ device_entry.device }} </td>
+<td class= "{{color}}" ><a href="{% url 'smarthome:devices'%}{{device_entry.device.name }}/">{{ device_entry.device }}</a></td>
 <td class= "{{color}}">{{ device_entry.quantity }} </td>
 <td class= "{{color}}">{{ device_entry.connector }} </td>
 <td><img draggable="false" src="/media/{{ device_entry.device.image }}" width="100" height="100"></img></td>
@@ -42,12 +42,6 @@
 
 {% endfor %}
 </div>
-
-
-
- 
-
-
 
 {% endblock %}
 

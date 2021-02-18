@@ -68,7 +68,11 @@
               <th>Link to the Patch Article</th>
             </tr>
         {% for vulnerability in device.vulnerability_set.all %}
+        {% if vulnerability.patch_date == None %}
+        <tr class="red_row">
+        {% else %}
         <tr>
+        {% endif %}        
             {{vulnerability.patch_url}}
             <td>{{ vulnerability.discovery }}</td>
             <td>{{ vulnerability.description }}</td>
@@ -85,39 +89,22 @@
 
     </div>
 
-    <div class = "privacy_issues">
+    <div class = "privacy_concerns">
         <table>
-            <caption>privacy Issues</caption>
+            <caption>Privacy Concerns</caption>
             <tr>
               <th>discovery</th>
               <th>description</th>
               <th>Link to the Paper</th>
-              <th>Patch Date</th>
-              <th>Link to the Patch Article</th>
             </tr>
-        {% for privacy_issue in device.privacyissue_set.all %}
+        {% for privacy_concern in device.privacyconcern_set.all %}
         <tr>
-            {{vulnerability.patch_url}}
-            <td>{{ privacy_issue.discovery }}</td>
-            <td>{{ privacy_issue.description }}</td>
-            <td><a href="{{privacy_issue.paper_url}}">Paper</a></td>
-            {% if privacy_issue.patch_date %}
-            <td>{{ privacy_issue.patch_date }}</td>
-            <td><a href="{{privacy_issue.url_patch}}">Patch</td>
-            {% else %}
-            <td>-</td>
-            <td>-</td>
-            {% endif %}
+            <td>{{ privacy_concern.discovery }}</td>
+            <td>{{ privacy_concern.description }}</td>
+            <td><a href="{{privacy_concern.paper_url}}">Paper</a></td>
         </tr>
         {% endfor %}    
-
     </div>
-
-
 </div>
-
-
-
-
 
 {% endblock %}

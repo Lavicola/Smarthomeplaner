@@ -17,22 +17,39 @@ from django.core.mail import send_mass_mail
 
 
 class Connector(models.Model):
-    connector = models.CharField(max_length=30,primary_key=True )
+    connector = models.CharField(max_length=30)
 
     def __str__(self):
         return self.connector
 
+    class Meta:
+        verbose_name = _("Connector")
+        verbose_name_plural = _("Connectors")
+        constraints = [models.UniqueConstraint(fields=["connector"],name="unique_connector")]
+
+    # get the connector id e.g E14 --> ID=1
     @staticmethod
-    def GetConnector(a_connector_name):
-        return Connector.objects.get(pk=a_connector_name)
+    def GetConnectorID(a_connector_name):
+        return Connector.objects.filter(connector=a_connector_name).values_list("id",flat=True)[0]
+    
+    #get the connector object
+    @staticmethod
+    def GetConnector(a_connector_id):
+        return Connector.objects.filter(connector=a_connector_id).get()
+        
+
 
 
 class Category(models.Model):
     category = models.CharField(max_length=30)
 
+    class Meta:
+        verbose_name = _("Category")
+        verbose_name_plural = _("Categories")
+        constraints = [models.UniqueConstraint(fields=["category"],name="unique_category")]
+
     def __str__(self):
         return self.category
-
 
 
 class Device(models.Model):
@@ -89,9 +106,6 @@ class Vulnerability(models.Model):
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Vulnerability"))
     patch_date = models.DateField(verbose_name= _("Vulnerability was patched on:"),null=True,blank=True)
     url_patch = models.URLField(max_length=500,verbose_name= _("URL to the Patch Article"),blank=True)
-    created     = models.DateTimeField(editable=False,blank=True,null=True)
-    modified    = models.DateTimeField(editable=False,blank=True,null=True)
-
 
     class Vulnerability_Category(models.TextChoices):
         Firmware = "Firmware", _("Firmware")
@@ -99,8 +113,6 @@ class Vulnerability(models.Model):
         Others = "Others", _("Others")
 
     category = models.CharField(max_length=8,choices=Vulnerability_Category.choices)
-
-
 
     class Meta:
         verbose_name = _("Vulnerability")
@@ -114,61 +126,54 @@ class Vulnerability(models.Model):
 
 @receiver(m2m_changed, sender=Vulnerability.device_id.through)
 def notify_users(sender,action,pk_set,instance, **kwargs):
-    device_entries = []
-    user_mailingdict = {}
-    messages = ()
-
     if(action == "post_add"):
-        for device_id in pk_set:
-            for entry in DeviceEntry.objects.filter(device=device_id):
-                user_email = str(entry.unique_room.user)
-                room_name = entry.unique_room.room_name
-                if ( user_email not in user_mailingdict):
-                    # e.g a[user@aol.de]
-                    user_mailingdict[user_email] = {}
-                
-                if not (user_mailingdict[user_email].__contains__(room_name)):
-                    user_mailingdict[user_email][room_name] = [] 
-                user_mailingdict[user_email][room_name].append(entry)
-        for user in user_mailingdict.keys():
-            context = {
-                    'username': user,
-                    "rooms" : user_mailingdict[user], 
-                    "vulnerability": instance.description, 
-                    }
-            if (list(CustomUser.objects.filter(email=user).values_list("country"))[0][0] == 'DE'):
-                subject = "Neue Sicherheitslücke die dich betrifft"
-                email_text = render_to_string("smarthome/email_body_german.html",context)
-            else:
-                subject = "A new Vulnerability added which concerns you "
-                email_text = render_to_string("smarthome/email_body_english.html",context)
-            messages = messages + ((subject, email_text, "davidschmidt777@t-online.de", [user_email]),)
-
-        print(len(messages))
-        send_mass_mail((messages))
-            
+        if(instance.patch_date is not None):
+            device_entries = []
+            user_mailingdict = {}
+            messages = ()
+            for device_id in pk_set:
+                for entry in DeviceEntry.objects.filter(device=device_id):
+                    user_email = str(entry.room.user)
+                    name = entry.room.name
+                    if ( user_email not in user_mailingdict):
+                        # e.g user_mailingdict[user@aol.de]
+                        user_mailingdict[user_email] = {}                    
+                    if not (user_mailingdict[user_email].__contains__(name)):
+                        user_mailingdict[user_email][name] = [] 
+                    user_mailingdict[user_email][name].append(entry)
+            for user in user_mailingdict.keys():
+                context = {
+                        'username': user,
+                        "rooms" : user_mailingdict[user], 
+                        "vulnerability": instance.description, 
+                        }
+                if (list(CustomUser.objects.filter(email=user).values_list("country"))[0][0] == 'DE'):
+                    subject = "Neue Sicherheitslücke die dich betrifft"
+                    email_text = render_to_string("smarthome/email_body_german.html",context)
+                else:
+                    subject = "A new Vulnerability added which concerns you "
+                    email_text = render_to_string("smarthome/email_body_english.html",context)
+                messages = messages + ((subject, email_text, "davidschmidt777@t-online.de", [user_email]),)
+            send_mass_mail((messages))
         pass
             
 
 
-class PrivacyIssue(models.Model):
-    device_id = models.ManyToManyField(Device,verbose_name= _("Privacy Issue affects the following devices:"))
+class PrivacyConcern(models.Model):
+    device_id = models.ManyToManyField(Device,verbose_name= _("Privacy Concern affects the following devices:"))
     discovery = models.DateField(max_length=20)
     description = models.CharField(max_length=300)
-    paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Issue"))
-    patch_date = models.DateField(verbose_name= _("Privacy Issue got resolved/updated on:"),null=True,blank=True)
-    url_patch = models.URLField(max_length=500,verbose_name= _("URL to the Privacy Issue update"),blank=True)
-
+    paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Concern"))
 
 class DeviceEntry(models.Model):
     id = models.AutoField(primary_key=True)
-    unique_room = models.ForeignKey("Room",on_delete=models.CASCADE)
+    room = models.ForeignKey("Room",on_delete=models.CASCADE)
     device = models.ForeignKey(Device,on_delete=models.CASCADE)
     connector = models.ForeignKey(Connector,on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["unique_room","device","connector","quantity"],name="unique_entry")]
+        constraints = [models.UniqueConstraint(fields=["room","device","connector","quantity"],name="unique_entry")]
         verbose_name = _("Device Entry")
         verbose_name_plural = _("Device Entries")
 
@@ -177,37 +182,37 @@ class DeviceEntry(models.Model):
         return self.device.manufacturer +" "+ self.device.name +" "+ str(self.quantity) 
 
 
-#
 # device_list list of dict with {device_id,connector}
-#
-
     @staticmethod
     def setEntries(a_room,device_list_dict):
         # get list of device_ids
         device_list = [a_dict["device_id"] for a_dict in device_list_dict]
-
         # get the unique connectors
         unique_dict_list = list(map(dict, set(tuple(sorted(sub.items())) for sub in device_list_dict))) 
         unique_connector_list = [a_dict["connector"] for a_dict in unique_dict_list]
+        # loop variables
+        l_connector_id = None
+        l_connector = None
 
         for id in set(device_list):
             device_object = Device.GetDevice(id)
-            for connector in unique_connector_list:                
+            for connector in unique_connector_list:
+                l_connector = Connector.GetConnector(connector)
+                l_connector_id = Connector.GetConnectorID(connector)                
                 quantity = DeviceEntry.GetDeviceQuantity(device_list_dict,id,connector)
                 if(quantity == 0):
                     continue
                 else:
-                    if(DeviceEntry.exists(a_room,device_object,connector)):
-                        DeviceEntry.UpdateQuantity(a_room,device_object,Connector.GetConnector(connector),quantity)
+                    if(DeviceEntry.exists(a_room,device_object,l_connector)):
+                        DeviceEntry.UpdateQuantity(a_room,device_object,l_connector,quantity)
                     else:
-                        DeviceEntry.setEntry(a_room,device_object,Connector.GetConnector(connector),quantity)
-
+                        DeviceEntry.setEntry(a_room,device_object,l_connector,quantity)
         return 
 
 
     @staticmethod
     def DeleteUnusedEntries(a_room,device_list_dict):
-        device_entries = DeviceEntry.objects.filter(unique_room=a_room)
+        device_entries = DeviceEntry.objects.filter(room=a_room)
         unique_dict_list = list(map(dict, set(tuple(sorted(sub.items())) for sub in device_list_dict))) 
         found = False
         for entry in device_entries:
@@ -219,7 +224,6 @@ class DeviceEntry(models.Model):
             if not (found):
                 DeviceEntry.delete(entry)
             found = False
-
         return 
 
     @staticmethod
@@ -230,28 +234,31 @@ class DeviceEntry(models.Model):
 
     @staticmethod
     def setEntry(room,device,a_connector,a_quantity):
-        DeviceEntry.save(DeviceEntry(unique_room=room,device=device,connector=a_connector,quantity=a_quantity))
+        DeviceEntry.save(DeviceEntry(room=room,device=device,connector=a_connector,quantity=a_quantity))
         return True
 
     @staticmethod
     def UpdateQuantity(a_room,a_device,a_connector,a_quantity):
-        DeviceEntry.objects.filter(unique_room=a_room,device=a_device,connector=a_connector).update(quantity=a_quantity)
+        DeviceEntry.objects.filter(room=a_room,device=a_device,connector=a_connector).update(quantity=a_quantity)
         return True
 
     @staticmethod
     def DeleteEntry(a_room,a_device,a_connector):
-        DeviceEntry.objects.get(unique_room=a_room,connector=a_connector,device=a_device).delete()
+        DeviceEntry.objects.get(room=a_room,connector=a_connector,device=a_device).delete()
         return 
 
     # gives the current Device Entry quantity which is saved in the database back. 
     @staticmethod
     def GetCurrentDeviceQuantity(a_room,a_device):
-        return DeviceEntry.objects.only("quantity").get(unique_room=a_room,device=a_device).quantity
+        return DeviceEntry.objects.only("quantity").get(room=a_room,device=a_device).quantity
 
 
+#a_room = roob object 
+# device = device object
+# connector = connector
     @staticmethod
     def exists(a_room,a_device,a_connector):
-        if( DeviceEntry.objects.filter(unique_room=a_room,device=a_device,connector=a_connector).count() == 0 ):
+        if( DeviceEntry.objects.filter(room=a_room,device=a_device,connector=a_connector).count() == 0 ):
             return False
         return True
 
@@ -261,58 +268,51 @@ class DeviceEntry(models.Model):
 class Room(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    room_name = models.CharField(max_length=50)
-
+    name = models.CharField(max_length=50)
 
     class Meta:
-        constraints = [models.UniqueConstraint(fields=["user","room_name"],name="unique_room")]
-
+        constraints = [models.UniqueConstraint(fields=["user","name"],name="room")]
 
     def __str__(self):
-        return self.room_name +"   " +str(self.user) 
+        return self.name +"   " +str(self.user) 
 
 
     @staticmethod
     def GetExistingRoomNames(a_email):
-        room_names = []
+        names = []
         for room in Room.objects.filter(user=a_email):
-            room_names.append(room.room_name)
-        return room_names
+            names.append(room.name)
+        return names
 
 
     @staticmethod
-    def DeleteUnusedRooms(a_email,a_room_names):
-        current_room_names = Room.GetExistingRoomNames(a_email)
-
-        for name in current_room_names:
-            if name not in a_room_names:
+    def DeleteUnusedRooms(a_email,a_names):
+        current_names = Room.GetExistingRoomNames(a_email)
+        for name in current_names:
+            if name not in a_names:
                 Room.delete(a_email,name)
-
         return 
 
 
     @staticmethod
-    def GetRoom(a_email,a_room_name):
+    def GetRoom(a_email,a_name):
                 
-        return Room.objects.filter(user=a_email,room_name=a_room_name).first()
+        return Room.objects.filter(user=a_email,name=a_name).first()
 
 
     @staticmethod
-    def exists(a_email,a_room_name):
+    def exists(a_email,a_name):
 
-        return Room.objects.filter(user=a_email,room_name=a_room_name).exists()
+        return Room.objects.filter(user=a_email,name=a_name).exists()
 
 
     @staticmethod
     def create(a_email,a_name):
-
-        Room.save(Room(user_id=a_email,room_name=a_name))
-
+        Room.save(Room(user_id=a_email,name=a_name))
         return True
     
     @staticmethod
     def CreateRooms(a_email,a_names):
-        
         for name in a_names:
             if(Room.exists(a_email,name) == False):
                 Room.create(a_email,name)
@@ -320,17 +320,14 @@ class Room(models.Model):
 
     @staticmethod
     def DeleteRooms(a_email,a_names):
-        
         for name in names:
             Room.delete(a_email,a_names)
-
         return True
 
 
     @staticmethod
-    def delete(a_email,a_names):
-        
-        Room.objects.filter(user_id=a_email,room_name=a_names).delete()
+    def delete(a_email,a_names): 
+        Room.objects.filter(user_id=a_email,name=a_names).delete()
         return True
 
 
