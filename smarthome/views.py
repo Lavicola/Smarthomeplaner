@@ -15,7 +15,6 @@ def device_overview(request,device_name):
     try:
         
         device = Device.objects.get(name=device_name)
-        print(device.name)
     except Device.DoesNotExist:
         raise Http404("Device does not exist")
     context = {

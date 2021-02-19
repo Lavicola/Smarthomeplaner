@@ -1,4 +1,9 @@
   
+#canvas_wrapper{
+  overflow-y: scroll;
+
+}
+
   div.device_container img {
     margin-left: auto;
     margin-right: auto;
@@ -33,4 +38,50 @@ option {
   padding: 4px;
   margin-bottom: 1px;
   cursor: pointer;
+}
+
+
+#customValues{
+  padding-top: 0.8%;
+  padding-bottom: 0.8%;
+}
+
+
+
+#room_name{
+  padding-bottom:0.3%;
+}
+
+.buttons{
+  float: left;
+  display: inline;
+  padding: 8px;
+  margin-right: 1.2%;
+  border-radius: 8px;
+  width: 150px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+}
+
+
+.button_serveraction{
+background-color: #1825d6;
+color: #FFFFFF;
+}
+
+
+.button_danger{
+  background-color: #d61818;
+  color: #FFFFFF;
+}
+
+.button_action{
+  background-color: #13d61d;
+  color: #FFFFFF;
+}
+
+.canvas_action{
+
+  width: 100%;
+  height: 20%;
 }

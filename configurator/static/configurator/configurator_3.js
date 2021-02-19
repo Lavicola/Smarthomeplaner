@@ -27,10 +27,10 @@
      })
         }).catch(error => {                
         console.log(error.response.status);
-        setLoadText(false);
+        setFeedbackText("Es ist ein Fehler aufgetreten, sind sie angemeldet?");
         return false;
      }) 
-    setLoadText(true);
+     setFeedbackText("Konfiguration wurde erfolgreich geladen");
     return true;
     }
     
@@ -51,35 +51,18 @@
 }
       )  .catch(error => {                
         console.log(error.response.status);
-        setSaveText(false)
+        setFeedbackText("Fehler, bitte versuche es erneut bzw. melde dich an");
         return false;
      })
-     setSaveText(true)
+     setFeedbackText("Konfiguration wurde erfolgreich gespeichert");
     return true;
     }
 
 
-function setSaveText(isTrue){
-  if(isTrue){
-      document.getElementById("save_text").innerHTML = "Konfiguration wurde erfolgreich gespeichert";
-  }else{
-      document.getElementById("save_text").innerHTML = "Fehler, bitte versuche es erneut bzw. melde dich an";
-  }
-
+function setFeedbackText(text=""){
+  document.getElementById("feedback_text").innerHTML = text;
   setTimeout(function(){
-    document.getElementById("save_text").innerHTML=""; }, 3000);
+    document.getElementById("feedback_text").innerHTML=""; }, 3000);
 
 }
 
-
-function setLoadText(isTrue){
-  if(isTrue){
-      document.getElementById("load_text").innerHTML = "Konfiguration wurde erfolgreich geladen ";
-  }else{
-      document.getElementById("load_text").innerHTML = "Es ist ein Fehler aufgetreten, sind sie angemeldet?";
-  }
-
-  setTimeout(function(){
-    document.getElementById("load_text").innerHTML=""; }, 3000);
-
-}

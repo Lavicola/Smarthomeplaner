@@ -32,9 +32,9 @@
         <table>
             <caption>{% translate "Firmwares" %}</caption>
             <tr>
-              <th>Firmware Version</th>
-              <th>Changelog</th>
-              <th>Release Date</th>
+              <th>{% translate "Firmware Version" %}</th>
+              <th>{% translate "Changelog" %}</th>
+              <th>{% translate "Release Date" %}</th>
             </tr>
 
         {% for firmware in device.firmware_set.all %}
@@ -61,11 +61,11 @@
         <table>
             <caption>Vulnerabilities</caption>
             <tr>
-              <th>discovery</th>
-              <th>description</th>
-              <th>Link to the Paper</th>
-              <th>Patch Date</th>
-              <th>Link to the Patch Article</th>
+              <th>{% translate "Discovered" %}</th>
+              <th>{% translate "Description" %}</th>
+              <th>{% translate "Link to the Paper" %}</th>
+              <th>{% translate "Patch Date" %}</th>
+              <th>{% translate "Link to the Patch Article" %}</th>
             </tr>
         {% for vulnerability in device.vulnerability_set.all %}
         {% if vulnerability.patch_date == None %}
@@ -93,10 +93,10 @@
         <table>
             <caption>Privacy Concerns</caption>
             <tr>
-              <th>discovery</th>
-              <th>description</th>
-              <th>Link to the Paper</th>
-            </tr>
+                <th>{% translate "Discovered" %}</th>
+                <th>{% translate "Description" %}</th>
+                <th>{% translate "Link to the Paper" %}</th>
+              </tr>
         {% for privacy_concern in device.privacyconcern_set.all %}
         <tr>
             <td>{{ privacy_concern.discovery }}</td>

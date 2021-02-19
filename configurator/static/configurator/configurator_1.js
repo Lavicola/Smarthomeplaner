@@ -1,4 +1,6 @@
 var canvas;
+const noZoom = 1;
+
 const default_Roomconfig = {
     left: 0,
     top: 0,
@@ -15,17 +17,22 @@ const default_Roomconfig = {
 
 function set_canvas_event_handlers(canvas) {
 
+
+    canvas.on("after:render", function(){ canvas.calcOffset() });
+
+
     //enables zoom and panning
     canvas.on('mouse:wheel', function(opt) {
         var delta = opt.e.deltaY;
         var zoom = canvas.getZoom();
         zoom *= 0.999 ** delta;
-        if (zoom > 20) zoom = 20;
-        if (zoom < 0.01) zoom = 0.01;
-        canvas.zoomToPoint({
-            x: opt.e.offsetX,
-            y: opt.e.offsetY
-        }, zoom);
+        if (zoom > 2){
+            zoom = 2;
+        }
+        if (zoom < 0.5){
+            zoom = 0.5;
+        } 
+        canvas.setZoom(zoom);
         opt.e.preventDefault();
         opt.e.stopPropagation();
     });
@@ -71,8 +78,16 @@ function getRoomProperties() {
 
 }
 
+
+function resetRoomName(){
+    document.getElementById("room_name").value = "";
+
+}
+
 function add_Room() {
     let room_properties = getRoomProperties();
+    resetRoomName();
+
 
     const room = new fabric.Rect(room_properties);
     let textObject = new fabric.IText(room_properties.name, {
@@ -95,7 +110,7 @@ function add_Room() {
 
 function GenerateRoomname() {
     let number = 2;
-    let temp_name = getRoomCategory();
+    let temp_name = getRoomName();
     let name = temp_name;
     while (RoomExists(name)) {
         name = temp_name + number;
@@ -120,9 +135,9 @@ function RoomExists(a_room_name) {
 }
 
 
-function getRoomCategory() {
-    category = document.getElementById("room_name").value;
-    return category;
+function getRoomName() {
+    let name = document.getElementById("room_name").value;
+    return name;
 }
 
 function getRoomColor() {
@@ -275,8 +290,8 @@ function drop_handler(ev) {
     svg_name = document.getElementById(svg_id).name;
     fabric.loadSVGFromURL(data, function(objects, options) {
         var svg = fabric.util.groupSVGElements(objects, options);
-        svg.left = ev.layerX;
-        svg.top = ev.layerY;
+        svg.left = ev.layerX / (canvas.getZoom());
+        svg.top = ev.layerY / (canvas.getZoom());
         svg.id = svg_id;
         svg.scaleToWidth(100);
         svg.scaleToHeight(100);
@@ -319,12 +334,20 @@ function add_event_to_device(a_element) {
 }
 
 
+function setCanvasWidth() {
+    canvas.setWidth(window.innerWidth);
+    return;
+}
+  
+
+
 function initCanvas() {
     canvas = new fabric.Canvas('canvas_object')
     fabric.Object.prototype.set({
         snapThreshold: 45,
         snapAngle: 90
     });;
+    setCanvasWidth();
     set_canvas_event_handlers(canvas);
 }
 

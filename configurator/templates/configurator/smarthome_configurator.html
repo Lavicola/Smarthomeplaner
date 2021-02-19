@@ -31,7 +31,7 @@
         <option value="{{category}}">{{category}}</option>
         {% endfor %}
       </select>      
-      <input class="form-control mr-sm-2" type="text" placeholder="{% translate "Search" %}" v-model="search_term" aria-label="Search">
+      <input class="form-control mr-sm-2" type="text" placeholder="{% translate 'Search' %}" v-model="search_term" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
    </div>
     <div class="responsive">
@@ -88,36 +88,42 @@
 
 
 
+<input type="hidden" id="csrf" value={{ csrf_token }} />
+<br><br>
+<span style="font-weight:bold" id="feedback_text"></span>
+<div class="ServerActions">                
+  <button class="buttons button_serveraction"  onclick="getCanvas()">{% translate "Load Room Configuration" %}</button>         
+  <button class="buttons button_serveraction"  onclick="saveConfiguration()">{% translate "Save Room Configuration" %}</button> 
 
-<div class="buttons">                
-  <input type="hidden" id="csrf" value={{ csrf_token }} />
-  <button  onclick="saveConfiguration()">{% translate "Save" %}</button> <span style="font-weight:bold" id="save_text"></span>   <br>
-  <button  onclick="getCanvas()">{% translate "Load" %}</button> <span style="font-weight:bold" id="load_text"></span>         
 </div>
 
 <div id= "customValues">
-  <input id="room_name" list="room_names" type= "text"/>
-  <datalist id="room_names">
-    <option>{% translate "Wohnzimmer" %}</option>
-    <option>{% translate "Büro" %}</option>
-    <option>{% translate "Küche" %}</option>
-    <option>{% translate "WC" %}</option>
-    <option>{% translate "Schlafzimmer" %}</option>
-  </datalist>
-
+  <br><br><br>
   <input type="color" id="room_color"value="#ffffff">
   <label for="room_color"></label>{% translate "Room Color" %}</label>
+<br>
+  <input id="room_name" list="room_names" type= "text" placeholder="{% translate 'type or choose' %}"/>
+  <datalist id="room_names">
+    <option>{% translate "Living Room" %}</option>
+    <option>{% translate "Office" %}</option>
+    <option>{% translate "Kitchen" %}</option>
+    <option>{% translate "Bathroom" %}</option>
+    <option>{% translate "Bedroom" %}</option>
+  </datalist>
+  <label for="room_name"></label>{% translate "Room Name" %}</label>
+
 </div>
 
 
 
-<div class="btn-group">  
-  <button onclick="add_Room()">{% translate "Add Room" %}</button>
-  <button class="btn btn-danger remove" onclick="remove_objects()">{% translate "Remove Element(s)" %}</button>
+<div class="canvas_action">  
+  <button class="button_action buttons" onclick="add_Room()">{% translate "Add Room" %}</button>
+  <button class="button_danger buttons" onclick="remove_objects()">{% translate "Remove Element(s)" %}</button>
+  <br><br><br>
 </div>
 
 
-<span id="CurrentCanvasObject">{% translate "Add Room" %} </span>
+<span id="CurrentCanvasObject">{% translate "Hover over any Device to get the Name" %} </span>
 <main id="canvas-wrapper" >
     <canvas id="canvas_object" width="1800" height="800"></canvas>
 </main>

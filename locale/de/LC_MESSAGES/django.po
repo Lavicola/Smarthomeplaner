@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-05 00:16+0100\n"
+"POT-Creation-Date: 2021-02-19 03:51+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,169 +18,324 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: .\Smarthomeplaner\settings.py:208
+#: .\Smarthomeplaner\settings.py:210
 msgid "English"
 msgstr "Englisch"
 
-#: .\Smarthomeplaner\settings.py:209
+#: .\Smarthomeplaner\settings.py:211
 msgid "German"
 msgstr "Deutsch"
 
-#: .\configurator\templates\configurator\index.html:33
-msgid "Please select one"
-msgstr "Bitte eine Kategorie auswählen"
+#: .\configurator\templates\configurator\room_configurations.html:23
+msgid "Product"
+msgstr "Product"
 
-#: .\configurator\templates\configurator\index.html:34
+#: .\configurator\templates\configurator\room_configurations.html:24
+msgid "Quantity"
+msgstr "Anzahl"
+
+#: .\configurator\templates\configurator\room_configurations.html:25
+#: .\configurator\templates\configurator\smarthome_configurator.html:43
+#: .\smarthome\models.py:26
+msgid "Connector"
+msgstr "Anschluss"
+
+#: .\configurator\templates\configurator\room_configurations.html:26
+msgid "Picture"
+msgstr "Bild"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:29
 msgid "All Categories"
 msgstr "Alle Kategorien"
 
-#: .\configurator\templates\configurator\index.html:40
+#: .\configurator\templates\configurator\smarthome_configurator.html:34
+#: .\configurator\templates\configurator\smarthome_configurator.html:35
 msgid "Search"
 msgstr "Suche"
 
-#: .\configurator\templates\configurator\index.html:57
-msgid "Save"
+#: .\configurator\templates\configurator\smarthome_configurator.html:53
+msgid "Double Click on a Device to Show vulnerabilities and Privacy Concerns "
+msgstr ""
+"Klick doppelt auf ein Gerät um die Schwachstellen und Datenschutz "
+"Bedenkliche Informationen anzeigen zu lassen"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:58
+#, fuzzy
+#| msgid "Vulnerability"
+msgid "Vulnerability found"
+msgstr "Schwachstelle gefunden"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:59
+#, fuzzy
+#| msgid "Vulnerability was patched on:"
+msgid "Vulnerability description"
+msgstr "Beschreibung der Schwachstelle am:"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:60
+#, fuzzy
+#| msgid "Vulnerability patched:"
+msgid "Vulnerability Patched"
+msgstr "Schwachstelle wurde gepatcht:"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:66
+msgid "Yes"
+msgstr "Ja"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:67
+msgid "No "
+msgstr "Nein"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:70
+#, fuzzy
+#| msgid "Vulnerabilities"
+msgid "No Vulnerabilities found!"
+msgstr "Keine Schwachstelle gefunden"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:75
+msgid "Privacy Concern found"
+msgstr "Datenschutzbedenkliche Eintrag gefunden"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:76
+msgid "Privacy Concern description"
+msgstr "Beschreibung"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:84
+msgid "No Privacy Concerns found!"
+msgstr "Keine Datenschutzbedenklichen Informationen gefunden!"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:95
+#, fuzzy
+#| msgid "Configurator"
+msgid "Load Room Configuration"
+msgstr "Konfigurator"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:96
+#, fuzzy
+#| msgid "Configurator"
+msgid "Save Room Configuration"
 msgstr "Speicher Raumkonfiguration"
 
-#: .\configurator\templates\configurator\index.html:58
-msgid "Load"
-msgstr "Lade Raumkonfiguration"
+#: .\configurator\templates\configurator\smarthome_configurator.html:103
+msgid "Room Color"
+msgstr "Raumfarbe"
 
-#: .\configurator\templates\configurator\index.html:73
+#: .\configurator\templates\configurator\smarthome_configurator.html:105
+msgid "type or choose"
+msgstr "gib einen Raumnamen ein oder wähle aus"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:107
+msgid "Living Room"
+msgstr "Wohnzimmer"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:108
+msgid "Office"
+msgstr "Büro"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:109
+msgid "Kitchen"
+msgstr "Küche"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:110
+msgid "Bathroom"
+msgstr "Badezimmer"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:111
+msgid "Bedroom"
+msgstr "Schlafzimmer"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:113
+msgid "Room Name"
+msgstr "Raumname"
+
+#: .\configurator\templates\configurator\smarthome_configurator.html:120
 msgid "Add Room"
 msgstr "Raum hinzufügen"
 
-#: .\configurator\templates\configurator\index.html:74
-msgid "Remove"
-msgstr "Raum entfernen"
+#: .\configurator\templates\configurator\smarthome_configurator.html:121
+msgid "Remove Element(s)"
+msgstr "Entferne Elemente"
 
-#: .\smarthome\models.py:19
-msgid "SMART_LIGHTING"
-msgstr "Intiligente Beleuchtung"
-
-#: .\smarthome\models.py:20
-msgid "SMART_LOCK"
-msgstr ""
-
-#: .\smarthome\models.py:21
-msgid "SMART_METERING_WATER"
-msgstr ""
-
-#: .\smarthome\models.py:22
-msgid "SMART_METERING_ELECTRICITY"
-msgstr ""
-
-#: .\smarthome\models.py:23
-msgid "SMAERT_METERING_WARMTH"
-msgstr ""
-
-#: .\smarthome\models.py:24
-msgid "VIRTUAL_ASSISTANT"
-msgstr ""
-
-#: .\smarthome\models.py:25
-msgid "SMART_THERMOSTAT"
-msgstr ""
-
-#: .\smarthome\models.py:26
-msgid "SMART_CAM"
-msgstr ""
+#: .\configurator\templates\configurator\smarthome_configurator.html:126
+msgid "Hover over any Device to get the Name"
+msgstr "Bewege die Maus über ein Gerät um dir den Namen anzeigen zu lassen"
 
 #: .\smarthome\models.py:27
-msgid "SMART_SECURITY_SYSTEM"
-msgstr ""
+#: .\smarthome\templates\smarthome\device_overview.html:23
+msgid "Connectors"
+msgstr "Anschlüsse"
 
-#: .\smarthome\models.py:35 .\smarthome\models.py:36
+#: .\smarthome\models.py:47
+#, fuzzy
+#| msgid "All Categories"
+msgid "Category"
+msgstr "Alle Kategorien"
+
+#: .\smarthome\models.py:48
+#, fuzzy
+#| msgid "All Categories"
+msgid "Categories"
+msgstr "Alle Kategorien"
+
+#: .\smarthome\models.py:66
 msgid "Device"
 msgstr "Gerät"
 
-#: .\smarthome\models.py:58
+#: .\smarthome\models.py:67
+#, fuzzy
+#| msgid "Device"
+msgid "Devices"
+msgstr "Gerät"
+
+#: .\smarthome\models.py:81
 msgid "Firmware Compatible with"
-msgstr ""
+msgstr "Firmware Kompatibel mit"
 
-#: .\smarthome\models.py:59
+#: .\smarthome\models.py:82
 msgid "Versionnumber"
-msgstr ""
+msgstr "Versionsnummer"
 
-#: .\smarthome\models.py:60
+#: .\smarthome\models.py:83
+#: .\smarthome\templates\smarthome\device_overview.html:36
 msgid "Changelog"
-msgstr ""
+msgstr "Changelog"
 
-#: .\smarthome\models.py:61
+#: .\smarthome\models.py:84
+#: .\smarthome\templates\smarthome\device_overview.html:37
 msgid "Release Date"
-msgstr ""
+msgstr "Veröffentlichungsdatum"
 
-#: .\smarthome\models.py:64
+#: .\smarthome\models.py:87 .\smarthome\models.py:111
 msgid "Firmware"
-msgstr ""
+msgstr "Firmware"
 
-#: .\smarthome\models.py:65
+#: .\smarthome\models.py:88
+#: .\smarthome\templates\smarthome\device_overview.html:33
 msgid "Firmwares"
-msgstr ""
+msgstr "Firmwares"
 
-#: .\smarthome\models.py:70
-msgid "Vulnerability useable by Device:"
-msgstr ""
+#: .\smarthome\models.py:103
+#, fuzzy
+#| msgid "Vulnerability patched:"
+msgid "Vulnerability exploitable by:"
+msgstr "Schwachstelle wurde gepatcht:"
 
-#: .\smarthome\models.py:71
+#: .\smarthome\models.py:104
 msgid "Vulnerability was found on:"
-msgstr ""
+msgstr "Schwachstelle wurde gefunden am:"
 
-#: .\smarthome\models.py:72
+#: .\smarthome\models.py:105
 msgid "Description of the Vulnerability "
-msgstr ""
+msgstr "Beschreibung der Schwachstelle"
 
-#: .\smarthome\models.py:73
+#: .\smarthome\models.py:106
 msgid "URL to the Article to the Vulnerability"
-msgstr ""
+msgstr "Adresse zum Artikel der Schwachstelle"
 
-#: .\smarthome\models.py:74
-msgid "Categorie"
-msgstr ""
-
-#: .\smarthome\models.py:75
+#: .\smarthome\models.py:107
 msgid "Vulnerability was patched on:"
-msgstr "Schwachstelle wurde gepatched am:"
+msgstr "Schwachstelle wurde gepatcht am:"
 
-#: .\smarthome\models.py:76
-msgid "Link to the Patch Article"
+#: .\smarthome\models.py:108
+#, fuzzy
+#| msgid "Link to the Patch Article"
+msgid "URL to the Patch Article"
 msgstr "Link zum Patch Artikel"
 
-#: .\smarthome\models.py:77
-msgid "Vulnerability patched:"
-msgstr "Schwachstelle wurde gepatched:"
+#: .\smarthome\models.py:112
+msgid "Physical"
+msgstr "Physikalische"
 
-#: .\smarthome\models.py:80
+#: .\smarthome\models.py:113
+msgid "Others"
+msgstr "Sonstige"
+
+#: .\smarthome\models.py:118
 msgid "Vulnerability"
 msgstr "Schwachstelle"
 
-#: .\smarthome\models.py:81
+#: .\smarthome\models.py:119
 msgid "Vulnerabilities"
-msgstr "Schwachstellem"
+msgstr "Schwachstellen"
 
-#: .\templates\nav.html:9
+#: .\smarthome\models.py:163
+msgid "Privacy Concern affects the following devices:"
+msgstr ""
+"Datenschutzbedenkliche Informationen beziehen sich auf folgende Geräte:"
+
+#: .\smarthome\models.py:166
+msgid "URL to the Article to the Privacy Concern"
+msgstr "Adresse zum Artikel"
+
+#: .\smarthome\models.py:177
+#, fuzzy
+#| msgid "Device"
+msgid "Device Entry"
+msgstr "Geräteeintrag"
+
+#: .\smarthome\models.py:178
+#, fuzzy
+#| msgid "Device Overview"
+msgid "Device Entries"
+msgstr "Geräteeintrag Übersicht"
+
+#: .\smarthome\templates\smarthome\device_overview.html:35
+msgid "Firmware Version"
+msgstr "Firmware Version"
+
+#: .\smarthome\templates\smarthome\device_overview.html:64
+#: .\smarthome\templates\smarthome\device_overview.html:96
+msgid "Discovered"
+msgstr "Entdeckt"
+
+#: .\smarthome\templates\smarthome\device_overview.html:65
+#: .\smarthome\templates\smarthome\device_overview.html:97
+msgid "Description"
+msgstr "Beschreibung"
+
+#: .\smarthome\templates\smarthome\device_overview.html:66
+#: .\smarthome\templates\smarthome\device_overview.html:98
+#, fuzzy
+#| msgid "Link to the Patch Article"
+msgid "Link to the Paper"
+msgstr "Link zum Patch Artikel"
+
+#: .\smarthome\templates\smarthome\device_overview.html:67
+msgid "Patch Date"
+msgstr "Patch Datum"
+
+#: .\smarthome\templates\smarthome\device_overview.html:68
+msgid "Link to the Patch Article"
+msgstr "Link zum Patch Artikel"
+
+#: .\templates\nav.html:7
 msgid "Welcome"
 msgstr "Wilkommen"
 
-#: .\templates\nav.html:18
+#: .\templates\nav.html:16
 msgid "Configurator"
 msgstr "Konfigurator"
 
-#: .\templates\nav.html:19
+#: .\templates\nav.html:17
 msgid "Device Overview"
 msgstr "Geräte Übersicht"
 
-#: .\templates\nav.html:20
+#: .\templates\nav.html:18
 msgid "My Devices"
 msgstr "Meine Geräte"
 
-#: .\templates\nav.html:23
+#: .\templates\nav.html:19
+msgid "Fundamentals"
+msgstr "Grundlagen"
+
+#: .\templates\nav.html:22
 msgid "Login"
 msgstr "Einloggen"
 
-#: .\templates\nav.html:24
-msgid "Logout"
-msgstr "Ausloggen"
+#: .\templates\nav.html:23
+#, fuzzy
+#| msgid "Registrieren"
+msgid "Register"
+msgstr "Registrieren"
 
 #: .\users\models.py:18
 msgid "The Email must be set"
@@ -194,6 +349,28 @@ msgstr ""
 msgid "Superuser must have is_superuser=True."
 msgstr ""
 
-#: .\users\models.py:43
+#: .\users\models.py:39
+msgid "Superuser must have is_active=True."
+msgstr ""
+
+#: .\users\models.py:47
 msgid "email address"
 msgstr "Emailadresse"
+
+#~ msgid "Load"
+#~ msgstr "Lade"
+
+#~ msgid "Save"
+#~ msgstr "Speicher"
+
+#~ msgid "Please select one"
+#~ msgstr "Bitte eine Kategorie auswählen"
+
+#~ msgid "Remove"
+#~ msgstr "Raum entfernen"
+
+#~ msgid "SMART_LIGHTING"
+#~ msgstr "Intiligente Beleuchtung"
+
+#~ msgid "Logout"
+#~ msgstr "Ausloggen"
