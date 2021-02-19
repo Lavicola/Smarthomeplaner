@@ -159,9 +159,8 @@ def notify_users(sender,action,pk_set,instance, **kwargs):
             
 
 
-class PrivacyConcern(models.Model):
+class PrivacyInformation(models.Model):
     device_id = models.ManyToManyField(Device,verbose_name= _("Privacy Concern affects the following devices:"))
-    discovery = models.DateField(max_length=20)
     description = models.CharField(max_length=300)
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Concern"))
 

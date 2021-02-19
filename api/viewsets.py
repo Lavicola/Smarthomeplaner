@@ -1,6 +1,6 @@
 from rest_framework import viewsets, filters
-from smarthome.models import Device,Firmware,Vulnerability,PrivacyConcern,Category
-from .serializers import DeviceSerializer,FirmwareSerializer,VulnerabilitySerializer,PrivacyConcernserializer
+from smarthome.models import Device,Firmware,Vulnerability,PrivacyInformation,Category
+from .serializers import DeviceSerializer,FirmwareSerializer,VulnerabilitySerializer,PrivacyInformationerializer
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters  
@@ -43,10 +43,10 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(device_id=device_id)            
         return queryset
 
-class PrivacyConcernViewSet(viewsets.ReadOnlyModelViewSet):
-    serializer_class = PrivacyConcernserializer
+class PrivacyInformationViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = PrivacyInformationerializer
     def get_queryset(self):
-        queryset = PrivacyConcern.objects.all()
+        queryset = PrivacyInformation.objects.all()
         device_id = self.request.query_params.get("device_id",None)
         #todo check if int?
         if device_id is not None:

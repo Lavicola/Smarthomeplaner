@@ -1,12 +1,12 @@
 from django.urls import include, path
 from rest_framework import routers
-from api.viewsets import DeviceViewSet,VulnerabilityViewSet,PrivacyConcernViewSet
+from api.viewsets import DeviceViewSet,VulnerabilityViewSet,PrivacyInformationViewSet
 
 
 router = routers.DefaultRouter()
 router.register(r'devices', DeviceViewSet,basename="api")
 router.register(r'vulnerability',VulnerabilityViewSet,basename="api")
-router.register(r'privacy',PrivacyConcernViewSet,basename="api")
+router.register(r'privacy',PrivacyInformationViewSet,basename="api")
 
 
 

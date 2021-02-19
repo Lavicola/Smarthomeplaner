@@ -1,5 +1,5 @@
 from modeltranslation.translator import translator, TranslationOptions
-from .models import Firmware,Category,PrivacyConcern,Vulnerability,Connector
+from .models import Firmware,Category,PrivacyInformation,Vulnerability,Connector
 
 
 
@@ -10,7 +10,7 @@ class CategoryTranslationOptions(TranslationOptions):
     fields = ("category",)
 
 
-class PrivacyConcernTranslationOptions(TranslationOptions):
+class PrivacyInformationTranslationOptions(TranslationOptions):
     fields = ("description",)
 
 class VulnerabilityTranslationOptions(TranslationOptions):
@@ -25,6 +25,6 @@ class ConnectorTranslationOptions(TranslationOptions):
 
 translator.register(Firmware,FirmwareTranslationOptions)
 translator.register(Category,CategoryTranslationOptions)
-translator.register(PrivacyConcern,PrivacyConcernTranslationOptions)
+translator.register(PrivacyInformation,PrivacyInformationTranslationOptions)
 translator.register(Vulnerability,VulnerabilityTranslationOptions)
 translator.register(Connector,ConnectorTranslationOptions)

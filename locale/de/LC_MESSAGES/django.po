@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 13:07+0100\n"
+"POT-Creation-Date: 2021-02-19 16:11+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,13 +55,13 @@ msgid "Search"
 msgstr "Suche"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:53
-msgid "Double Click on a Device to Show vulnerabilities and Privacy Concerns "
+msgid ""
+"Double Click on a Device to Show vulnerabilities and Privacy Information "
 msgstr ""
-"Klick doppelt auf ein Gerät um die Schwachstellen und Datenschutz "
-"Bedenkliche Informationen anzeigen zu lassen"
+"Klick doppelt auf ein Gerät um die Schwachstellen und Informationen zum "
+"Datenschutz  anzeigen zu lassen"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:58
-#: .\configurator\templates\configurator\smarthome_configurator.html:75
 msgid "Found"
 msgstr "Funddatum"
 
@@ -85,63 +85,64 @@ msgstr "Nein"
 msgid "No Vulnerabilities found!"
 msgstr "Keine Schwachstelle gefunden!"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:76
-msgid "Description(Privacy Concerns)"
+#: .\configurator\templates\configurator\smarthome_configurator.html:75
+msgid "Description(Privacy Information)"
 msgstr "Beschreibung(Datenschutz)"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:84
-msgid "No Privacy Concerns found!"
-msgstr "Keine Datenschutz bedenklichen Informationen gefunden!"
+#: .\configurator\templates\configurator\smarthome_configurator.html:82
+#| msgid "No Privacy Concerns found!"
+msgid "No Privacy Information found!"
+msgstr "Keine Datenschutz Informationen gefunden"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:95
+#: .\configurator\templates\configurator\smarthome_configurator.html:93
 msgid "Load Room Configuration"
 msgstr "Lade Raumkonfigurator"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:96
+#: .\configurator\templates\configurator\smarthome_configurator.html:94
 msgid "Save Room Configuration"
 msgstr "Speicher Raumkonfiguration"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:103
+#: .\configurator\templates\configurator\smarthome_configurator.html:101
 msgid "Room Color"
 msgstr "Raumfarbe"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:105
+#: .\configurator\templates\configurator\smarthome_configurator.html:103
 msgid "type or choose"
 msgstr "Raumname eingeben oder auswählen"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:107
+#: .\configurator\templates\configurator\smarthome_configurator.html:105
 msgid "Living Room"
 msgstr "Wohnzimmer"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:108
+#: .\configurator\templates\configurator\smarthome_configurator.html:106
 msgid "Office"
 msgstr "Büro"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:109
+#: .\configurator\templates\configurator\smarthome_configurator.html:107
 msgid "Kitchen"
 msgstr "Küche"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:110
+#: .\configurator\templates\configurator\smarthome_configurator.html:108
 msgid "Bathroom"
 msgstr "Badezimmer"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:111
+#: .\configurator\templates\configurator\smarthome_configurator.html:109
 msgid "Bedroom"
 msgstr "Schlafzimmer"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:113
+#: .\configurator\templates\configurator\smarthome_configurator.html:111
 msgid "Room Name"
 msgstr "Raumname"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:120
+#: .\configurator\templates\configurator\smarthome_configurator.html:118
 msgid "Add Room"
 msgstr "Raum hinzufügen"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:121
+#: .\configurator\templates\configurator\smarthome_configurator.html:119
 msgid "Remove Element(s)"
-msgstr "Entferne Elemente"
+msgstr "Entferne Element(e)"
 
-#: .\configurator\templates\configurator\smarthome_configurator.html:126
+#: .\configurator\templates\configurator\smarthome_configurator.html:124
 msgid "Hover over any Device to get the Name"
 msgstr "Bewege die Maus über ein Gerät um dir den Namen anzeigen zu lassen"
 
@@ -149,6 +150,12 @@ msgstr "Bewege die Maus über ein Gerät um dir den Namen anzeigen zu lassen"
 #: .\smarthome\templates\smarthome\device_overview.html:23
 msgid "Connectors"
 msgstr "Anschlüsse"
+
+#: .\smarthome\models.py:47
+#, fuzzy
+#| msgid "All Categories"
+msgid "Category"
+msgstr "Alle Kategorien"
 
 #: .\smarthome\models.py:48
 #, fuzzy
@@ -235,20 +242,19 @@ msgstr "Schwachstellen"
 
 #: .\smarthome\models.py:163
 msgid "Privacy Concern affects the following devices:"
-msgstr ""
-"Datenschutzbedenkliche Informationen beziehen sich auf folgende Geräte:"
+msgstr "Datenschutz Informationen beziehen sich auf folgende Geräte:"
 
-#: .\smarthome\models.py:166
+#: .\smarthome\models.py:165
 msgid "URL to the Article to the Privacy Concern"
 msgstr "Adresse zum Artikel"
 
-#: .\smarthome\models.py:177
+#: .\smarthome\models.py:176
 #, fuzzy
 #| msgid "Device"
 msgid "Device Entry"
 msgstr "Geräteeintrag"
 
-#: .\smarthome\models.py:178
+#: .\smarthome\models.py:177
 #, fuzzy
 #| msgid "Device Overview"
 msgid "Device Entries"
@@ -259,17 +265,16 @@ msgid "Firmware Version"
 msgstr "Firmware Version"
 
 #: .\smarthome\templates\smarthome\device_overview.html:64
-#: .\smarthome\templates\smarthome\device_overview.html:96
 msgid "Discovered"
 msgstr "Entdeckt"
 
 #: .\smarthome\templates\smarthome\device_overview.html:65
-#: .\smarthome\templates\smarthome\device_overview.html:97
+#: .\smarthome\templates\smarthome\device_overview.html:96
 msgid "Description"
 msgstr "Beschreibung"
 
 #: .\smarthome\templates\smarthome\device_overview.html:66
-#: .\smarthome\templates\smarthome\device_overview.html:98
+#: .\smarthome\templates\smarthome\device_overview.html:97
 #, fuzzy
 #| msgid "Link to the Patch Article"
 msgid "Link to the Paper"
@@ -282,6 +287,10 @@ msgstr "Patch Datum"
 #: .\smarthome\templates\smarthome\device_overview.html:68
 msgid "Link to the Patch Article"
 msgstr "Link zum Patch Artikel"
+
+#: .\smarthome\templates\smarthome\device_overview.html:94
+msgid "Privacy Information"
+msgstr "Datenschutz Informationen"
 
 #: .\templates\nav.html:7
 msgid "Welcome"

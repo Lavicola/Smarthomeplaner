@@ -89,17 +89,15 @@
 
     </div>
 
-    <div class = "privacy_concerns">
+    <div class = "privacy_information">
         <table>
-            <caption>Privacy Concerns</caption>
+            <caption>{% translate "Privacy Information" %}</caption>
             <tr>
-                <th>{% translate "Discovered" %}</th>
                 <th>{% translate "Description" %}</th>
                 <th>{% translate "Link to the Paper" %}</th>
               </tr>
-        {% for privacy_concern in device.privacyconcern_set.all %}
+        {% for privacy_concern in device.privacyinformation_set.all %}
         <tr>
-            <td>{{ privacy_concern.discovery }}</td>
             <td>{{ privacy_concern.description }}</td>
             <td><a href="{{privacy_concern.paper_url}}">Paper</a></td>
         </tr>

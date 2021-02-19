@@ -50,7 +50,7 @@
         </div>
     </div>
 
-    <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Concerns " %}</div>
+    <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Information " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
               <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </a></caption>              
@@ -65,23 +65,21 @@
                   <td><a v-bind:href="vulnerability.paper_url" target="_blank">{[vulnerability.description]} </a></td>
                   <td v-if="vulnerability.patch_date">{% translate "Yes" %} </td> 
                   <td v-else>{% translate "No " %} </td>
-              </tr>          
+              </tr>
           </table>
           <span v-else> {% translate "No Vulnerabilities found!" %} </span>
 
-    <div class="privacy_concerns">
-      <table v-if="privacy_concerns.length">
+    <div class="privacy_information">
+      <table v-if="privacy_information.length">
         <tr>
-          <th>{% translate "Found" %}</th>
-          <th>{% translate "Description(Privacy Concerns)" %}</th>
+          <th>{% translate "Privacy Information" %}</th>
         </tr>
       <tr>                             
-      <tr v-for="privacy_concern in privacy_concerns">
-          <td>{[privacy_concern.discovery]} </td>
+      <tr v-for="privacy_concern in privacy_information">
           <td><a v-bind:href="privacy_concern.paper_url" target="_blank">{[privacy_concern.description]} </a></td>
       </tr>
       </table>
-      <span v-else> {% translate "No Privacy Concerns found!" %} </span>
+      <span v-else> {% translate "No Privacy Information found!" %} </span>
     </div>
   </div>
 </div>

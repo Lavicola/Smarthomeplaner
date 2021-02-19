@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from smarthome.models import Device, Firmware,Vulnerability,PrivacyConcern,Category,Connector
+from smarthome.models import Device, Firmware,Vulnerability,PrivacyInformation,Category,Connector
 from configurator.models import CanvasMap
 
 
@@ -47,12 +47,12 @@ class VulnerabilitySerializer(serializers.ModelSerializer ):
         fields=("device_id",'discovery',"description","paper_url","patch_date","url_patch")
 
 
-class PrivacyConcernserializer(serializers.ModelSerializer ):
+class PrivacyInformationerializer(serializers.ModelSerializer ):
     device_id = DeviceSerializerShort(many=True)
 
     class Meta:
-        model = PrivacyConcern
-        fields=("device_id",'discovery',"description","paper_url")
+        model = PrivacyInformation
+        fields=("device_id","description","paper_url")
 
 
 
