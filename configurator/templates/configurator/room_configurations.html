@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block stylesheets %}
 {% load static %}
@@ -20,7 +21,7 @@
 <caption>{{ room_name }}</caption>
 
     <tr>
-        <th>{% translate "Product" %}</th>
+        <th>{% translate "Device" %}</th>
         <th>{% translate "Quantity" %}</th>
         <th>{% translate "Connector" %}</th>
         <th>{% translate "Picture" %}</th>

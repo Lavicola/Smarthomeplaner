@@ -327,7 +327,7 @@ function add_event_to_device(a_element) {
     });
 
     a_element.on('mouseout', function() {
-        document.getElementById("CurrentCanvasObject").innerHTML = "Move over a Object to show the Name";
+        document.getElementById("CurrentCanvasObject").innerHTML = "Bewege die Maus über ein Gerät um dir den Namen anzeigen zu lassen";
     });
 
 

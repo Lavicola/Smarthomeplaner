@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-02-19 03:51+0100\n"
+"POT-Creation-Date: 2021-02-19 13:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,21 +26,22 @@ msgstr "Englisch"
 msgid "German"
 msgstr "Deutsch"
 
-#: .\configurator\templates\configurator\room_configurations.html:23
-msgid "Product"
-msgstr "Product"
-
 #: .\configurator\templates\configurator\room_configurations.html:24
+#: .\smarthome\models.py:66
+msgid "Device"
+msgstr "Gerät"
+
+#: .\configurator\templates\configurator\room_configurations.html:25
 msgid "Quantity"
 msgstr "Anzahl"
 
-#: .\configurator\templates\configurator\room_configurations.html:25
+#: .\configurator\templates\configurator\room_configurations.html:26
 #: .\configurator\templates\configurator\smarthome_configurator.html:43
 #: .\smarthome\models.py:26
 msgid "Connector"
 msgstr "Anschluss"
 
-#: .\configurator\templates\configurator\room_configurations.html:26
+#: .\configurator\templates\configurator\room_configurations.html:27
 msgid "Picture"
 msgstr "Bild"
 
@@ -60,22 +61,17 @@ msgstr ""
 "Bedenkliche Informationen anzeigen zu lassen"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:58
-#, fuzzy
-#| msgid "Vulnerability"
-msgid "Vulnerability found"
-msgstr "Schwachstelle gefunden"
+#: .\configurator\templates\configurator\smarthome_configurator.html:75
+msgid "Found"
+msgstr "Funddatum"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:59
-#, fuzzy
-#| msgid "Vulnerability was patched on:"
-msgid "Vulnerability description"
-msgstr "Beschreibung der Schwachstelle am:"
+msgid "Description(Vulnerability)"
+msgstr "Beschreibung(Schwachstelle)"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:60
-#, fuzzy
-#| msgid "Vulnerability patched:"
-msgid "Vulnerability Patched"
-msgstr "Schwachstelle wurde gepatcht:"
+msgid "Patched"
+msgstr "Gepatcht"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:66
 msgid "Yes"
@@ -86,32 +82,22 @@ msgid "No "
 msgstr "Nein"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:70
-#, fuzzy
-#| msgid "Vulnerabilities"
 msgid "No Vulnerabilities found!"
-msgstr "Keine Schwachstelle gefunden"
-
-#: .\configurator\templates\configurator\smarthome_configurator.html:75
-msgid "Privacy Concern found"
-msgstr "Datenschutzbedenkliche Eintrag gefunden"
+msgstr "Keine Schwachstelle gefunden!"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:76
-msgid "Privacy Concern description"
-msgstr "Beschreibung"
+msgid "Description(Privacy Concerns)"
+msgstr "Beschreibung(Datenschutz)"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:84
 msgid "No Privacy Concerns found!"
-msgstr "Keine Datenschutzbedenklichen Informationen gefunden!"
+msgstr "Keine Datenschutz bedenklichen Informationen gefunden!"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:95
-#, fuzzy
-#| msgid "Configurator"
 msgid "Load Room Configuration"
-msgstr "Konfigurator"
+msgstr "Lade Raumkonfigurator"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:96
-#, fuzzy
-#| msgid "Configurator"
 msgid "Save Room Configuration"
 msgstr "Speicher Raumkonfiguration"
 
@@ -121,7 +107,7 @@ msgstr "Raumfarbe"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:105
 msgid "type or choose"
-msgstr "gib einen Raumnamen ein oder wähle aus"
+msgstr "Raumname eingeben oder auswählen"
 
 #: .\configurator\templates\configurator\smarthome_configurator.html:107
 msgid "Living Room"
@@ -164,27 +150,17 @@ msgstr "Bewege die Maus über ein Gerät um dir den Namen anzeigen zu lassen"
 msgid "Connectors"
 msgstr "Anschlüsse"
 
-#: .\smarthome\models.py:47
-#, fuzzy
-#| msgid "All Categories"
-msgid "Category"
-msgstr "Alle Kategorien"
-
 #: .\smarthome\models.py:48
 #, fuzzy
 #| msgid "All Categories"
 msgid "Categories"
 msgstr "Alle Kategorien"
 
-#: .\smarthome\models.py:66
-msgid "Device"
-msgstr "Gerät"
-
 #: .\smarthome\models.py:67
 #, fuzzy
 #| msgid "Device"
 msgid "Devices"
-msgstr "Gerät"
+msgstr "Geräte"
 
 #: .\smarthome\models.py:81
 msgid "Firmware Compatible with"
@@ -217,7 +193,7 @@ msgstr "Firmwares"
 #, fuzzy
 #| msgid "Vulnerability patched:"
 msgid "Vulnerability exploitable by:"
-msgstr "Schwachstelle wurde gepatcht:"
+msgstr "Schwachstelle ausnutzbar von::"
 
 #: .\smarthome\models.py:104
 msgid "Vulnerability was found on:"
@@ -332,8 +308,6 @@ msgid "Login"
 msgstr "Einloggen"
 
 #: .\templates\nav.html:23
-#, fuzzy
-#| msgid "Registrieren"
 msgid "Register"
 msgstr "Registrieren"
 
@@ -356,6 +330,22 @@ msgstr ""
 #: .\users\models.py:47
 msgid "email address"
 msgstr "Emailadresse"
+
+#~ msgid "Product"
+#~ msgstr "Product"
+
+#~| msgid "Vulnerability"
+#~ msgid "Vulnerability found"
+#~ msgstr "Schwachstelle gefunden"
+
+#~ msgid "Vulnerability description"
+#~ msgstr "Beschreibung der Schwachstelle"
+
+#~ msgid "Vulnerability Patched"
+#~ msgstr "Schwachstelle wurde gepatcht:"
+
+#~ msgid "description"
+#~ msgstr " Beschreibung"
 
 #~ msgid "Load"
 #~ msgstr "Lade"

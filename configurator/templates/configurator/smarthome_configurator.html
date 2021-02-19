@@ -53,11 +53,11 @@
     <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Concerns " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
-              <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </a></caption>
+              <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </a></caption>              
               <tr>
-                  <th>{% translate "Vulnerability found" %}</th>
-                  <th>{% translate "Vulnerability description" %}</th>
-                  <th>{% translate "Vulnerability Patched" %}</th>
+                  <th>{% translate "Found" %}</th>
+                  <th>{% translate "Description(Vulnerability)" %}</th>
+                  <th>{% translate "Patched" %}</th>
                 </tr>
               <tr>                             
               <tr v-for="vulnerability in vulnerabilities">
@@ -72,8 +72,8 @@
     <div class="privacy_concerns">
       <table v-if="privacy_concerns.length">
         <tr>
-          <th>{% translate "Privacy Concern found" %}</th>
-          <th>{% translate "Privacy Concern description" %}</th>
+          <th>{% translate "Found" %}</th>
+          <th>{% translate "Description(Privacy Concerns)" %}</th>
         </tr>
       <tr>                             
       <tr v-for="privacy_concern in privacy_concerns">
