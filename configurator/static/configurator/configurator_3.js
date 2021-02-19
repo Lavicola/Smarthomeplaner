@@ -25,12 +25,12 @@
           add_event_to_device(object);
         }
      })
-        }).catch(error => {                
+     setFeedbackText("Konfiguration wurde erfolgreich geladen");
+    }).catch(error => {                
         console.log(error.response.status);
         setFeedbackText("Es ist ein Fehler aufgetreten, sind sie angemeldet?");
         return false;
-     }) 
-     setFeedbackText("Konfiguration wurde erfolgreich geladen");
+     })      
     return true;
     }
     
@@ -47,14 +47,12 @@
           },
         data: { json_data: buildJSON(), canvas_map: JSON.stringify( canvas.toJSON(['id','name',"isDevice","connector"]) ) },
       }).then(function (response){ 
-        console.log("success");          
-}
+        setFeedbackText("Konfiguration wurde erfolgreich gespeichert");
+      }
       )  .catch(error => {                
-        console.log(error.response.status);
         setFeedbackText("Fehler, bitte versuche es erneut bzw. melde dich an");
         return false;
      })
-     setFeedbackText("Konfiguration wurde erfolgreich gespeichert");
     return true;
     }
 
