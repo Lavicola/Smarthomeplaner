@@ -40,7 +40,7 @@ class VulnerabilityViewSet(viewsets.ReadOnlyModelViewSet):
         device_id = self.request.query_params.get("device_id",None)
         #todo check if int?
         if device_id is not None:
-            queryset = queryset.filter(device_id=device_id)            
+            queryset = queryset.filter(device_id=device_id,patch_date__isnull = True)            
         return queryset
 
 class PrivacyInformationViewSet(viewsets.ReadOnlyModelViewSet):

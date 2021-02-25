@@ -18,13 +18,7 @@
           },
       }).then ( function (response){ 
         canvas.clear();
-        canvas.loadFromJSON(response.data, function() {
-        canvas.renderAll(); 
-     },function(o,object){
-        if(object.isDevice){
-          add_event_to_device(object);
-        }
-     })
+        restoreCanvas(response.data);
      setFeedbackText("Konfiguration wurde erfolgreich geladen");
     }).catch(error => {                
         console.log(error.response.status);

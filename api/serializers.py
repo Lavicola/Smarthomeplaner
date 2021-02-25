@@ -44,7 +44,7 @@ class VulnerabilitySerializer(serializers.ModelSerializer ):
 
     class Meta:
         model = Vulnerability
-        fields=("device_id",'discovery',"description","paper_url","patch_date","url_patch")
+        fields=("device_id",'discovery',"description","paper_url")
 
 
 class PrivacyInformationerializer(serializers.ModelSerializer ):

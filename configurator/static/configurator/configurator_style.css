@@ -8,7 +8,7 @@
     margin-left: auto;
     margin-right: auto;
     display: block;
-        width: 100px;
+    width: 100px;
     height: 100px;
   }
   
@@ -16,7 +16,17 @@
     padding: 15px;
     text-align: center;
   }
+ 
   
+input[list]{
+  width: 110px;
+}
+
+#room_color {
+  height: 19px;
+  width: 20px;
+}
+
 .responsive{
     display: flex;
     flex-wrap: wrap;
@@ -26,62 +36,3 @@
   border: 10px solid black;
 }
 
-datalist {
-  position: absolute;
-  background-color: lightgrey;
-  font-family: sans-serif;
-  font-size: 0.8rem;
-}
-/*https://developer.mozilla.org/en-US/docs/Web/HTML/Element/datalist */
-option {
-  background-color: #bbb;
-  padding: 4px;
-  margin-bottom: 1px;
-  cursor: pointer;
-}
-
-
-#customValues{
-  padding-top: 0.8%;
-  padding-bottom: 0.8%;
-}
-
-
-
-#room_name{
-  padding-bottom:0.3%;
-}
-
-.buttons{
-  float: left;
-  display: inline;
-  padding: 8px;
-  margin-right: 1.2%;
-  border-radius: 8px;
-  width: 150px;
-  -moz-border-radius: 10px;
-  -webkit-border-radius: 10px;
-}
-
-
-.button_serveraction{
-background-color: #1825d6;
-color: #FFFFFF;
-}
-
-
-.button_danger{
-  background-color: #d61818;
-  color: #FFFFFF;
-}
-
-.button_action{
-  background-color: #13d61d;
-  color: #FFFFFF;
-}
-
-.canvas_action{
-
-  width: 100%;
-  height: 20%;
-}

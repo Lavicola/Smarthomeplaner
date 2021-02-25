@@ -1,6 +1,7 @@
 var canvas;
 const noZoom = 1;
 
+
 const default_Roomconfig = {
     left: 0,
     top: 0,
@@ -66,6 +67,28 @@ function set_canvas_event_handlers(canvas) {
         this.isDragging = false;
         this.selection = true;
     });
+
+        //If an object has been modified at all, save the new state
+        this.canvas.on("object:moving", function(e) {
+            console.log(statemachine.addNewState());
+            statemachine.setLock(true);
+        });
+    
+        //If an object has been modified at all, save the new state
+        this.canvas.on("object:modified", function(e) {
+            statemachine.setLock(false);
+            console.log("modified");
+            });
+
+        //If an object has been modified at all, save the new state
+        this.canvas.on("object:scaling", function(e) {
+            console.log(statemachine.addNewState());
+            statemachine.setLock(true);
+            
+            });
+            
+
+
 }
 
 function getRoomProperties() {
@@ -103,7 +126,7 @@ function add_Room() {
         snapAngle: 90,
 
     });
-
+    statemachine.addNewState();
     canvas.add(group);
     return true;
 }
@@ -300,17 +323,23 @@ function drop_handler(ev) {
         svg.connector = svg_connector;
         add_event_to_device(svg);
 
+
+        statemachine.addNewState();
         canvas.add(svg);
+
+
     });
 
 
 }
 
 function remove_objects() {
-
     objects = canvas.getActiveObjects();
-    for (var i = 0; i < objects.length; i++) {
-        canvas.remove(objects[i]);
+    if(objects.length >=1){
+        statemachine.addNewState();
+        for (var i = 0; i < objects.length; i++) {
+            canvas.remove(objects[i]);
+        }
     }
 }
 
@@ -334,20 +363,13 @@ function add_event_to_device(a_element) {
 }
 
 
-function setCanvasWidth() {
-    canvas.setWidth(window.innerWidth);
-    return;
-}
-  
-
-
 function initCanvas() {
     canvas = new fabric.Canvas('canvas_object')
     fabric.Object.prototype.set({
         snapThreshold: 45,
         snapAngle: 90
     });;
-    setCanvasWidth();
+    setTimeout(function(){ canvas.setWidth(window.innerWidth - 150); }, 200);
     set_canvas_event_handlers(canvas);
 }
 
@@ -358,6 +380,20 @@ function InitCanvasContainerEvents(){
     canvasContainer.addEventListener('dragleave', handleDragLeave, false);
     canvasContainer.addEventListener('drop', drop_handler, false);
 }
+
+
+
+function restoreCanvas(canvas_json){
+    canvas.loadFromJSON(canvas_json, function() {
+        canvas.renderAll(); 
+     },function(o,object){
+        if(object.isDevice){
+          add_event_to_device(object);
+        }
+     })
+}
+
+
 
 
 function include(file) {
@@ -375,5 +411,71 @@ include("https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js");
 window.addEventListener("load", function() {
     initCanvas();
     InitCanvasContainerEvents();
+    statemachine= new StateMachine();
+
 
 });
+
+class StateMachine {
+
+    constructor() {
+        this.redoStack = [this.getCurrentState()];
+        this.unduStack = []
+        this.islocked = false;
+
+    }
+
+
+    setLock(islocked){
+        this.islocked=islocked;
+    }
+
+    getLock(){
+        return this.islocked;
+    }
+
+    getCurrentState(){
+        return JSON.stringify(canvas.toJSON(['id','name',"isDevice","connector"]));
+    }
+//NOW STOP RETURINUNG
+    addNewState(){
+        if(!this.getLock()){     
+        this.redoStack.push(this.getCurrentState());
+        return true;
+        }else{
+            return false;
+        }
+    }
+
+    removeState(){
+        if(this.redoStack.length == 0){
+            return false;
+        }else{
+            // push the current canvas to the undu stack 
+            this.unduStack.push(this.getCurrentState());
+            this.restoreLastState(this.redoStack[this.redoStack.length-1]);
+            this.redoStack.pop();
+            return true;
+        }        
+    }
+
+    restoreState(){
+
+        if(this.unduStack.length == 0){
+            return false;
+        }else{
+            this.redoStack.push(this.getCurrentState());
+            this.restoreLastState(this.unduStack[this.unduStack.length-1]);
+            this.unduStack.pop();
+            return true;
+        }
+
+    }
+
+    restoreLastState(state)
+    {
+        restoreCanvas(state);
+    }
+
+
+  }

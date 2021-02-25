@@ -14,6 +14,7 @@
 <script src="{% static 'configurator/configurator_1.js'%}"></script>
 <script src="{% static 'configurator/configurator_2_vue.js'%}"></script>
 <script src="{% static 'configurator/configurator_3.js'%}"></script>
+<script src="https://kit.fontawesome.com/626e8c6de9.js" crossorigin="anonymous"></script>
 
 {% endblock %}
 
@@ -24,21 +25,21 @@
 <div id="live_search">
     <h1>Smarthomeplaner</h1>
     <!-- search start-->
-    <div class="form-inline my-2 my-lg-0" style="margin-left: 40%;">
+    <div style="margin-left: 40%;">
       <select v-model="selected_category">
         <option value="all" >{% translate "All Categories" %}</option>
         {% for category in categories %} 
         <option value="{{category}}">{{category}}</option>
         {% endfor %}
       </select>      
-      <input class="form-control mr-sm-2" type="text" placeholder="{% translate 'Search' %}" v-model="search_term" aria-label="Search">
+      <input  type="text"  placeholder="{% translate 'Search' %}" v-model="search_term" aria-label="Search">
       <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
    </div>
     <div class="responsive">
       <div class="device_container" v-for="device in devices">
-          <img  v-on:dblclick="getAdditionalInformations" :name="device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image">
+          <img  v-on:dblclick="getAdditionalInformations" :name="device.manufacturer +' '+  device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image">
            <div class="desc">    
-              <a v-bind:href="base_url+device.name" target="_blank"> {[device.name]} </a>
+              <a v-bind:href="base_url+device.name" target="_blank"> {[device.manufacturer]} {[device.name]}</a>
               <br>   
               <label for="connector">{% translate "Connector" %}:</label>
               <select class="dropdown" :id="'dropdown-' + device.id">
@@ -86,21 +87,16 @@
 
 
 
-<input type="hidden" id="csrf" value={{ csrf_token }} />
-<br><br>
-<span style="font-weight:bold" id="feedback_text"></span>
-<div class="ServerActions">                
-  <button class="buttons button_serveraction"  onclick="getCanvas()">{% translate "Load Room Configuration" %}</button>         
-  <button class="buttons button_serveraction"  onclick="saveConfiguration()">{% translate "Save Room Configuration" %}</button> 
-
-</div>
-
-<div id= "customValues">
-  <br><br><br>
-  <input type="color" id="room_color"value="#ffffff">
-  <label for="room_color"></label>{% translate "Room Color" %}</label>
+<div class="canvas_actions">
+  <input type="hidden" id="csrf" value={{ csrf_token }} />
+  <button class="undo" onclick="statemachine.removeState()"><i class="fas fa-undo fa-1x"></i></button>
+  <button class="redo" onclick="statemachine.restoreState()"><i class="fas fa-redo fa-1x"></i></button>
+  <button class="danger" onclick="remove_objects()"><i class="fas fa-trash fa-1x"></i></button>
+  <button class="save" onclick="getCanvas()"><i class="fas fa-save fa-1x"></i></button>
+  <button class="load" onclick="saveConfiguration()"><i class="fas fa-arrow-alt-circle-down fa-1x"></i></button>
 <br>
-  <input id="room_name" list="room_names" type= "text" placeholder="{% translate 'type or choose' %}"/>
+<input type="color" id="room_color"value="#ff0000">
+  <input id="room_name" list="room_names" type= "text" placeholder="{% translate 'Room Name' %}"/>
   <datalist id="room_names">
     <option>{% translate "Living Room" %}</option>
     <option>{% translate "Office" %}</option>
@@ -108,22 +104,12 @@
     <option>{% translate "Bathroom" %}</option>
     <option>{% translate "Bedroom" %}</option>
   </datalist>
-  <label for="room_name"></label>{% translate "Room Name" %}</label>
+  <button class="add" onclick="add_Room()"><i class="fas fa-plus fa-1x"></i></button>
+  <span id="CurrentCanvasObject">{% translate "Hover over any Device to get the Name" %} </span><br>
 
 </div>
-
-
-
-<div class="canvas_action">  
-  <button class="button_action buttons" onclick="add_Room()">{% translate "Add Room" %}</button>
-  <button class="button_danger buttons" onclick="remove_objects()">{% translate "Remove Element(s)" %}</button>
-  <br><br><br>
-</div>
-
-
-<span id="CurrentCanvasObject">{% translate "Hover over any Device to get the Name" %} </span>
 <main id="canvas-wrapper" >
-    <canvas id="canvas_object" width="1800" height="800"></canvas>
+    <canvas id="canvas_object" width="2000" height="800"></canvas>
 </main>
 
 </div>

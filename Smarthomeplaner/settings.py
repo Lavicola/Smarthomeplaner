@@ -10,7 +10,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-import django_heroku
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
@@ -62,7 +61,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     ####self start
-    'basics',
     'users',
     'api.apps.APIConfig',
     'smarthome.apps.SmarthomeConfig',
@@ -226,4 +224,3 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_ROOT  = os.path.join(BASE_DIR, 'Media')
 MEDIA_URL = "/media/"
 
-django_heroku.settings(locals())
