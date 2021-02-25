@@ -1,6 +1,6 @@
 var canvas;
 const noZoom = 1;
-
+var angle = 0;
 
 const default_Roomconfig = {
     left: 0,
@@ -41,6 +41,11 @@ function set_canvas_event_handlers(canvas) {
     // enables dragging the canvas: alt + mouse down and move
     canvas.on('mouse:down', function(opt) {
         var evt = opt.e;
+        // save the last state just in case
+        if(opt.target){
+            angle = opt.target.get('angle')
+            statemachine.addNewState();
+        }
         if (evt.altKey === true) {
             this.isDragging = true;
             this.selection = false;
@@ -60,10 +65,18 @@ function set_canvas_event_handlers(canvas) {
             this.lastPosY = e.clientY;
         }
     });
+
     canvas.on('mouse:up', function(opt) {
         // on mouse up we want to recalculate new interaction
         // for all objects, so we call setViewportTransform
         this.setViewportTransform(this.viewportTransform);
+        if(opt.target){
+            if(angle == opt.target.get('angle')){
+            //User did not change the angle of the object remove last state 
+            statemachine.redoStack.pop();
+
+            }
+        }
         this.isDragging = false;
         this.selection = true;
     });
@@ -356,7 +369,7 @@ function add_event_to_device(a_element) {
     });
 
     a_element.on('mouseout', function() {
-        document.getElementById("CurrentCanvasObject").innerHTML = "Bewege die Maus über ein Gerät um dir den Namen anzeigen zu lassen";
+        document.getElementById("CurrentCanvasObject").innerHTML = "Geräte Name";
     });
 
 
@@ -364,7 +377,7 @@ function add_event_to_device(a_element) {
 
 
 function initCanvas() {
-    canvas = new fabric.Canvas('canvas_object')
+    canvas = new fabric.Canvas('canvas')
     fabric.Object.prototype.set({
         snapThreshold: 45,
         snapAngle: 90

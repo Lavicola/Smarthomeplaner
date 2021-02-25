@@ -1,9 +1,3 @@
-  
-#canvas_wrapper{
-  overflow-y: scroll;
-
-}
-
   div.device_container img {
     margin-left: auto;
     margin-right: auto;
@@ -32,7 +26,7 @@ input[list]{
     flex-wrap: wrap;
 
 }
-#canvas_object {
-  border: 10px solid black;
-}
+#canvas {
+  border: 3px solid black;
 
+}

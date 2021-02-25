@@ -89,13 +89,7 @@
 
 <div class="canvas_actions">
   <input type="hidden" id="csrf" value={{ csrf_token }} />
-  <button class="undo" onclick="statemachine.removeState()"><i class="fas fa-undo fa-1x"></i></button>
-  <button class="redo" onclick="statemachine.restoreState()"><i class="fas fa-redo fa-1x"></i></button>
-  <button class="danger" onclick="remove_objects()"><i class="fas fa-trash fa-1x"></i></button>
-  <button class="save" onclick="getCanvas()"><i class="fas fa-save fa-1x"></i></button>
-  <button class="load" onclick="saveConfiguration()"><i class="fas fa-arrow-alt-circle-down fa-1x"></i></button>
-<br>
-<input type="color" id="room_color"value="#ff0000">
+  <input type="color" id="room_color"value="#ff0000">
   <input id="room_name" list="room_names" type= "text" placeholder="{% translate 'Room Name' %}"/>
   <datalist id="room_names">
     <option>{% translate "Living Room" %}</option>
@@ -104,12 +98,17 @@
     <option>{% translate "Bathroom" %}</option>
     <option>{% translate "Bedroom" %}</option>
   </datalist>
-  <button class="add" onclick="add_Room()"><i class="fas fa-plus fa-1x"></i></button>
-  <span id="CurrentCanvasObject">{% translate "Hover over any Device to get the Name" %} </span><br>
-
+    <button class="add" onclick="add_Room()"><i class="fas fa-plus fa-1x"></i></button>
+    <button title="{% translate 'undo' %}" class="undo" onclick="statemachine.removeState()"><i class="fas fa-undo fa-1x"></i></button>
+    <button title="{% translate 'redo' %}" class="redo" onclick="statemachine.restoreState()"><i class="fas fa-redo fa-1x"></i></button>
+    <button title="{% translate 'Remove Element(s)' %}" class="danger" onclick="remove_objects()"><i class="fas fa-trash fa-1x"></i></button>
+    <button title="{% translate 'save Roomconfiguration' %}" class="save" onclick="getCanvas()"><i class="fas fa-save fa-1x"></i></button>
+    <button title="{% translate 'load Roomconfiguration' %}" class="load" onclick="saveConfiguration()"><i class="fas fa-arrow-alt-circle-down fa-1x"></i></button>
 </div>
+
 <main id="canvas-wrapper" >
-    <canvas id="canvas_object" width="2000" height="800"></canvas>
+  <span id="CurrentCanvasObject">{% translate "Device Name" %} </span><br>
+    <canvas id="canvas" width="2000" height="800"></canvas>
 </main>
 
 </div>
