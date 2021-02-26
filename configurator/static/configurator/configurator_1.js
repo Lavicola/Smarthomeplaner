@@ -83,19 +83,18 @@ function set_canvas_event_handlers(canvas) {
 
         //If an object has been modified at all, save the new state
         this.canvas.on("object:moving", function(e) {
-            console.log(statemachine.addNewState());
+            statemachine.addNewState();
             statemachine.setLock(true);
         });
     
         //If an object has been modified at all, save the new state
         this.canvas.on("object:modified", function(e) {
             statemachine.setLock(false);
-            console.log("modified");
             });
 
         //If an object has been modified at all, save the new state
         this.canvas.on("object:scaling", function(e) {
-            console.log(statemachine.addNewState());
+            statemachine.addNewState();
             statemachine.setLock(true);
             
             });
@@ -107,7 +106,7 @@ function set_canvas_event_handlers(canvas) {
 function getRoomProperties() {
     let room_properties = default_Roomconfig;
     room_properties.fill = getRoomColor();
-    room_properties.name = GenerateRoomname();
+    room_properties.name = getRoomName();
     room_properties.isDevice = false;
     room_properties.opacity = 0.5;
     return room_properties;
@@ -124,7 +123,6 @@ function add_Room() {
     let room_properties = getRoomProperties();
     resetRoomName();
 
-
     const room = new fabric.Rect(room_properties);
     let textObject = new fabric.IText(room_properties.name, {
         left: 40,
@@ -139,37 +137,11 @@ function add_Room() {
         snapAngle: 90,
 
     });
+    group.isDevice = false;
     statemachine.addNewState();
     canvas.add(group);
     return true;
 }
-
-function GenerateRoomname() {
-    let number = 2;
-    let temp_name = getRoomName();
-    let name = temp_name;
-    while (RoomExists(name)) {
-        name = temp_name + number;
-        number++;
-    }
-
-    return name;
-}
-
-function RoomExists(a_room_name) {
-    let l_rooms = GetRoomNames(canvas.getObjects());
-    let j = l_rooms.length;
-
-    for (var i = 0; i < j; i++) {
-
-        if (l_rooms[i] == a_room_name) {
-            return true;
-        }
-
-    }
-    return false;
-}
-
 
 function getRoomName() {
     let name = document.getElementById("room_name").value;
@@ -369,10 +341,14 @@ function add_event_to_device(a_element) {
     });
 
     a_element.on('mouseout', function() {
-        document.getElementById("CurrentCanvasObject").innerHTML = "Geräte Name";
+        document.getElementById("CurrentCanvasObject").innerHTML = "Hoover over any Device";
     });
+}
 
 
+
+function myfunc(){
+    console.log("delete");
 }
 
 
@@ -384,15 +360,98 @@ function initCanvas() {
     });;
     setTimeout(function(){ canvas.setWidth(window.innerWidth - 150); }, 200);
     set_canvas_event_handlers(canvas);
+    
 }
 
+
+function getCanvasContainer(){
+    return document.getElementById('canvas-wrapper');
+}
+
+
 function InitCanvasContainerEvents(){
-    var canvasContainer = document.getElementById('canvas-wrapper');
+    var canvasContainer = getCanvasContainer();
     canvasContainer.addEventListener('dragenter', handleDragEnter, false);
     canvasContainer.addEventListener('dragover', handleDragOver, false);
     canvasContainer.addEventListener('dragleave', handleDragLeave, false);
     canvasContainer.addEventListener('drop', drop_handler, false);
 }
+
+
+function inCanvasContainerShortcuts(){
+    canvasContainer = getCanvasContainer();
+    canvasContainer.tabIndex = 1000;
+    canvasContainer.onkeydown = function(e) 
+    {
+    if(e.ctrlKey){
+        switch (e.keyCode) {
+            case 46:
+            break;
+            case 67:
+                Copy();
+                break;
+            case 86:
+                Paste();
+                break;
+        }
+     }
+    }
+}
+
+
+function Copy() {
+    
+    element = canvas.getActiveObject();
+    console.log(element.isDevice);
+    element.clone(function(element) {
+		_clipboard = element;
+	},getCustomAttributes(element));
+}
+
+function getCustomAttributes(a_element){
+    let custom_attributes = [];
+    if(a_element.isDevice){
+        custom_attributes = ["isDevice","name","connector"];
+    }else{
+        custom_attributes = ["isDevice"];
+    }
+    return custom_attributes;
+}
+
+
+function Paste() {
+
+	// clone again, so you can do multiple copies.
+	_clipboard.clone(function(clonedObj) {
+		canvas.discardActiveObject();
+		clonedObj.set({
+			left: clonedObj.left + 40,
+			top: clonedObj.top + 40,
+			evented: true,
+		});
+		if (clonedObj.type === 'activeSelection') {
+			// active selection needs a reference to the canvas.
+			clonedObj.canvas = canvas;
+			clonedObj.forEachObject(function(obj) {
+				canvas.add(obj);
+			});
+			// this should solve the unselectability
+			clonedObj.setCoords();
+		} else {
+            console.log(clonedObj.isDevice);
+			canvas.add(clonedObj);
+		}
+		_clipboard.top += 10;
+		_clipboard.left += 10;
+        if(clonedObj.isDevice){
+            add_event_to_device(clonedObj);
+        }
+		canvas.setActiveObject(clonedObj);
+		canvas.requestRenderAll();
+	},getCustomAttributes(_clipboard));
+}
+
+
 
 
 
@@ -424,6 +483,7 @@ include("https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js");
 window.addEventListener("load", function() {
     initCanvas();
     InitCanvasContainerEvents();
+    inCanvasContainerShortcuts();
     statemachine= new StateMachine();
 
 

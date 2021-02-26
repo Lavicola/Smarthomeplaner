@@ -26,7 +26,33 @@ input[list]{
     flex-wrap: wrap;
 
 }
+
+.canvas_actions{
+  display: inline-flex;
+
+}
+
+#button{
+  border: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  font-size: 0;
+}
+
+
+#canvas-wrapper{
+  position:relative;
+}
+
 #canvas {
   border: 3px solid black;
+  
+}
 
+#CurrentCanvasObject{
+  position:absolute;
+  top: 2%;
+  left: 20px;
 }
