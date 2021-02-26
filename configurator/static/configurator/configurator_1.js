@@ -385,8 +385,6 @@ function inCanvasContainerShortcuts(){
     {
     if(e.ctrlKey){
         switch (e.keyCode) {
-            case 46:
-            break;
             case 67:
                 Copy();
                 break;
@@ -394,6 +392,13 @@ function inCanvasContainerShortcuts(){
                 Paste();
                 break;
         }
+     }else{
+        switch (e.keyCode){
+            case 46:
+                remove_objects();
+                break;
+        }
+
      }
     }
 }
@@ -402,7 +407,13 @@ function inCanvasContainerShortcuts(){
 function Copy() {
     
     element = canvas.getActiveObject();
-    console.log(element.isDevice);
+
+    if(typeof element.name === "undefined"){
+        //we can only copy one element at a timee
+        _clipboard = undefined;
+        return;
+    }
+
     element.clone(function(element) {
 		_clipboard = element;
 	},getCustomAttributes(element));
@@ -420,9 +431,15 @@ function getCustomAttributes(a_element){
 
 
 function Paste() {
-
+    if(typeof _clipboard === "undefined"){
+        return;
+    }
+    statemachine.addNewState();
 	// clone again, so you can do multiple copies.
 	_clipboard.clone(function(clonedObj) {
+
+        console.log(clonedObj);
+
 		canvas.discardActiveObject();
 		clonedObj.set({
 			left: clonedObj.left + 40,

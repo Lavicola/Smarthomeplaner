@@ -44,6 +44,11 @@ input[list]{
 
 #canvas-wrapper{
   position:relative;
+  border: none;
+}
+
+[tabindex] {
+  outline: none !important;
 }
 
 #canvas {
