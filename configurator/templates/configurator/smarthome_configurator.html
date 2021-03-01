@@ -102,9 +102,10 @@
     <button title="{% translate 'undo' %}" class="undo" onclick="statemachine.removeState()"><i class="fas fa-undo fa-1x"></i></button>
     <button title="{% translate 'redo' %}" class="redo" onclick="statemachine.restoreState()"><i class="fas fa-redo fa-1x"></i></button>
     <button title="{% translate 'Remove Element(s)' %}" class="danger" onclick="remove_objects()"><i class="fas fa-trash fa-1x"></i></button>
-    <button title="{% translate 'save Roomconfiguration' %}" class="save" onclick="getCanvas()"><i class="fas fa-save fa-1x"></i></button>
-    <button title="{% translate 'load Roomconfiguration' %}" class="load" onclick="saveConfiguration()"><i class="fas fa-arrow-alt-circle-down fa-1x"></i></button>
-</div>
+    <button title="{% translate 'save Roomconfiguration' %}" class="save" onclick="saveConfiguration()"><i class="fas fa-save fa-1x"></i></button>
+    <button title="{% translate 'load Roomconfiguration' %}" class="load" onclick="getCanvas()"><i class="fas fa-arrow-alt-circle-down fa-1x"></i></button>
+    <span id="feedback_text"></span>
+  </div>
 
 <main id="canvas-wrapper" >
     <canvas id="canvas" width="2000" height="800"></canvas>

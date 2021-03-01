@@ -1,6 +1,9 @@
-var canvas;
+var canvas; // the fabric canvas
 const noZoom = 1;
-var angle = 0;
+var angle = 0; // used to check if angle was changed.
+var mousePosition = {x:0, y:0}; // needed for the Paste function
+
+
 
 const default_Roomconfig = {
     left: 0,
@@ -55,6 +58,8 @@ function set_canvas_event_handlers(canvas) {
     });
 
     canvas.on('mouse:move', function(opt) {
+        mousePosition = canvas.getPointer(opt);
+
         if (this.isDragging) {
             var e = opt.e;
             var vpt = this.viewportTransform;
@@ -346,12 +351,6 @@ function add_event_to_device(a_element) {
 }
 
 
-
-function myfunc(){
-    console.log("delete");
-}
-
-
 function initCanvas() {
     canvas = new fabric.Canvas('canvas')
     fabric.Object.prototype.set({
@@ -359,8 +358,7 @@ function initCanvas() {
         snapAngle: 90
     });;
     setTimeout(function(){ canvas.setWidth(window.innerWidth - 150); }, 200);
-    set_canvas_event_handlers(canvas);
-    
+    set_canvas_event_handlers(canvas);   
 }
 
 
@@ -382,6 +380,7 @@ function inCanvasContainerShortcuts(){
     canvasContainer = getCanvasContainer();
     canvasContainer.tabIndex = 1000;
     canvasContainer.onkeydown = function(e) 
+    
     {
     if(e.ctrlKey){
         switch (e.keyCode) {
@@ -422,28 +421,27 @@ function Copy() {
 function getCustomAttributes(a_element){
     let custom_attributes = [];
     if(a_element.isDevice){
-        custom_attributes = ["isDevice","name","connector"];
-    }else{
-        custom_attributes = ["isDevice"];
+        custom_attributes = ["id","isDevice","name","connector"];
     }
+
     return custom_attributes;
 }
 
 
 function Paste() {
+
+
     if(typeof _clipboard === "undefined"){
-        return;
+        return false;
     }
+    //save state Before copying the element
     statemachine.addNewState();
 	// clone again, so you can do multiple copies.
 	_clipboard.clone(function(clonedObj) {
-
-        console.log(clonedObj);
-
 		canvas.discardActiveObject();
 		clonedObj.set({
-			left: clonedObj.left + 40,
-			top: clonedObj.top + 40,
+			left: mousePosition["x"],
+			top: mousePosition["y"],
 			evented: true,
 		});
 		if (clonedObj.type === 'activeSelection') {
@@ -455,7 +453,6 @@ function Paste() {
 			// this should solve the unselectability
 			clonedObj.setCoords();
 		} else {
-            console.log(clonedObj.isDevice);
 			canvas.add(clonedObj);
 		}
 		_clipboard.top += 10;
@@ -467,6 +464,8 @@ function Paste() {
 		canvas.requestRenderAll();
 	},getCustomAttributes(_clipboard));
 }
+
+
 
 
 
