@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from smarthome.models import Device, Firmware,Vulnerability,PrivacyInformation,Category,Connector
+from smarthome.models import Device, Firmware,Vulnerability,PrivacyInformation,Connector
 from configurator.models import CanvasMap
 
 

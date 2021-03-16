@@ -14,7 +14,7 @@ include("https://unpkg.com/v-tooltip@2.0.2");
 
 window.addEventListener("load", function(){
 new Vue({
-    el: '#live_search',
+    el: '#vue_app',
     delimiters: ['{[',']}'],
     data: {
       search_term: "",
@@ -60,7 +60,6 @@ new Vue({
             })
       },
       getPrivacyInformation: function(device_id) {
-
         let api_base_url = '/api/privacy/';
         let api_url = api_base_url+"?device_id="+device_id
         axios.get(api_url)

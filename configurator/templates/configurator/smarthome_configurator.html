@@ -17,15 +17,9 @@
 <script src="https://kit.fontawesome.com/626e8c6de9.js" crossorigin="anonymous"></script>
 
 {% endblock %}
-
-
-
-
 {% block content %}
-<div id="live_search">
-    <h1>Smarthomeplaner</h1>
-    <!-- search start-->
-    <div style="margin-left: 40%;">
+<div id="vue_app">
+    <div class="search">
       <select v-model="selected_category">
         <option value="all" >{% translate "All Categories" %}</option>
         {% for category in categories %} 
@@ -33,11 +27,13 @@
         {% endfor %}
       </select>      
       <input  type="text"  placeholder="{% translate 'Search' %}" v-model="search_term" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
+      <button v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
    </div>
-    <div class="responsive">
+   <div class="devices">
       <div class="device_container" v-for="device in devices">
-          <img  v-on:dblclick="getAdditionalInformations" :name="device.manufacturer +' '+  device.name" :title="device.name" :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" :src="device.image">
+          <img  v-on:dblclick="getAdditionalInformations" :name="device.manufacturer +' '+  device.name" :title="device.name" 
+          :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" 
+          :src="device.image">
            <div class="desc">    
               <a v-bind:href="base_url+device.name" target="_blank"> {[device.manufacturer]} {[device.name]}</a>
               <br>   
@@ -49,8 +45,7 @@
               </select>            
             </div>
         </div>
-    </div>
-
+      </div>
     <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Information " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
@@ -69,7 +64,6 @@
               </tr>
           </table>
           <span v-else> {% translate "No Vulnerabilities found!" %} </span>
-
     <div class="privacy_information">
       <table v-if="privacy_information.length">
         <tr>
@@ -110,7 +104,7 @@
 <main id="canvas-wrapper" >
     <canvas id="canvas" width="2000" height="800"></canvas>
     <div id="CurrentCanvasObject">
-      {% translate "  Hoover over any Device" %}
+      {% translate "  Hover über ein Gerät" %}
   </div>
 
 </main>

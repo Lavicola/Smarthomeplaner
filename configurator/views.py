@@ -2,7 +2,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 
 from django.shortcuts import render
-from smarthome.models import Device,Room,DeviceEntry,Category,Vulnerability,Connector
+from smarthome.models import Device,Room,DeviceEntry,Vulnerability,Connector
 from django.template import loader
 from .forms import AJAXForm
 from configurator.models import CanvasMap
@@ -33,12 +33,10 @@ def configuration(request):
     return HttpResponse(template.render(context, request))
 
 
-def index(request):
-    devices = Device.objects.all()
-    categories = Category.objects.all()
+def index(request): 
     context = {
-        'devices': devices,
-        "categories":categories,
+        'devices': Device.objects.all(),
+        "categories":Device.GetCategories(),
     }
     
     template = loader.get_template('configurator/smarthome_configurator.html')

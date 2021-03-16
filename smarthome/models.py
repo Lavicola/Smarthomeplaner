@@ -39,17 +39,21 @@ class Connector(models.Model):
         
 
 
-
-class Category(models.Model):
-    category = models.CharField(max_length=30)
+class Standard(models.Model):
+    standard = models.CharField(max_length=30,primary_key=True)
+    def __str__(self):
+        return self.standard
 
     class Meta:
-        verbose_name = _("Category")
-        verbose_name_plural = _("Categories")
-        constraints = [models.UniqueConstraint(fields=["category"],name="unique_category")]
+        verbose_name = _("Standard")
+        verbose_name_plural = _("Standard")
 
-    def __str__(self):
-        return self.category
+
+    #get the Standard object
+    @staticmethod
+    def GetStandard(a_standard):
+        return Standard.objects.filter(standard=a_standard).get()
+
 
 
 class Device(models.Model):
@@ -57,11 +61,23 @@ class Device(models.Model):
     name = models.CharField(max_length=200)
     image = models.FileField(upload_to='Device')
     connector = models.ManyToManyField(Connector)
-    category = models.ForeignKey(Category,on_delete=models.SET_NULL,null=True)
-    release_date = models.DateField(null=True,blank=True)
+    standard = models.ManyToManyField(Standard,blank=True)
     manufacturer = models.CharField(max_length=200) 
     generation = models.CharField(max_length=10)
+    compatible_device = models.ManyToManyField('self',verbose_name="Compatible with",blank=True)
     
+
+    class Device_Category(models.TextChoices):
+        SMART_LIGHTING = "Smart_Lightning", _("Smart_Lightning")
+        SMART_LOCK = "Smart_Lock" , _("Smart_Lock")
+        VIRTUAL_ASSISTANT = "Virtual_Assistant", _("Virtual_Assistant")
+
+    category = models.CharField(
+        max_length=20,
+        choices=Device_Category.choices
+    )
+
+
     class Meta:
         verbose_name = _("Device")
         verbose_name_plural = _("Devices")
@@ -74,6 +90,19 @@ class Device(models.Model):
     @staticmethod
     def GetDevice(device_id):
         return Device.objects.filter(id=device_id).first()
+
+    @staticmethod
+    def GetCategories():
+        choices_tuple = Device.Device_Category.choices
+        choices = []
+        for category in choices_tuple:
+            choices.append(category[0])    
+        return choices
+
+
+
+
+
 
 
 class Firmware(models.Model):

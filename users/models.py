@@ -51,11 +51,8 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     )
     country = CountryField()
     is_staff = models.BooleanField(default=False)
-    is_translator = models.BooleanField(default=False)
-    is_contributor = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    date_joined = models.DateTimeField(default=timezone.now)
 
 
     USERNAME_FIELD = 'email'
