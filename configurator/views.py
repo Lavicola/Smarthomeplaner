@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.http import HttpResponse
+from rest_framework import status
 
 from django.shortcuts import render
 from smarthome.models import Device,Room,DeviceEntry,Vulnerability,Connector

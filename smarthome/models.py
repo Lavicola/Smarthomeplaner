@@ -32,10 +32,10 @@ class Connector(models.Model):
     def GetConnectorID(a_connector_name):
         return Connector.objects.filter(connector=a_connector_name).values_list("id",flat=True)[0]
     
-    #get the connector object
+    #get the connector object over name
     @staticmethod
-    def GetConnector(a_connector_id):
-        return Connector.objects.filter(connector=a_connector_id).get()
+    def GetConnector(a_connector_name):
+        return Connector.objects.filter(connector=a_connector_name).get()
         
 
 
@@ -68,7 +68,7 @@ class Device(models.Model):
     
 
     class Device_Category(models.TextChoices):
-        SMART_LIGHTING = "Smart_Lightning", _("Smart_Lightning")
+        SMART_LIGHTNING = "Smart_Lightning", _("Smart_Lightning")
         SMART_LOCK = "Smart_Lock" , _("Smart_Lock")
         VIRTUAL_ASSISTANT = "Virtual_Assistant", _("Virtual_Assistant")
 
@@ -219,14 +219,12 @@ class DeviceEntry(models.Model):
         unique_dict_list = list(map(dict, set(tuple(sorted(sub.items())) for sub in device_list_dict))) 
         unique_connector_list = [a_dict["connector"] for a_dict in unique_dict_list]
         # loop variables
-        l_connector_id = None
         l_connector = None
 
         for id in set(device_list):
             device_object = Device.GetDevice(id)
             for connector in unique_connector_list:
                 l_connector = Connector.GetConnector(connector)
-                l_connector_id = Connector.GetConnectorID(connector)                
                 quantity = DeviceEntry.GetDeviceQuantity(device_list_dict,id,connector)
                 if(quantity == 0):
                     continue
