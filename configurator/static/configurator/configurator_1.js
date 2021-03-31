@@ -15,6 +15,7 @@ const default_Roomconfig = {
     strokeWidth: 4,
     originX: 'left',
     originY: 'top',
+    opacity: 0.5,
     centeredRotation: true,
     selectable: true,
 };
@@ -111,9 +112,6 @@ function set_canvas_event_handlers(canvas) {
 function getRoomProperties() {
     let room_properties = default_Roomconfig;
     room_properties.fill = getRoomColor();
-    room_properties.name = getRoomName();
-    room_properties.isDevice = false;
-    room_properties.opacity = 0.5;
     return room_properties;
 
 }
@@ -126,25 +124,27 @@ function resetRoomName(){
 
 function add_Room() {
     let room_properties = getRoomProperties();
-    resetRoomName();
+    let room_name = getRoomName();
 
-    const room = new fabric.Rect(room_properties);
-    let textObject = new fabric.IText(room_properties.name, {
+    const rectangle = new fabric.Rect(room_properties);
+    let textObject = new fabric.IText(room_name, {
         left: 40,
         top: 40,
         fontSize: 18,
         fill: '#000000'
     });
 
-    let group = new fabric.Group([room, textObject], {
+    let room = new fabric.Group([rectangle, textObject], {
         left: 150,
         top: 150,
         snapAngle: 90,
+        isDevice: false,
+        name: room_name,
 
     });
-    group.isDevice = false;
     statemachine.addNewState();
-    canvas.add(group);
+    canvas.add(room);
+    resetRoomName();
     return true;
 }
 
@@ -161,15 +161,14 @@ function getRoomColor() {
 
 function buildJSON() {
     let canvas_objects = canvas.getObjects();
-    let l_hash_map = CreateHashMap(canvas_objects); // [room_name]
-    let l_rooms = GetRectTextGroups(canvas_objects);
-    let l_room_names = GetRoomNames(canvas_objects);
+    let l_rooms = GetRooms(canvas_objects);
+    let l_hash_map = CreateHashMap(l_rooms);
     let l_devices = GetDevices(canvas_objects);
-    let l_found;
+    let l_found = false;
 
     //check for every device in which room it is
     for (var i = 0; i < l_devices.length; i++) {
-        //iterate through all rooms
+        //iterate through all rooms and check in which room the device is
         for (var j = 0; j < l_rooms.length; j++) {
             l_found = false;
             if (l_devices[i].isContainedWithinObject(l_rooms[j])) {
@@ -177,7 +176,8 @@ function buildJSON() {
                     device_id: l_devices[i].id,
                     connector: l_devices[i].connector
                 };
-                l_hash_map[l_room_names[j]].push(device_tuple);                
+
+                l_hash_map[l_rooms[j].name].push(device_tuple);                
                 l_found=true;
                 break;
             }
@@ -197,67 +197,32 @@ function buildJSON() {
 }
 
 
-function CreateHashMap(a_canvas_objects) {
+function GetRooms(a_canvas_objects){
+let l_rooms = []
+
+    for (var i = 0; i < a_canvas_objects.length; i++) {
+        // if its not a device it must be a room
+        if(!a_canvas_objects[i].isDevice){
+            l_rooms.push(a_canvas_objects[i]);
+        }
+    }
+
+    return l_rooms;
+
+}
+
+
+function CreateHashMap(a_rooms) {
 
     let l_hash_map = {};
-    let l_rooms = GetRoomNames(a_canvas_objects);
 
-    for (var i = 0; i < l_rooms.length; i++) {
-        l_hash_map[l_rooms[i]] = [];
+    for (var i = 0; i < a_rooms.length; i++) {
+        l_hash_map[a_rooms[i].name] = [];
     }
     return l_hash_map;
 
 }
 
-// This function returns a room object or None if the inserted group is not a (rect,text). The Group also must have an isDevice type
-function GetRectOfRectTextGroup(group) {
-
-    single_object = group._objects[0];
-    // check if isDevice type exists if not return a placeholder string
-    if (single_object.isDevice === undefined) {
-        //console.log("object has no isDevice type");
-        return "None";
-        //if it is not a device it must be a room
-    } else if (!single_object.isDevice) {
-        return single_object;
-    }
-
-    return "None";
-}
-
-
-// This function returns every rectText group which are rooms
-function GetRectTextGroups(groups) {
-    rectTextGroups = [];
-    for (var i = 0; i < groups.length; i++) {
-        single_objects = groups[i]._objects;
-
-        if (single_objects[0].isDevice === undefined) {
-            //if it is not a device it must be a room
-        } else if (!single_objects[0].isDevice) {
-            rectTextGroups.push(groups[i]);
-        }
-
-    }
-    return rectTextGroups;
-}
-
-
-//This function returns an array of Room names
-function GetRoomNames(a_canvas_objects) {
-    let room_names = [];
-    let room;
-
-    for (var i = 0; i < a_canvas_objects.length; i++) {
-        room = GetRectOfRectTextGroup(a_canvas_objects[i]);
-
-        if (room != "None") {
-            room_names.push(room.name);
-        }
-    }
-    return room_names;
-
-}
 
 function GetDevices(canvas_objects) {
     let l_devices = [];
