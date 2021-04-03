@@ -6,7 +6,6 @@ from users.models import CustomUser
 from django.utils import timezone
 from django.db.models.signals import m2m_changed, post_delete, pre_save
 from django.dispatch import receiver
-from django_countries.fields import CountryField
 from django.template.loader import get_template,render_to_string
 from django.template import Context
 from django.core.mail import send_mass_mail

@@ -1,13 +1,21 @@
 from allauth.account.forms import SignupForm
 from django.contrib.auth.forms import UserCreationForm
-from django_countries.fields import CountryField
 from users.models import CustomUser
+from django import forms
+from django.utils.translation import ugettext_lazy as _
+
+
+LANGUAGE_CHOICE = [
+    ( 'de', _('German')),
+    ('en', _('English')),
+    ]
+
 
 
 class RegisterUser(SignupForm):
-    country = CountryField(blank_label=_'(Select country)').formfield()
+    language = forms.CharField(label=_('Which Language do you prefer?'), widget=forms.Select(choices=LANGUAGE_CHOICE))
     
     class Meta:
-        fields  = ("email","password1","password2","country")
+        fields  = ("email","password1","password2","language")
         model = CustomUser
 

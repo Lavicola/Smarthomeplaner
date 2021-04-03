@@ -3,9 +3,6 @@ from rest_framework import routers
 from api.viewsets import DeviceViewSet,VulnerabilityViewSet,PrivacyInformationViewSet
 
 router = routers.DefaultRouter()
-#router.register(r'devices', DeviceViewSet,basename="api")
-router.register(r'vulnerability',VulnerabilityViewSet,basename="api")
-router.register(r'privacy',PrivacyInformationViewSet,basename="api")
 
 
 
@@ -13,5 +10,6 @@ router.register(r'privacy',PrivacyInformationViewSet,basename="api")
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('devices/', DeviceViewSet.as_view()),
-    path('', include(router.urls)),
+    path('vulnerability/', VulnerabilityViewSet.as_view()),    
+    path('privacy/', PrivacyInformationViewSet.as_view()),    
 ]

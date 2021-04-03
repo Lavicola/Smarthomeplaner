@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 from django.utils.translation import gettext_lazy as _
 import os
-
+import smarthome.middleware
 
 
 
@@ -47,7 +47,6 @@ INSTALLED_APPS = [
     'rest_framework',
     'django_filters',
     'modeltranslation',
-    'django_countries',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
@@ -72,10 +71,10 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'smarthome.middleware.CustomLocaleMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
