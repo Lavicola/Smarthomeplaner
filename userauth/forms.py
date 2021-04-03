@@ -3,19 +3,14 @@ from django.contrib.auth.forms import UserCreationForm
 from users.models import CustomUser
 from django import forms
 from django.utils.translation import ugettext_lazy as _
-
-
-LANGUAGE_CHOICE = [
-    ( 'de', _('German')),
-    ('en', _('English')),
-    ]
+from users import models
 
 
 
 class RegisterUser(SignupForm):
-    language = forms.CharField(label=_('Which Language do you prefer?'), widget=forms.Select(choices=LANGUAGE_CHOICE))
+    language_choice = forms.ChoiceField(choices=CustomUser.Language.choices) #use the model field. Form will be always up to date
     
     class Meta:
-        fields  = ("email","password1","password2","language")
+        fields  = ("email","password1","password2","language_choice")
         model = CustomUser
 

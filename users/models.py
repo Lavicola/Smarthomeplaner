@@ -50,13 +50,14 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
     )
 
     class Language(models.TextChoices):
-        ENGLISH = "en", _("English")
-        GERMAN = "de" , _("German")
+        ENGLISH_US = "en-us", _("English-US")
+        ENGLISH_GB = "en-gb", _("English-GB")
+        GERMAN = "de-de" , _("German-DE")
        
     language_choice = models.CharField(
-        max_length=2,
+        max_length=5,
         choices= Language.choices,
-        default=Language.ENGLISH,
+        default=Language.ENGLISH_US,
     )
 
     is_staff = models.BooleanField(default=False)

@@ -14,12 +14,11 @@ class CustomLocaleMiddleware(MiddlewareMixin):
     response_redirect_class = HttpResponseRedirect
 
     def process_request(self, request):
-        if(request.user.is_authenticated):
-            a=5
+        if(request.user.is_authenticated):            
             #user is logged in for the language we use the value stored in the database
-            language = request.user.language_choice
+            language = request.user.language_choice[0:2]
         else:
-            #user is not logged in. We use the Accept Header value
+            #user is not logged in. We use the Accept Header value. If Language is not supported the default language english is used
             language = translation.get_language_from_request(request)
         translation.activate(language)
         request.LANGUAGE_CODE = translation.get_language()
