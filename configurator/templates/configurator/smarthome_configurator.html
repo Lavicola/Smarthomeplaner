@@ -31,7 +31,7 @@
    </div>
    <div class="devices">
       <div class="device_container" v-for="device in devices">
-          <img  v-on:dblclick="getAdditionalInformations" :name="device.manufacturer +' '+  device.name" :title="device.name" 
+          <img  v-on:dblclick="getAdditionalInformation" :name="device.manufacturer +' '+  device.name" :title="device.name" 
           :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" 
           :src="device.image">
            <div class="desc">    
@@ -64,13 +64,13 @@
               </tr>
           </table>
           <span v-else> {% translate "No Vulnerabilities found!" %} </span>
-    <div class="privacy_information">
-      <table v-if="privacy_information.length">
+    <div class="data_protection">
+      <table v-if="data_protection.length">
         <tr>
           <th>{% translate "Privacy Information" %}</th>
         </tr>
       <tr>                             
-      <tr v-for="privacy_concern in privacy_information">
+      <tr v-for="privacy_concern in data_protection">
           <td><a v-bind:href="privacy_concern.paper_url" target="_blank">{[privacy_concern.description]} </a></td>
       </tr>
       </table>

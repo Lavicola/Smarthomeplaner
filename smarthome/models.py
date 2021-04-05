@@ -63,9 +63,8 @@ class Device(models.Model):
     standard = models.ManyToManyField(Standard,blank=True)
     manufacturer = models.CharField(max_length=200) 
     generation = models.CharField(max_length=10)
-    compatible_device = models.ManyToManyField('self',verbose_name="Compatible with",blank=True)
+    compatible_device = models.ManyToManyField('self',verbose_name=_("Compatible with"),blank=True)
     
-
     class Device_Category(models.TextChoices):
         SMART_LIGHTNING = "Smart_Lightning", _("Smart_Lightning")
         SMART_LOCK = "Smart_Lock" , _("Smart_Lock")
@@ -75,7 +74,6 @@ class Device(models.Model):
         max_length=20,
         choices=Device_Category.choices
     )
-
 
     class Meta:
         verbose_name = _("Device")
@@ -187,10 +185,21 @@ def notify_users(sender,action,pk_set,instance, **kwargs):
             
 
 
-class PrivacyInformation(models.Model):
+class DataProtectionInformation(models.Model):
     device_id = models.ManyToManyField(Device,verbose_name= _("Privacy Concern affects the following devices:"))
     description = models.CharField(max_length=300)
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Concern"))
+
+    class Meta:
+        verbose_name = _("Data Protection Information")
+        verbose_name_plural = _("Data Protection Information")
+
+
+    def __str__(self):
+        return self.description 
+
+
+
 
 class DeviceEntry(models.Model):
     id = models.AutoField(primary_key=True)
@@ -354,22 +363,6 @@ class Room(models.Model):
     def delete(a_email,a_names): 
         Room.objects.filter(user_id=a_email,name=a_names).delete()
         return True
-
-
-"""
-class App(models.Model):
-    name = models.CharField(primary_key=True,max_length=60)
-    supported_device = models.ManyToManyField(Device,verbose_name=("The App works with the following Devices:"))
-    developer = models.CharField(max_length=200)
-
-
-class AppUpdate(models.Model):
-    app_name = models.ManyToManyField(App,verbose_name= _("Update belongs to"))
-    version_number = models.CharField(primary_key=True,max_length=50)
-    releasedate = models.DateField(blank=True) 
-    changelog = models.CharField(max_length=200)
-    
-"""
 
 
 

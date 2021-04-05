@@ -100,7 +100,7 @@
                 <th>{% translate "Description" %}</th>
                 <th>{% translate "Link to the Paper" %}</th>
               </tr>
-        {% for privacy_concern in device.privacyinformation_set.all %}
+        {% for privacy_concern in device.DataProtectionInformation_set.all %}
         <tr>
             <td>{{ privacy_concern.description }}</td>
             <td><a href="{{privacy_concern.paper_url}}">Paper</a></td>

@@ -22,7 +22,7 @@ new Vue({
       devices: [],
       selected_category: 'all',
       vulnerabilities: [],
-      privacy_information:[],
+      data_protection:[],
       base_url : "/smarthome/devices/",
     },
     mounted: function() {
@@ -59,17 +59,17 @@ new Vue({
               this.vulnerabilities = response.data;
             })
       },
-      getPrivacyInformation: function(device_id) {
-        let api_base_url = '/api/privacy/';
+      getDataProtectionInformation: function(device_id) {
+        let api_base_url = '/api/data-protection/';
         let api_url = api_base_url+"?device_id="+device_id
         axios.get(api_url)
             .then((response) => {
-              this.privacy_information = response.data;
+              this.data_protection = response.data;
             })
       },
-      getAdditionalInformations: function(event) {
+      getAdditionalInformation: function(event) {
         device_id=event.target.id;
-        this.getPrivacyInformation(device_id);      
+        this.getDataProtectionInformation(device_id);      
         this.getVulnerabilities(device_id);
         if(!this.seen){
           this.seen=true;
