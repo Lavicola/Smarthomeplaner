@@ -10,11 +10,20 @@
 
 {% block content %}
 
+{% if not user.is_authenticated %}
+<p>
+  <a href="{% url 'account_signup' %}">{% translate "Please Register and configure a Smarthome first" %}</a>
+</p>
+{% elif table_information|length == 0  %}
+<a href="{% url 'configurator:index' %}">{% translate "Please configure a Smarthome first." %}</a>
+
+{% else %}
+
 
 <br>
 <div class="flex-container"> 
 
-{% for room_name, table_data in table_informations.items %} 
+{% for room_name, table_data in table_information.items %} 
 <div class="room"> 
 
 <table>
@@ -43,6 +52,7 @@
 
 {% endfor %}
 </div>
+{% endif %}
 
 {% endblock %}
 

@@ -27,7 +27,7 @@ def configuration(request):
                 l_tabledata[room["name"]].append((device_entry,table_color))
                 
     context =  {
-        'table_informations': l_tabledata
+        'table_information': l_tabledata
         }
     template = loader.get_template('configurator/room_configurations.html')
 
