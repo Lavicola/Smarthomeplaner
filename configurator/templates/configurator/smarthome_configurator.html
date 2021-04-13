@@ -49,7 +49,7 @@
     <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Information " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
-              <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </a></caption>              
+              <caption> {[ vulnerabilities[0].device_id[0]["name"]  ]} </caption>              
               <tr>
                   <th>{% translate "Found" %}</th>
                   <th>{% translate "Description(Vulnerability)" %}</th>
