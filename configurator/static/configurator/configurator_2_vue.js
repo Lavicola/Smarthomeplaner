@@ -11,7 +11,6 @@ include("https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.js");
 include("https://unpkg.com/v-tooltip@2.0.2");
 
 
-
 window.addEventListener("load", function(){
 new Vue({
     el: '#vue_app',

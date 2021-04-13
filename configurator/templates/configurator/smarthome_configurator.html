@@ -30,6 +30,9 @@
       <button v-on:click.prevent="getSearchResults">{% translate "Search" %}</button>
    </div>
    <div class="devices">
+           <!-- The most important fact is that every device has as id the id of the primary key in the table! This allows us easily to speak the same language with
+            the server side
+          -->
       <div class="device_container" v-for="device in devices">
           <img  v-on:dblclick="getAdditionalInformation" :name="device.manufacturer +' '+  device.name" :title="device.name" 
           :id="device.id" ondragstart="dragstart_handler(event)" ondrop="drop_handler(event)" draggable="true" 
@@ -46,6 +49,7 @@
             </div>
         </div>
       </div>
+      <!-- seen is only false once the page was opened. Once you click any Device the new text will appear -->
     <div v-if="seen == false ">{% translate "Double Click on a Device to Show vulnerabilities and Privacy Information " %}</div>
     <div v-else id="additional_informations" >      
             <table v-if="vulnerabilities.length">
@@ -99,11 +103,10 @@
   </div>
 
 
-
 <main id="canvas-wrapper" >
     <canvas id="canvas" width="2000" height="800"></canvas>
     <div id="CurrentCanvasObject">
-      {% translate "  Hover über ein Gerät" %}
+      {% translate "  Hoover over any Device " %}
   </div>
 
 </main>

@@ -26,7 +26,7 @@ function set_canvas_event_handlers(canvas) {
     canvas.on("after:render", function(){ canvas.calcOffset() });
 
 
-    //enables zoom and panning
+    //enables zoom and panning http://fabricjs.com/fabric-intro-part-5
     canvas.on('mouse:wheel', function(opt) {
         var delta = opt.e.deltaY;
         var zoom = canvas.getZoom();
@@ -80,7 +80,6 @@ function set_canvas_event_handlers(canvas) {
             if(angle == opt.target.get('angle')){
             //User did not change the angle of the object remove last state 
             statemachine.redoStack.pop();
-
             }
         }
         this.isDragging = false;
@@ -237,50 +236,60 @@ function GetDevices(canvas_objects) {
 
 
 function dragstart_handler(ev) {
+    // for a drag operation set text to the id value
     ev.dataTransfer.setData("text", ev.target.id);
     
 }
 
 function handleDragOver(e) {
     if (e.preventDefault) {
-        e.preventDefault(); // Necessary.  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations   
+        e.preventDefault();   
     }
-    e.dataTransfer.dropEffect = 'copy';
-    console.log(ev.target.getAttribute("data-device_id"));
 
     return false;
 }
 
 
-
+// transfer the img/svg to the canvas via build in function of fabric.js
 function drop_handler(ev) {
     ev.preventDefault();
     let data = ev.dataTransfer.getData("URL");
     let svg_id = ev.dataTransfer.getData("text");
     svg_connector = getConnector(svg_id);
     svg_name = document.getElementById(svg_id).name;
-    fabric.loadSVGFromURL(data, function(objects, options) {
-        var svg = fabric.util.groupSVGElements(objects, options);
-        svg.left = ev.layerX / (canvas.getZoom());
-        svg.top = ev.layerY / (canvas.getZoom());
-        svg.id = svg_id;
-        svg.scaleToWidth(100);
-        svg.scaleToHeight(100);
-        svg.name = svg_name + " " + svg_connector;
-        svg.isDevice = true;
-        svg.connector = svg_connector;
-        add_event_to_device(svg);
-
-
-        statemachine.addNewState();
-        canvas.add(svg);
-
-
-    });
-
-
+    if(data.split('.').pop() == "svg" ){
+        fabric.loadSVGFromURL(data, function(objects, options) {
+            var svg = fabric.util.groupSVGElements(objects, options);
+            svg.left = ev.layerX / (canvas.getZoom());
+            svg.top = ev.layerY / (canvas.getZoom());
+            svg.id = svg_id;
+            svg.scaleToWidth(100);
+            svg.scaleToHeight(100);
+            svg.name = svg_name + " " + svg_connector;
+            svg.isDevice = true;
+            svg.connector = svg_connector;
+            add_event_to_device(svg);
+            statemachine.addNewState();
+            canvas.add(svg);
+        });    
+    }else{
+            // jpg or png picutres. 
+            fabric.Image.fromURL(data, function(img) {
+                img.left = ev.layerX / (canvas.getZoom());
+                img.top = ev.layerY / (canvas.getZoom());
+                img.id = svg_id;
+                img.scaleToWidth(100);
+                img.scaleToHeight(100);
+                img.name = svg_name + " " + svg_connector;
+                img.isDevice = true;
+                img.connector = svg_connector;
+                add_event_to_device(img);
+                statemachine.addNewState();
+                canvas.add(img);
+        });
+    }
 }
-
+// remove every active object
 function remove_objects() {
     objects = canvas.getActiveObjects();
     if(objects.length >=1){
@@ -292,12 +301,14 @@ function remove_objects() {
 }
 
 function getConnector(device_id) {
+    //the connector drop field is always dropdown_string + device_id. 
     var dropdown_string = "dropdown-";
     let con = document.getElementById(dropdown_string + device_id);
     var connector = con.value;
     return connector;
 }
 
+// In order to see the full name of the device every device needs the following 2 events
 function add_event_to_device(a_element) {
     a_element.on('mouseover', function() {
         document.getElementById("CurrentCanvasObject").innerHTML = a_element.name;
@@ -308,7 +319,7 @@ function add_event_to_device(a_element) {
     });
 }
 
-
+// init canvas and set the canvas size to the width of the monitor 
 function initCanvas() {
     canvas = new fabric.Canvas('canvas')
     fabric.Object.prototype.set({
@@ -324,14 +335,14 @@ function getCanvasContainer(){
     return document.getElementById('canvas-wrapper');
 }
 
-
+//The canvas container needs those function in order to fire the events.
 function InitCanvasContainerEvents(){
     var canvasContainer = getCanvasContainer();
     canvasContainer.addEventListener('dragover', handleDragOver, false);
     canvasContainer.addEventListener('drop', drop_handler, false);
 }
 
-
+// set the short cuts of the canvas
 function inCanvasContainerShortcuts(){
     canvasContainer = getCanvasContainer();
     canvasContainer.tabIndex = 1000;
@@ -340,14 +351,17 @@ function inCanvasContainerShortcuts(){
     {
     if(e.ctrlKey){
         switch (e.keyCode) {
+            // strg+c
             case 67:
                 Copy();
                 break;
             case 86:
+                // strg+v
                 Paste();
                 break;
         }
      }else{
+         // entf button
         switch (e.keyCode){
             case 46:
                 remove_objects();
@@ -358,13 +372,13 @@ function inCanvasContainerShortcuts(){
     }
 }
 
-
+//following the http://fabricjs.com/copypaste implementation with certain changes.
 function Copy() {
     
     element = canvas.getActiveObject();
 
-    if(typeof element.name === "undefined"){
-        //we can only copy one element at a timee
+    if(typeof element.name === "undefined" || ! element.isDevice){
+        //we can only copy one element at a time. Copy more would break our application. Also we only allow to copy devices
         _clipboard = undefined;
         return;
     }
@@ -373,7 +387,7 @@ function Copy() {
 		_clipboard = element;
 	},getCustomAttributes(element));
 }
-
+// we have to copy our customattributes
 function getCustomAttributes(a_element){
     let custom_attributes = [];
     if(a_element.isDevice){
@@ -383,11 +397,9 @@ function getCustomAttributes(a_element){
     return custom_attributes;
 }
 
-
+//following the http://fabricjs.com/copypaste implementation with certain changes.
 function Paste() {
-
-
-    if(typeof _clipboard === "undefined"){
+    if(typeof _clipboard === "undefined" || ! element.isDevice){
         return false;
     }
     //save state Before copying the element
@@ -426,7 +438,7 @@ function Paste() {
 
 
 
-
+// The statemachine calls this function
 function restoreCanvas(canvas_json){
     canvas.loadFromJSON(canvas_json, function() {
         canvas.renderAll(); 
@@ -466,8 +478,8 @@ class StateMachine {
     constructor() {
         this.redoStack = [this.getCurrentState()];
         this.unduStack = []
+        // lock is needed for operations like move and scale, since those are called every (small) move
         this.islocked = false;
-
     }
 
 
@@ -482,7 +494,7 @@ class StateMachine {
     getCurrentState(){
         return JSON.stringify(canvas.toJSON(['id','name',"isDevice","connector"]));
     }
-//NOW STOP RETURINUNG
+
     addNewState(){
         if(!this.getLock()){     
         this.redoStack.push(this.getCurrentState());

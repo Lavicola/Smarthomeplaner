@@ -4,7 +4,7 @@ from configurator.models import CanvasMap
 
 
 
-
+# not used but could be used in the future-
 class FirmwareSerializer(serializers.ModelSerializer ):
 
     class Meta:
@@ -22,7 +22,6 @@ class ConnectorSerializer(serializers.ModelSerializer ):
 
 
 class DeviceSerializer(serializers.ModelSerializer ):
-    #firmware_set = FirmwareSerializer(many=True)
     connector = ConnectorSerializer(many=True)
     class Meta:
         model = Device
@@ -40,6 +39,7 @@ class DeviceSerializerShort(serializers.ModelSerializer ):
 
 
 class VulnerabilitySerializer(serializers.ModelSerializer ):
+    #many = true means we have a many to many relationship
     device_id = DeviceSerializerShort(many = True)
 
     class Meta:

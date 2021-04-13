@@ -24,7 +24,7 @@ class DeviceViewSet(APIView):
 
     def get(self, request):
         '''
-        List every device, device with name LIKE,device with certain category or both. 
+        List every device, device with name LIKE  search_string, device with certain category or both. 
         '''
         queryset = Device.objects.all()
         device_name = self.request.query_params.get("name",None)
@@ -39,7 +39,7 @@ class DeviceViewSet(APIView):
         serializer = DeviceSerializer(queryset, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    # PUT API for the webservice try. NOT SECURE
+    # PUT API for the webservice try. NOT SECURE and just here to show it could be done.
     def put(self, request):
 
         connectors = []
@@ -56,8 +56,6 @@ class DeviceViewSet(APIView):
                 standards.append(standard)        
         except KeyError:
             pass
-
-
 
         device = Device(name=device_data["name"],manufacturer=device_data["manufacturer"],generation=device_data["generation"])
         device.image = '/Device/HUE_E27_yjzDXH7.svg'
@@ -91,8 +89,10 @@ class VulnerabilityViewSet(APIView):
 
 
 class DataProtectionInformationViewSet(APIView):
+    '''
+        GET Requst to get all DataProtection Information for a device  
+    '''
     serializer_class = DataProtectionInformationerializer
-
     def get(self, request):
         queryset = DataProtectionInformation.objects.all()
         device_id = self.request.query_params.get("device_id",None)

@@ -68,13 +68,14 @@ INSTALLED_APPS = [
 
 ]
 
+# here you can find the written localemiddleware
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'smarthome.middleware.CustomLocaleMiddleware',
+    'smarthome.middleware.CustomLocaleMiddleware', 
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -108,10 +109,11 @@ AUTHENTICATION_BACKENDS = [
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
+# dummy just ignores everything
 EMAIL_BACKEND = 'django.core.mail.backends.dummy.EmailBackend'
 #EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
+#values for django-userauth
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
@@ -147,6 +149,7 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
 #DATABASES = {
 #    'default': {
 #        'ENGINE': 'django.db.backends.mysql',
@@ -158,7 +161,7 @@ REST_FRAMEWORK = {
 #    }
 #}
 
-
+# SQL lite does not fire the the add_post event!
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',

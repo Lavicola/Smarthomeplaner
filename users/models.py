@@ -49,6 +49,7 @@ class CustomUser(AbstractBaseUser,PermissionsMixin):
         primary_key=True
     )
 
+    # we do save the region of the user as well e.g to show him the right time. But it is not used right now
     class Language(models.TextChoices):
         ENGLISH_US = "en-us", _("English-US")
         ENGLISH_GB = "en-gb", _("English-GB")

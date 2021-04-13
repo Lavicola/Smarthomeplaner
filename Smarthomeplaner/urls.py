@@ -18,7 +18,7 @@ from django.urls import path,include
 from django.conf import settings
 from django.conf.urls.static import static
 
-
+# get the paths of every application
 urlpatterns = [
     path("api/",include("api.urls")),
     path('smarthome/',include('smarthome.urls')),

@@ -149,40 +149,45 @@ class Vulnerability(models.Model):
 
 
 
-
+# this signals sends the name 
 @receiver(m2m_changed, sender=Vulnerability.device_id.through)
 def notify_users(sender,action,pk_set,instance, **kwargs):
     email_sender = "smarthomeplaner@gmail.com"
+    #check if a new vulnerability was added
     if(action == "post_add"):
+        #maybe a closed vulnerability was added if so we dont want to send an email
         if(instance.patch_date is not None):
             device_entries = []
             user_mailingdict = {}
             messages = ()
+            #pk_set is a list of ids which are vulnerable
             for device_id in pk_set:
                 for entry in DeviceEntry.objects.filter(device=device_id):
                     user_email = str(entry.room.user)
                     name = entry.room.name
                     if ( user_email not in user_mailingdict):
                         # e.g user_mailingdict[user@aol.de]
-                        user_mailingdict[user_email] = {}                    
+                        user_mailingdict[user_email] = {}           
+                        # add the roomname to the nested hashmap if necessary         
                     if not (user_mailingdict[user_email].__contains__(name)):
                         user_mailingdict[user_email][name] = [] 
                     user_mailingdict[user_email][name].append(entry)
             for user in user_mailingdict.keys():
+                # the context holds every room with every device which is vulnerable
                 context = {
                         'username': user,
                         "rooms" : user_mailingdict[user], 
                         "vulnerability": instance.description, 
                         }
-                if (list(CustomUser.objects.filter(email=user).values_list("language_choice"))[0][0] == 'DE'):
+                if (list(CustomUser.objects.filter(email=user).values_list("language_choice"))[0] == 'de-de'):
                     subject = "Neue Sicherheitslücke die dich betrifft"
                     email_text = render_to_string("smarthome/email_body_german.html",context)
                 else:
                     subject = "A new Vulnerability added which concerns you "
                     email_text = render_to_string("smarthome/email_body_english.html",context)
                     #In order to send mass emails we create a tuple of messages which consists of
-                    #subject,message text,Email from sender ,receiver email
-                messages = messages + ((subject, email_text, "davidschmidt777@t-online.de", [user_email]),)
+                #every subject is in the language of the user and now we can send every email to the users
+                messages = messages + ((subject, email_text, email_sender, [user_email]),)
             send_mass_mail((messages))
         pass
             
@@ -231,7 +236,6 @@ class DeviceEntry(models.Model):
         unique_connector_list = [a_dict["connector"] for a_dict in unique_dict_list]
         # loop variables
         l_connector = None
-
         for id in set(device_list):
             device_object = Device.GetDevice(id)
             for connector in unique_connector_list:
