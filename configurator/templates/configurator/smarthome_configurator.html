@@ -53,14 +53,11 @@
               <tr>
                   <th>{% translate "Found" %}</th>
                   <th>{% translate "Description(Vulnerability)" %}</th>
-                  <th>{% translate "Patched" %}</th>
                 </tr>
               <tr>                             
               <tr v-for="vulnerability in vulnerabilities">
                   <td>{[vulnerability.discovery]} </td>
                   <td><a v-bind:href="vulnerability.paper_url" target="_blank">{[vulnerability.description]} </a></td>
-                  <td v-if="vulnerability.patch_date">{% translate "Yes" %} </td> 
-                  <td v-else>{% translate "No " %} </td>
               </tr>
           </table>
           <span v-else> {% translate "No Vulnerabilities found!" %} </span>
@@ -97,9 +94,11 @@
     <button title="{% translate 'redo' %}" class="redo" onclick="statemachine.restoreState()"><i class="fas fa-redo fa-1x"></i></button>
     <button title="{% translate 'Remove Element(s)' %}" class="danger" onclick="remove_objects()"><i class="fas fa-trash fa-1x"></i></button>
     <button title="{% translate 'save Roomconfiguration' %}" class="save" onclick="saveConfiguration()"><i class="fas fa-save fa-1x"></i></button>
-    <button title="{% translate 'load Roomconfiguration' %}" class="load" onclick="getCanvas()"><i class="fas fa-arrow-alt-circle-down fa-1x"></i></button>
+    <button title="{% translate 'load Roomconfiguration' %}" class="load" onclick="getCanvas()"><i class="fa fa-download fa-1x"></i></button>
     <span id="feedback_text"></span>
   </div>
+
+
 
 <main id="canvas-wrapper" >
     <canvas id="canvas" width="2000" height="800"></canvas>

@@ -152,6 +152,7 @@ class Vulnerability(models.Model):
 
 @receiver(m2m_changed, sender=Vulnerability.device_id.through)
 def notify_users(sender,action,pk_set,instance, **kwargs):
+    email_sender = "smarthomeplaner@gmail.com"
     if(action == "post_add"):
         if(instance.patch_date is not None):
             device_entries = []
@@ -173,12 +174,14 @@ def notify_users(sender,action,pk_set,instance, **kwargs):
                         "rooms" : user_mailingdict[user], 
                         "vulnerability": instance.description, 
                         }
-                if (list(CustomUser.objects.filter(email=user).values_list("country"))[0][0] == 'DE'):
+                if (list(CustomUser.objects.filter(email=user).values_list("language_choice"))[0][0] == 'DE'):
                     subject = "Neue Sicherheitslücke die dich betrifft"
                     email_text = render_to_string("smarthome/email_body_german.html",context)
                 else:
                     subject = "A new Vulnerability added which concerns you "
                     email_text = render_to_string("smarthome/email_body_english.html",context)
+                    #In order to send mass emails we create a tuple of messages which consists of
+                    #subject,message text,Email from sender ,receiver email
                 messages = messages + ((subject, email_text, "davidschmidt777@t-online.de", [user_email]),)
             send_mass_mail((messages))
         pass

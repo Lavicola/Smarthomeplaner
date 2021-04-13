@@ -238,6 +238,7 @@ function GetDevices(canvas_objects) {
 
 function dragstart_handler(ev) {
     ev.dataTransfer.setData("text", ev.target.id);
+    
 }
 
 function handleDragOver(e) {
@@ -245,20 +246,12 @@ function handleDragOver(e) {
         e.preventDefault(); // Necessary.  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations   
     }
     e.dataTransfer.dropEffect = 'copy';
+    console.log(ev.target.getAttribute("data-device_id"));
+
     return false;
 }
 
-function handleDragEnter(e) {
-    if (e.preventDefault) {
-        e.preventDefault(); // Necessary.  https://developer.mozilla.org/en-US/docs/Web/API/HTML_Drag_and_Drop_API/Drag_operations   
-    }
-    // this / e.target is the current hover target.
-    this.classList.add('over');
-}
 
-function handleDragLeave(e) {
-    this.classList.remove('over'); // this / e.target is previous target element.
-}
 
 function drop_handler(ev) {
     ev.preventDefault();
@@ -334,9 +327,7 @@ function getCanvasContainer(){
 
 function InitCanvasContainerEvents(){
     var canvasContainer = getCanvasContainer();
-    canvasContainer.addEventListener('dragenter', handleDragEnter, false);
     canvasContainer.addEventListener('dragover', handleDragOver, false);
-    canvasContainer.addEventListener('dragleave', handleDragLeave, false);
     canvasContainer.addEventListener('drop', drop_handler, false);
 }
 

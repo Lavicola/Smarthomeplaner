@@ -69,8 +69,8 @@ new Vue({
       },
       getAdditionalInformation: function(event) {
         device_id=event.target.id;
-        this.getDataProtectionInformation(device_id);      
         this.getVulnerabilities(device_id);
+        this.getDataProtectionInformation(device_id);      
         if(!this.seen){
           this.seen=true;
         }        
