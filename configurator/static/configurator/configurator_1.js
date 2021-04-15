@@ -59,7 +59,7 @@ function set_canvas_event_handlers(canvas) {
     });
 
     canvas.on('mouse:move', function(opt) {
-        mousePosition = canvas.getPointer(opt);
+        mousePosition = canvas.getPointer(opt); //save mpuse position everytime we move
 
         if (this.isDragging) {
             var e = opt.e;
@@ -438,16 +438,6 @@ function Paste() {
 
 
 
-// The statemachine calls this function
-function restoreCanvas(canvas_json){
-    canvas.loadFromJSON(canvas_json, function() {
-        canvas.renderAll(); 
-     },function(o,object){
-        if(object.isDevice){
-          add_event_to_device(object);
-        }
-     })
-}
 
 
 
@@ -461,17 +451,6 @@ function include(file) {
 }
 
 
-
-include("https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js");
-
-window.addEventListener("load", function() {
-    initCanvas();
-    InitCanvasContainerEvents();
-    inCanvasContainerShortcuts();
-    statemachine= new StateMachine();
-
-
-});
 
 class StateMachine {
 
@@ -529,10 +508,29 @@ class StateMachine {
 
     }
 
-    restoreLastState(state)
-    {
-        restoreCanvas(state);
-    }
+ restoreCanvas(canvas_json){
+    canvas.loadFromJSON(canvas_json, function() {
+        canvas.renderAll(); 
+     },function(o,object){
+        if(object.isDevice){
+          add_event_to_device(object);
+        }
+     })
+}
 
 
   }
+
+
+
+include("https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.2.0/fabric.min.js");
+
+window.addEventListener("load", function() {
+    initCanvas();
+    InitCanvasContainerEvents();
+    inCanvasContainerShortcuts();
+    statemachine= new StateMachine();
+
+
+});
+

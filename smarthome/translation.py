@@ -1,7 +1,7 @@
 from modeltranslation.translator import translator, TranslationOptions
 from .models import Firmware,DataProtectionInformation,Vulnerability,Connector
 
-
+# localization of database tables
 
 class FirmwareTranslationOptions(TranslationOptions):
     fields = ("changelog",)

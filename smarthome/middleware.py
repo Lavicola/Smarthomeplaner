@@ -6,7 +6,7 @@ from django.utils import translation
 from django.utils.cache import patch_vary_headers
 from django.utils.deprecation import MiddlewareMixin
 
-
+# The Locale Middleware used for the Smarthomeplaner
 class CustomLocaleMiddleware(MiddlewareMixin):
     """
     Decide in which Language the Content should be sent to Client.

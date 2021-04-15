@@ -9,7 +9,7 @@ from .forms import AJAXForm
 from configurator.models import CanvasMap
 import json
 
-
+# this view is for the "Meine Geräte" View. In order to know which row should be red we have to check which device as an open vulnerability
 def configuration(request):
     l_tabledata = {}
     table_color = ""
@@ -34,6 +34,8 @@ def configuration(request):
     return HttpResponse(template.render(context, request))
 
 
+# the index is the configurator itself(the Smarthomeplaner).
+#The template gives the structure of the data 
 def index(request): 
     context = {
         'devices': Device.objects.all(),
@@ -44,7 +46,7 @@ def index(request):
     return HttpResponse(template.render(context, request))
 
 
-
+# this view is called in order to load the canvas into the client canvas.
 def getCanvas(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -56,7 +58,7 @@ def getCanvas(request):
     return HttpResponse() #
 
 
-
+# this view saves the configuration
 def saveConfiguration(request):
     if request.method == 'POST':
         if request.user.is_authenticated:
@@ -66,7 +68,6 @@ def saveConfiguration(request):
             if form.is_valid():                                
                 json_data = form.cleaned_data["json_data"]
                 canvas_map = form.cleaned_data["canvas_map"]
-                #Step 1 Save Room Configuration
                 room_names = list(json_data.keys())
                 Room.DeleteUnusedRooms(email,list(json_data.keys()))   
                 Room.CreateRooms(email,list(json_data.keys()))

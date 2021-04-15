@@ -12,7 +12,8 @@ class FirmwareSerializer(serializers.ModelSerializer ):
         fields = ('version_number','changelog')
 
 
-
+# create a class and set the model to the python model which should be serialized. Later add the fields you want to serialize. For the sake of safety enumerate individually
+ 
 class ConnectorSerializer(serializers.ModelSerializer ):
     class Meta:
         model = Connector
