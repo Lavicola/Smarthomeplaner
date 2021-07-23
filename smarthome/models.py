@@ -16,6 +16,7 @@ from django.core.mail import send_mass_mail
 
 
 class Connector(models.Model):
+    id = models.AutoField(primary_key=True)
     connector = models.CharField(max_length=30)
 
     def __str__(self):
@@ -37,7 +38,7 @@ class Connector(models.Model):
         return Connector.objects.filter(connector=a_connector_name).get()
         
 
-
+# which standards does the Product support?
 class Standard(models.Model):
     standard = models.CharField(max_length=30,primary_key=True)
     def __str__(self):
@@ -126,6 +127,7 @@ class Firmware(models.Model):
 
 
 class Vulnerability(models.Model):
+    id = models.AutoField(primary_key=True)
     device_id = models.ManyToManyField(Device,verbose_name= _("Vulnerability exploitable by:"))
     discovery = models.DateField(verbose_name= _("Vulnerability was found on:"))
     description = models.CharField(max_length=500,verbose_name= _("Description of the Vulnerability "))
@@ -194,6 +196,7 @@ def notify_users(sender,action,pk_set,instance, **kwargs):
 
 
 class DataProtectionInformation(models.Model):
+    id = models.AutoField(primary_key=True)
     device_id = models.ManyToManyField(Device,verbose_name= _("Privacy Concern affects the following devices:"))
     description = models.CharField(max_length=300)
     paper_url = models.URLField(max_length=500,verbose_name= _("URL to the Article to the Privacy Concern"))

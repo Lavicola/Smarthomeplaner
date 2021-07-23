@@ -372,7 +372,7 @@ function inCanvasContainerShortcuts(){
     }
 }
 
-//following the http://fabricjs.com/copypaste implementation with certain changes.
+//following the http://fabricjs.com/copypaste implementation with some changes.
 function Copy() {
     
     element = canvas.getActiveObject();
@@ -397,7 +397,7 @@ function getCustomAttributes(a_element){
     return custom_attributes;
 }
 
-//following the http://fabricjs.com/copypaste implementation with certain changes.
+//following the http://fabricjs.com/copypaste implementation with some changes.
 function Paste() {
     if(typeof _clipboard === "undefined" || ! element.isDevice){
         return false;
@@ -457,7 +457,7 @@ class StateMachine {
     constructor() {
         this.redoStack = [this.getCurrentState()];
         this.unduStack = []
-        // lock is needed for operations like move and scale, since those are called every (small) move
+        // lock is needed for operations like move and scale, since those are called every (small) movement this means it is actually not the real last point after undo
         this.islocked = false;
     }
 
